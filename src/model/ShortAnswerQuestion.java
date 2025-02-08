@@ -9,5 +9,4 @@ public class ShortAnswerQuestion extends AbstractQuestion {
 	public ShortAnswerQuestion(final String theQuestion, final String theAnswer) {
 		super(theQuestion, theAnswer);
 	}
-
 }
