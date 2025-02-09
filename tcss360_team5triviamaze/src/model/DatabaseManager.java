@@ -23,7 +23,7 @@ public class DatabaseManager {
         try {
             // TODO: Create database connection using DriverManager.getConnection()
             
-            // Create tables if they don't exist
+            // Create tables if they do not exist
             createTables();
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
