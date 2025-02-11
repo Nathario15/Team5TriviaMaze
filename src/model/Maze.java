@@ -1,10 +1,16 @@
 package model;
 
-public final class Maze {
+import java.io.Serializable;
+
+public final class Maze implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * A map of rooms.
 	 */
-	public static final Room[][]MAP = null;
+	public static final Room[][] MAP = null;
 	/**
 	 * y coordinate.
 	 */
@@ -13,9 +19,11 @@ public final class Maze {
 	 * x coordinate.
 	 */
 	private static int x;
+
 	private Maze() {
-		
+
 	}
+
 //	/**
 //	 * Returns room North of player.
 //	 * @return
@@ -46,6 +54,7 @@ public final class Maze {
 //	}
 	/**
 	 * Returns room based on direction.
+	 * 
 	 * @param theDirection
 	 * @return
 	 */
@@ -65,16 +74,20 @@ public final class Maze {
 		}
 		return temp;
 	}
+
 	/**
 	 * Returns room.
+	 * 
 	 * @param theDirection
 	 * @return
 	 */
 	public static Room getRoom() {
 		return MAP[x][y];
 	}
+
 	/**
 	 * moves and returns new room.
+	 * 
 	 * @param dir
 	 * @return
 	 */
@@ -92,6 +105,6 @@ public final class Maze {
 			x--;
 		}
 		return MAP[x][y];
-		
+
 	}
 }

@@ -1,6 +1,12 @@
 package model;
 
-public abstract class AbstractQuestion {
+import java.io.Serializable;
+
+public abstract class AbstractQuestion implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * The Question that will be asked.
 	 */
@@ -8,18 +14,22 @@ public abstract class AbstractQuestion {
 	/**
 	 * The correct answer.
 	 */
-    protected final String myAnswer;
-    /**
-     * Creates abstract question.
-     * @param theQuestion the question that shows up
-     * @param theAnswer correct answer
-     */
+	protected final String myAnswer;
+
+	/**
+	 * Creates abstract question.
+	 * 
+	 * @param theQuestion the question that shows up
+	 * @param theAnswer   correct answer
+	 */
 	public AbstractQuestion(final String theQuestion, final String theAnswer) {
 		this.myQuestion = theQuestion;
 		this.myAnswer = theAnswer;
 	}
+
 	/**
 	 * Checks if answer is correct.
+	 * 
 	 * @param theAnswer
 	 * @return
 	 */
