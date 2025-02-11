@@ -22,8 +22,8 @@ public class GameView extends JFrame {
         mainPanel = new JPanel(cardLayout);
         
         //AddMainMenu();
-        //addGamePanel();
-        //addInstructionsPanel();
+        addGamePanel();
+        addInstructionsPanel();
         //addAboutPanel();
         
         add(mainPanel);
@@ -34,6 +34,21 @@ public class GameView extends JFrame {
             GameView game = new GameView();
             game.setVisible(true);
         });
+    }
+    
+    private void addGamePanel() {
+    	JPanel gamePanel = new JPanel();
+    	gamePanel.add(new JLabel("Game currently in progress."));
+    	mainPanel.add(gamePanel, "Game");
+    }
+    
+    private void addInstructionsPanel() {
+    	JPanel instructionsPanel = new JPanel();
+        instructionsPanel.add(new JLabel("Instructions: You must navigate the maze by answering trivia questions about Minecraft."));
+        JButton backBtn = new JButton("Back");
+        backBtn.addActionListener(_ -> cardLayout.show(mainPanel, "MainMenu"));
+        instructionsPanel.add(backBtn);
+        mainPanel.add(instructionsPanel, "Instructions");
     }
 }
 
