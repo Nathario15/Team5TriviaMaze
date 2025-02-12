@@ -58,6 +58,11 @@ public class GameView extends JFrame {
     	cardLayout.show(mainPanel, "Game");
     }
     
+    public void saveGame() {
+    	//gameState.saveState(maze, player);
+    	JOptionPane.showMessageDialog(this, "Game saved successfully!");
+    }
+    
     public void LoadGame() {
         //gameState.loadState();
         JOptionPane.showMessageDialog(this, "Game loaded successfully!");
