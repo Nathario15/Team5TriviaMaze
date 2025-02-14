@@ -36,6 +36,31 @@ public class GameView extends JFrame {
         });
     }
     
+	private void AddMainMenu() {
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new GridLayout(5, 1));
+        
+        JButton newGameButton = new JButton("New Game");
+        JButton loadGameButton = new JButton("Load Game");
+        JButton instructionsButton = new JButton("Instructions");
+        JButton aboutBtn = new JButton("About");
+        JButton exitBtn = new JButton("Exit");
+        
+        newGameButton.addActionListener(_ -> NewGame());
+        loadGameButton.addActionListener(_ -> LoadGame());
+        instructionsButton.addActionListener(_ -> DisplayInstructions());
+        aboutBtn.addActionListener(_ -> DisplayAbout());
+        exitBtn.addActionListener(_ -> System.exit(0));
+        
+        menuPanel.add(newGameButton);
+        menuPanel.add(loadGameButton);
+        menuPanel.add(instructionsButton);
+        menuPanel.add(aboutBtn);
+        menuPanel.add(exitBtn);
+        
+        mainPanel.add(menuPanel, "MainMenu");
+    }
+    
     private void AddGamePanel() {
     	JPanel gamePanel = new JPanel();
     	gamePanel.add(new JLabel("Game currently in progress."));
@@ -67,6 +92,14 @@ public class GameView extends JFrame {
         //gameState.loadState();
         JOptionPane.showMessageDialog(this, "Game loaded successfully!");
         cardLayout.show(mainPanel, "Game");
+    }
+    
+    public void DisplayInstructions() {
+        cardLayout.show(mainPanel, "Instructions");
+    }
+    
+    public void DisplayAbout() {
+        cardLayout.show(mainPanel, "About");
     }
 }
 
