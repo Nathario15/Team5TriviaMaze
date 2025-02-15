@@ -17,8 +17,17 @@ public class MultipleChoiceQuestion extends AbstractQuestion {
 	 * @param theAnswer   the correct answer
 	 * @param theChoices  a list of possible answers (should include correct one)
 	 */
-	public MultipleChoiceQuestion(final String theQuestion, final String theAnswer, final String[] theChoices) {
+	public MultipleChoiceQuestion(final String theQuestion, 
+			final String theAnswer, final String[] theChoices) {
 		super(theQuestion, theAnswer);
 		myChoices = theChoices;
+	}
+	/**
+	 * The whole point of this is to get the number of questions, 
+	 * so GUI elements can be sized correctly.
+	 * @return
+	 */
+	public int getChoices() {
+		return myChoices.length;
 	}
 }

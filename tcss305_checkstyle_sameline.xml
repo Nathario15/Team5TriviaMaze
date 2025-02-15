@@ -88,7 +88,9 @@
     <module name="EmptyForIteratorPad"/>
     <module name="EmptyForInitializerPad"/>
     <module name="NoWhitespaceAfter">
+      <property name="severity" value="ignore"/>
       <property name="tokens" value="ARRAY_INIT,BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="NoWhitespaceBefore">
       <property name="tokens" value="SEMI,DOT,POST_DEC,POST_INC"/>
@@ -217,8 +219,10 @@
     </module>
   </module>
   <module name="LineLength">
+    <property name="severity" value="ignore"/>
     <property name="ignorePattern" value="(^ *//\*@ .+$)|(^ *@.+$)"/>
     <property name="max" value="95"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="FileLength">
     <property name="max" value="1000"/>

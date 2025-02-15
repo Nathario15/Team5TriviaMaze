@@ -6,7 +6,7 @@ public enum Difficulty {
 	 */
 	Hard,
 	/**
-	 * This question is of medium diffculty.
+	 * This question is of medium difficulty.
 	 */
 	Medium,
 	/**

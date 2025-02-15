@@ -5,8 +5,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-public class QuestionManager implements Serializable {
+/**
+ * @author Ibrahim Elnikety
+ * @version 0.5
+ * Implements the factory design pattern and the Singleton Design Pattern.
+ */
+public class QuestionFactory implements Serializable {
 	/**
 	 * 
 	 */
@@ -21,15 +25,16 @@ public class QuestionManager implements Serializable {
 	 * 
 	 * @param theQuestions the questions that will be asked.
 	 */
-	public QuestionManager(final ArrayList<AbstractQuestion> theQuestions) {
+	public QuestionFactory(final ArrayList<AbstractQuestion> theQuestions) {
 		myQuestions = theQuestions;
 
 		@SuppressWarnings("unused")
 		Connection conn = null;
-
-		try {
-			conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir"));
-		} catch (SQLException E) {
+		//TODO make a question database.
+		try { // get connection will create a file if not found. 
+			conn = DriverManager.getConnection("jdbc:sqlite:" 
+		+ System.getProperty("user.dir"));
+		} catch (final SQLException e) {
 
 		}
 	}
