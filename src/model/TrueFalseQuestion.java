@@ -1,5 +1,9 @@
 package model;
-
+/**
+ * @author Ibrahim ELnikety
+ * @version 1
+ * A true false question, can take booleans as input.
+ */
 public class TrueFalseQuestion extends AbstractQuestion {
 	/**
 	 * 

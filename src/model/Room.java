@@ -1,7 +1,14 @@
 package model;
-
+import controller.SystemControl;
 import java.io.Serializable;
 
+
+
+/**
+ * @author Ibrahim ELnikety
+ * @version 1
+ * A room, contains a question you have to answer, and a door that will open.
+ */
 public class Room implements Serializable {
 	/**
 	 * 
@@ -14,5 +21,10 @@ public class Room implements Serializable {
 	public Room() {
 		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 * When palyer enters a room.
+	 */
+	public void enter() {
+		SystemControl.triggerQuestion();
+	}
 }
