@@ -1,21 +1,20 @@
 package model;
 
-import java.io.Serializable;
+//import java.io.Serializable;
 /**
  * @author Ibrahim Elnikety
- * @version 0.3
- * Implements the singleton design pattern.
- * TODO make the fields not static, so it can be serialized.
+ * @version 0.3 Implements the singleton design pattern. TODO make the fields
+ *          not static, so it can be serialized.
  */
-public final class Maze implements Serializable {
+public final class Maze /* implements Serializable */ {
 	/**
 	 * A map of rooms.
 	 */
-	public static final Room[][] MAP = null; //TODO make map double array
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	public static final Room[][] MAP = null; // TODO make map double array
+//	/**
+//	 * 
+//	 */
+//	private static final long serialVersionUID = 1L;
 	/**
 	 * y coordinate.
 	 */
@@ -27,7 +26,14 @@ public final class Maze implements Serializable {
 
 	private Maze() {
 
-	} //might make the class not static later
+	} // might make the class not static later
+
+	/**
+	 * The map will stay the same size, but it's contents will change.
+	 */
+	protected static void loadMap() {
+
+	}
 
 //	/**
 //	 * Returns room North of player.

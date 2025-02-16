@@ -37,6 +37,7 @@ public class QuestionFactory implements Serializable {
 		} catch (final SQLException e) {
 
 		}
+		//TODO write rest, when database is set up
 	}
 
 	/**
