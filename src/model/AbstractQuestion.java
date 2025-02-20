@@ -4,9 +4,8 @@ import java.io.Serializable;
 
 /**
  * @author Ibrahim Elnikety
- * @version 0.7
- * an abstract question class. Has some default methods, that all question
- * classes should use.
+ * @version 0.7 an abstract question class. Has some default methods, that all
+ *          question classes should use.
  */
 public abstract class AbstractQuestion implements Serializable {
 	/**

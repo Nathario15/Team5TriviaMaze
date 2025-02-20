@@ -1,8 +1,9 @@
 package model;
+
 /**
  * @author Ibrahim Elnikety
- * @version 1.0
- * This indicates the difficulty of a queation, used to make sure hte player gets a good dsitrubtion.
+ * @version 1.0 This indicates the difficulty of a question, used to make sure
+ *          the player gets a good distribution.
  */
 public enum Difficulty {
 	/**

@@ -5,10 +5,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 /**
  * @author Ibrahim Elnikety
- * @version 0.5
- * Implements the factory design pattern and the Singleton Design Pattern.
+ * @version 0.5 Implements the factory design pattern and the Singleton Design
+ *          Pattern.
  */
 public class QuestionFactory implements Serializable {
 	/**
@@ -30,14 +31,13 @@ public class QuestionFactory implements Serializable {
 
 		@SuppressWarnings("unused")
 		Connection conn = null;
-		//TODO make a question database.
-		try { // get connection will create a file if not found. 
-			conn = DriverManager.getConnection("jdbc:sqlite:" 
-		+ System.getProperty("user.dir"));
+		// TODO make a question database.
+		try { // get connection will create a file if not found.
+			conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir"));
 		} catch (final SQLException e) {
 
 		}
-		//TODO write rest, when database is set up
+		// TODO write rest, when database is set up
 	}
 
 	/**
