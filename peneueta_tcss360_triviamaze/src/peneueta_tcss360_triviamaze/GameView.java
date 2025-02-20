@@ -76,29 +76,29 @@ public class GameView extends JFrame {
         mainPanel.add(instructionsPanel, "Instructions");
     }
     
-    public void NewGame() {
+    private void NewGame() {
     	//maze = new Maze();
     	//player = new Player();
     	//gameState = new GameState();
     	cardLayout.show(mainPanel, "Game");
     }
     
-    public void saveGame() {
+    private void saveGame() {
     	//gameState.saveState(maze, player);
     	JOptionPane.showMessageDialog(this, "Game saved successfully!");
     }
     
-    public void LoadGame() {
+    private void LoadGame() {
         //gameState.loadState();
         JOptionPane.showMessageDialog(this, "Game loaded successfully!");
         cardLayout.show(mainPanel, "Game");
     }
     
-    public void DisplayInstructions() {
+    private void DisplayInstructions() {
         cardLayout.show(mainPanel, "Instructions");
     }
     
-    public void DisplayAbout() {
+    private void DisplayAbout() {
         cardLayout.show(mainPanel, "About");
     }
 }
