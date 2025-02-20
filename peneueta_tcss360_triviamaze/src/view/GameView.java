@@ -1,4 +1,4 @@
-package peneueta_tcss360_triviamaze;
+package view;
 
 import javax.swing.*;
 import java.awt.*;
