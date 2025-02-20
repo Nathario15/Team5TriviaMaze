@@ -56,7 +56,7 @@ public class DatabaseManager {
      * Get a random question of the current difficulty
      * @return Question object or null if no questions available
      */
-    public Question getRandomQuestion() {
+    public AbstractQuestion getRandomQuestion() {
         String sql = "SELECT TOP 1 * FROM trivia_questions WHERE difficulty = ? ORDER BY Rnd()";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -76,7 +76,7 @@ public class DatabaseManager {
     /**
      * Create appropriate Question object from database result
      */
-    private Question createQuestionFromResultSet(ResultSet rs) throws SQLException {
+    private AbstractQuestion createQuestionFromResultSet(ResultSet rs) throws SQLException {
         String questionType = rs.getString("question_type");
         String questionText = rs.getString("question");
         String correctAnswer = rs.getString("correct_answer");
@@ -90,10 +90,10 @@ public class DatabaseManager {
                 answers.add(rs.getString("wrong_answer3"));
                 // Shuffle answers for randomized order
                 shuffleAnswers(answers);
-                return new MultipleChoiceQuestion(questionText, correctAnswer, answers);
+                return new MultipleChoiceQuestion(questionText, correctAnswer, (String[]) answers.toArray());
                 
             case "TRUE_FALSE":
-                return new TrueFalseQuestion(questionText, correctAnswer);
+                return new TrueFalseQuestion(questionText, Boolean.valueOf(correctAnswer));
                 
             case "SHORT_ANSWER":
                 return new ShortAnswerQuestion(questionText, correctAnswer);
