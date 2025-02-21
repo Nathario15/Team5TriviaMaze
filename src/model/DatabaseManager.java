@@ -143,7 +143,7 @@ public final class DatabaseManager {
 	 * @return true if questions exist, false otherwise
 	 */
 	public boolean hasQuestionsForDifficulty() {
-		String sql = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
+		final String sql = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
 
 		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
 			pstmt.setString(1, myDifficulty.toString());
@@ -200,7 +200,7 @@ public final class DatabaseManager {
 	 * @return number of questions available.
 	 */
 	public int getQuestionCount() {
-		String sql = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
+		final String sql = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
 
 		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
 			pstmt.setString(1, myDifficulty.toString());
