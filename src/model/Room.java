@@ -22,7 +22,7 @@ public class Room implements Serializable {
 	}
 
 	/**
-	 * When palyer enters a room.
+	 * When player enters a room.
 	 */
 	public void enter() {
 		SystemControl.triggerQuestion();

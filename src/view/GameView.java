@@ -105,14 +105,14 @@ public class GameView extends JFrame {
 		myCardLayout.show(myMainPanel, "Game");
 	}
 	/**
-	 * begins serialtion.
+	 * begins serialization.
 	 */
 	public void saveGame() {
 		// gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
 	/**
-	 * begins deserialtion.
+	 * begins deserialization.
 	 */
 	public void loadGame() {
 		// gameState.loadState();
