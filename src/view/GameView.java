@@ -26,11 +26,27 @@ public class GameView extends JFrame {
 	 */
 	private JPanel myMainPanel;
 	/**
+	 * Determines the width of the window.
+	 */
+	private final int myWidth = 800;
+	/**
+	 * Determines the height of the window.
+	 */
+	private final int myHeight = 600;
+	/**
+	 * Determines the number of rows.
+	 */
+	private final int myRows = 5;
+	/**
+	 * Determines the number of columns.
+	 */
+	private final int myCols = 5;
+	/**
 	 * Constructor.
 	 */
 	public GameView() {
 		setTitle("Trivia Maze Game");
-		setSize(800, 600);
+		setSize(myWidth, myHeight);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
@@ -57,7 +73,7 @@ public class GameView extends JFrame {
 
 	private void addMainMenu() {
 		final JPanel menuPanel = new JPanel();
-		menuPanel.setLayout(new GridLayout(5, 1));
+		menuPanel.setLayout(new GridLayout(myRows, myCols));
 
 		final JButton newGameButton = new JButton("New Game");
 		final JButton loadGameButton = new JButton("Load Game");

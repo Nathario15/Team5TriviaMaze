@@ -21,6 +21,10 @@ public final class DatabaseManager {
 	 */
 	private static final String DB_PATH = "minecraft_trivia.accdb";
 	/**
+	 * A code used to access questions.
+	 */
+	private static final String QUESTION_ACCESS = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
+	/**
 	 * an instance of the singleton.
 	 */
 	private static DatabaseManager instance;
@@ -143,9 +147,7 @@ public final class DatabaseManager {
 	 * @return true if questions exist, false otherwise
 	 */
 	public boolean hasQuestionsForDifficulty() {
-		final String sql = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
-
-		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
+		try (PreparedStatement pstmt = myConnection.prepareStatement(QUESTION_ACCESS)) {
 			pstmt.setString(1, myDifficulty.toString());
 			final ResultSet rs = pstmt.executeQuery();
 
@@ -200,9 +202,7 @@ public final class DatabaseManager {
 	 * @return number of questions available.
 	 */
 	public int getQuestionCount() {
-		final String sql = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
-
-		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
+		try (PreparedStatement pstmt = myConnection.prepareStatement(QUESTION_ACCESS)) {
 			pstmt.setString(1, myDifficulty.toString());
 			final ResultSet rs = pstmt.executeQuery();
 
