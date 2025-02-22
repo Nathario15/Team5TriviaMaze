@@ -1,8 +1,9 @@
 package model;
 
 /**
- * @author Ibrahim ELnikety
- * @version 1 A short Answer Question, has a textbox for you to type a answer.
+ * A Short Answer Question, has a textbox for you to type a answer.
+ * @author Ibrahim Elnikety
+ * @version 1
  */
 public class ShortAnswerQuestion extends AbstractQuestion {
 	/**

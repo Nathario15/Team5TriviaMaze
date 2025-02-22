@@ -2,9 +2,9 @@ package model;
 
 //import java.io.Serializable;
 /**
+ * Implements the singleton design pattern. TODO make the fields not static, so it can be serialized.
  * @author Ibrahim Elnikety
- * @version 0.3 Implements the singleton design pattern. TODO make the fields
- *          not static, so it can be serialized.
+ * @version 0.6 
  */
 public final class Maze /* implements Serializable */ {
 	/**

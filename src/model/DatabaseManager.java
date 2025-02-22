@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author Nathaniel
- * @version 0.7
  * DatabaseManager handles all database operations for the Minecraft Trivia Maze
  * game. Uses Microsoft Access database to store and retrieve questions.
+ * @author Nathaniel
+ * @version 0.7
  */
 public final class DatabaseManager {
 	/**

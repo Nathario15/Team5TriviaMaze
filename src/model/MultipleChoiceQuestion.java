@@ -1,9 +1,9 @@
 package model;
 
 /**
- * @author Ibrahim ELnikety
- * @version 1 A multiple Choice Question, Has a multiple options for you to
- *          pick, and you have to chose the right one.
+ * A multiple Choice Question, Has a multiple options for you to  pick, and you have to chose the right one.
+ * @author Ibrahim Elnikety
+ * @version 1 
  */
 public class MultipleChoiceQuestion extends AbstractQuestion {
 	/**

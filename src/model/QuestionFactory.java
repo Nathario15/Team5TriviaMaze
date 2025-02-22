@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * Implements the factory design pattern and the Singleton Design Pattern.
  * @author Ibrahim Elnikety
- * @version 0.5 Implements the factory design pattern and the Singleton Design
- *          Pattern.
+ * @version 0.5
  */
 public class QuestionFactory implements Serializable {
 	/**

@@ -5,9 +5,9 @@ import java.io.Serializable;
 import java.util.EnumMap;
 
 /**
- * @author Ibrahim ELnikety
- * @version 1 A room, contains a question you have to answer, and a door that
- *          will open.
+ *A room, contains a question you have to answer, and a door that will open.
+ * @author Ibrahim Elnikety
+ * @version 1.3 
  */
 public class Room implements Serializable {
 	/**
@@ -17,7 +17,7 @@ public class Room implements Serializable {
 	/**
 	 * Shows which doors are open.
 	 */
-	private EnumMap<Direction, Boolean> Doors;
+	private EnumMap<Direction, Boolean> myDoors;
 //	/**
 //	 * Door to the north.
 //	 */
@@ -39,10 +39,10 @@ public class Room implements Serializable {
 	 * Creates a room object.
 	 */
 	public Room() {
-		Doors.put(Direction.North, false);
-		Doors.put(Direction.South, false);
-		Doors.put(Direction.East, false);
-		Doors.put(Direction.East, false);
+		myDoors.put(Direction.North, false);
+		myDoors.put(Direction.South, false);
+		myDoors.put(Direction.East, false);
+		myDoors.put(Direction.East, false);
 	}
 
 	/**
@@ -51,6 +51,6 @@ public class Room implements Serializable {
 	 * @param theDir the direction you are going when you enter the room.
 	 */
 	public void enter(final Direction theDir) {
-		Doors.put(theDir.getOpposite(), true);
+		myDoors.put(theDir.getOpposite(), true);
 	}
 }
