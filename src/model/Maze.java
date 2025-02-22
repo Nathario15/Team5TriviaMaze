@@ -29,6 +29,24 @@ public final class Maze /* implements Serializable */ {
 	} // might make the class not static later
 
 	/**
+	 * used for testing.
+	 * 
+	 * @return
+	 */
+	protected static int getY() {
+		return y;
+	}
+
+	/**
+	 * used for testing.
+	 * 
+	 * @return
+	 */
+	protected static int getX() {
+		return x;
+	}
+
+	/**
 	 * The map will stay the same size, but it's contents will change.
 	 */
 	protected static void loadMap() {
@@ -114,6 +132,9 @@ public final class Maze /* implements Serializable */ {
 		}
 		if (theDirection == Direction.West) {
 			x--;
+		}
+		if (MAP == null) {
+			return null;
 		}
 		return MAP[x][y];
 
