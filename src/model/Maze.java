@@ -10,7 +10,14 @@ public final class Maze /* implements Serializable */ {
 	/**
 	 * A map of rooms.
 	 */
-	public static final Room[][] MAP = null; // TODO make map double array
+	public static final Room[][] MAP = { { null, null, null, null, null, null, null, null },
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			{ null, null, null, null, null, null, null, null } };
 //	/**
 //	 * 
 //	 */
