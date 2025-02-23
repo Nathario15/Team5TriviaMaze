@@ -10,13 +10,13 @@ class MazeTest {
 	void test() {
 		assertEquals(Maze.getX(), 0);
 		assertEquals(Maze.getY(), 0);
-		Maze.move(Direction.North);
+		Maze.setRoom(Direction.North);
 		assertEquals(Maze.getY(), 1);
-		Maze.move(Direction.South);
+		Maze.setRoom(Direction.South);
 		assertEquals(Maze.getY(), 0);
-		Maze.move(Direction.East);
+		Maze.setRoom(Direction.East);
 		assertEquals(Maze.getX(), 1);
-		Maze.move(Direction.West);
+		Maze.setRoom(Direction.West);
 		assertEquals(Maze.getX(), 0);
 	}
 

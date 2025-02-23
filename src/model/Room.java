@@ -1,6 +1,5 @@
 package model;
 
-import controller.SystemControl;
 import java.io.Serializable;
 import java.util.EnumMap;
 
@@ -17,7 +16,7 @@ public class Room implements Serializable {
 	/**
 	 * Shows which doors are open.
 	 */
-	private EnumMap<Direction, Boolean> myDoors;
+	protected EnumMap<Direction, DoorState> myDoors;
 //	/**
 //	 * Door to the north.
 //	 */
@@ -39,10 +38,10 @@ public class Room implements Serializable {
 	 * Creates a room object.
 	 */
 	public Room() {
-		myDoors.put(Direction.North, false);
-		myDoors.put(Direction.South, false);
-		myDoors.put(Direction.East, false);
-		myDoors.put(Direction.East, false);
+		myDoors.put(Direction.North, DoorState.Locked);
+		myDoors.put(Direction.South, DoorState.Locked);
+		myDoors.put(Direction.East, DoorState.Locked);
+		myDoors.put(Direction.East, DoorState.Locked);
 	}
 
 	/**
@@ -50,7 +49,16 @@ public class Room implements Serializable {
 	 * 
 	 * @param theDir the direction you are going when you enter the room.
 	 */
-	public void enter(final Direction theDir) {
-		myDoors.put(theDir.getOpposite(), true);
+	private void unlocked(final Direction theDir) {
+		myDoors.put(theDir.getOpposite(), DoorState.Open);
+	}
+	/**
+	 * When player leaves a room.
+	 * 
+	 * @param theDir the direction you are leaving when you enter the room.
+	 */
+	public void unlock(final Direction theDir) {
+		myDoors.put(theDir, DoorState.Open);
+		Maze.getRoom(theDir).unlocked(theDir);
 	}
 }

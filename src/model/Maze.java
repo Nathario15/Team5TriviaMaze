@@ -1,5 +1,7 @@
 package model;
 
+import controller.SystemControl;
+
 //import java.io.Serializable;
 /**
  * Implements the singleton design pattern. TODO make the fields not static, so it can be serialized.
@@ -127,7 +129,7 @@ public final class Maze /* implements Serializable */ {
 	 * @param dir
 	 * @return
 	 */
-	public static Room move(final Direction theDirection) {
+	protected static Room setRoom(final Direction theDirection) {
 		if (theDirection == Direction.North) {
 			y++;
 		}
@@ -143,7 +145,25 @@ public final class Maze /* implements Serializable */ {
 		if (MAP == null) {
 			return null;
 		}
+		
 		return MAP[x][y];
-
 	}
+	/**
+	 * moves and returns new room.
+	 * 
+	 * @param dir
+	 * @return
+	 */
+	public static Room Move(final Direction theDirection) {
+		final Room current = MAP[x][y];
+		if(current.myDoors.get(theDirection)==DoorState.Blocked) {
+			return null;
+		}
+		if(current.myDoors.get(theDirection)==DoorState.Locked) {
+			SystemControl.triggerQuestion();
+		}
+		return null;
+		//TODO finish this.
+	}
+	
 }
