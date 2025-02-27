@@ -12,24 +12,31 @@ import controller.SystemControl;
  */
 public final class Maze /* implements Serializable */ {
 	/**
+	 * How big the map is.
+	 */
+	public static final int MAP_SIZE = 8;
+	/**
 	 * A map of rooms.
 	 */
-	public static final Room[][] MAP = { 
-			{ null, null, 		null, 		null, 		null, 		null, 		null, 		null },
-			
-			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			
-			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			
-			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			
-			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			
-			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			
-			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			
-			{ null, null, 		null, 		null, 		null, 		null, 		null, 		null } };
+	public static final Room[][] MAP = {
+			// 0 1 2 3 4 5 6 7 8
+			{ null, null, null, null, null, null, null, null, null }, // 0
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 1
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 2
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 3
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 4
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 5
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 6
+
+			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 7
+
+			{ null, null, null, null, null, null, null, null, null } }; // 8
 //	/**
 //	 * 
 //	 */
@@ -37,11 +44,11 @@ public final class Maze /* implements Serializable */ {
 	/**
 	 * y coordinate.
 	 */
-	private static int y;
+	private static int y = MAP_SIZE / 2;
 	/**
 	 * x coordinate.
 	 */
-	private static int x;
+	private static int x = MAP_SIZE / 2;
 
 	private Maze() {
 
@@ -161,8 +168,8 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	public static boolean move(final Direction theDirection) {
-		//checks the room isn't null, checks that it is open
-		//if it is not open, checks that it is locked, then attempts to unlock it
+		// checks the room isn't null, checks that it is open
+		// if it is not open, checks that it is locked, then attempts to unlock it
 		return getRoom(theDirection) != null && getRoom().myDoors.get(theDirection) == DoorState.Open
 				|| getRoom().myDoors.get(theDirection) == DoorState.Locked && attempt(theDirection);
 	}

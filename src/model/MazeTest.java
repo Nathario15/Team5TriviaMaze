@@ -19,5 +19,9 @@ class MazeTest {
 		Maze.setRoom(Direction.West);
 		assertEquals(Maze.getX(), 0);
 	}
-
+	
+	@Test
+	void testDoors() {
+		
+	}
 }
