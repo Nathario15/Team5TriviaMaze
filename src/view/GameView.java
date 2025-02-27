@@ -14,9 +14,9 @@ public class GameView extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Maze maze; Will be used once Maze is implemented
-	private Player player; Will be used once Player is implemented
-	private GameState gameState; will be used once GameState is implemented
+	private Maze maze;
+	private Player player;
+	private GameState gameState;
 	/**
 	 * The card layout.
 	 */

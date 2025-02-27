@@ -38,21 +38,26 @@ public class GameState {
         questionsUsed.add(questionId);
     }
 
-    private void saveToFile(String filename) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
-            out.writeObject(this);
+    public void saveToFile(String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(currentPosition + "\n");
+            writer.write(lockedDoors.toString() + "\n");
+            writer.write(questionsUsed.toString() + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static GameState loadFromFile(String filename) {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
-            return (GameState) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+    public static GameState loadFromFile(String filename) {
+        GameState gameState = new GameState();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            gameState.currentPosition = Integer.parseInt(reader.readLine());
+            gameState.lockedDoors = new HashSet<>();
+            gameState.questionsUsed = new HashSet<>();
+        } catch (IOException e) {
             e.printStackTrace();
-            return new GameState(); // Return a new state if loading fails
         }
+        return gameState;
     }
 }
 
