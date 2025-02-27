@@ -18,6 +18,22 @@ public class GameView extends JFrame {
 	// private Player player; Will be used once Player is implemented
 	// private GameState gameState; will be used once GameState is implemented
 	/**
+	 * Game.
+	 */
+	private static String Game = "Game";
+	/**
+	 * Instructions.
+	 */
+	private static String Instructions = "Instructions";
+	/**
+	 * About.
+	 */
+	private static String About = "About";
+	/**
+	 * MainMenu.
+	 */
+	private static String MainMenu = "MainMenu";
+	/**
 	 * The card layout.
 	 */
 	private CardLayout myCardLayout;
@@ -71,14 +87,15 @@ public class GameView extends JFrame {
 		});
 	}
 
+	@SuppressWarnings("unused")
 	private void addMainMenu() {
 		final JPanel menuPanel = new JPanel();
 		menuPanel.setLayout(new GridLayout(myRows, myCols));
 
 		final JButton newGameButton = new JButton("New Game");
 		final JButton loadGameButton = new JButton("Load Game");
-		final JButton instructionsButton = new JButton("Instructions");
-		final JButton aboutBtn = new JButton("About");
+		final JButton instructionsButton = new JButton(Instructions);
+		final JButton aboutBtn = new JButton(About);
 		final JButton exitBtn = new JButton("Exit");
 
 		newGameButton.addActionListener(_ -> newGame());
@@ -93,13 +110,13 @@ public class GameView extends JFrame {
 		menuPanel.add(aboutBtn);
 		menuPanel.add(exitBtn);
 
-		myMainPanel.add(menuPanel, "MainMenu");
+		myMainPanel.add(menuPanel, MainMenu);
 	}
 
 	private void addGamePanel() {
 		final JPanel gamePanel = new JPanel();
 		gamePanel.add(new JLabel("Game currently in progress."));
-		myMainPanel.add(gamePanel, "Game");
+		myMainPanel.add(gamePanel, Game);
 	}
 
 	private void addInstructionsPanel() {
@@ -107,9 +124,9 @@ public class GameView extends JFrame {
 		instructionsPanel.add(
 				new JLabel("Instructions: You must navigate the maze by answering trivia questions about Minecraft."));
 		final JButton backButton = new JButton("Back");
-		backButton.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
+		backButton.addActionListener(_ -> myCardLayout.show(myMainPanel, MainMenu));
 		instructionsPanel.add(backButton);
-		myMainPanel.add(instructionsPanel, "Instructions");
+		myMainPanel.add(instructionsPanel, Instructions);
 	}
 	/**
 	 * starts a new game.
@@ -118,7 +135,7 @@ public class GameView extends JFrame {
 		// maze = new Maze();
 		// player = new Player();
 		// gameState = new GameState();
-		myCardLayout.show(myMainPanel, "Game");
+		myCardLayout.show(myMainPanel, Game);
 	}
 	/**
 	 * begins serialization.
@@ -133,18 +150,18 @@ public class GameView extends JFrame {
 	public void loadGame() {
 		// gameState.loadState();
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-		myCardLayout.show(myMainPanel, "Game");
+		myCardLayout.show(myMainPanel, Game);
 	}
 	/**
 	 * display instructions.
 	 */
 	public void displayInstructions() {
-		myCardLayout.show(myMainPanel, "Instructions");
+		myCardLayout.show(myMainPanel, Instructions);
 	}
 	/**
 	 * display about.
 	 */
 	public void displayAbout() {
-		myCardLayout.show(myMainPanel, "About");
+		myCardLayout.show(myMainPanel, About);
 	}
 }

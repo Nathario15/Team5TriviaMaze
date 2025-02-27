@@ -219,6 +219,7 @@ public final class DatabaseManager {
 	/**
 	 * Finalize method to ensure database connection is closed.
 	 */
+	@SuppressWarnings("removal")
 	@Override
 	protected void finalize() throws Throwable {
 		closeConnection();
