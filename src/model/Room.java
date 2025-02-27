@@ -55,10 +55,28 @@ public class Room implements Serializable {
 	/**
 	 * When player leaves a room.
 	 * 
-	 * @param theDir the direction you are leaving when you enter the room.
+	 * @param theDir the direction you are going when you leave the room.
 	 */
 	public void unlock(final Direction theDir) {
 		myDoors.put(theDir, DoorState.Open);
 		Maze.getRoom(theDir).unlocked(theDir);
+	}
+	
+	/**
+	 * When player fails to enter a room.
+	 * 
+	 * @param theDir the direction you are going when you fail to enter the room.
+	 */
+	private void blocked(final Direction theDir) {
+		myDoors.put(theDir.getOpposite(), DoorState.Open);
+	}
+	/**
+	 * When player fails to leave a room.
+	 * 
+	 * @param theDir the direction you are going when you fail to leave the room.
+	 */
+	public void block(final Direction theDir) {
+		myDoors.put(theDir, DoorState.Open);
+		Maze.getRoom(theDir).blocked(theDir);
 	}
 }

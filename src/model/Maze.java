@@ -4,22 +4,32 @@ import controller.SystemControl;
 
 //import java.io.Serializable;
 /**
- * Implements the singleton design pattern. TODO make the fields not static, so it can be serialized.
+ * Implements the singleton design pattern. TODO make the fields not static, so
+ * it can be serialized.
+ * 
  * @author Ibrahim Elnikety
- * @version 0.6 
+ * @version 0.6
  */
 public final class Maze /* implements Serializable */ {
 	/**
 	 * A map of rooms.
 	 */
-	public static final Room[][] MAP = { { null, null, null, null, null, null, null, null },
+	public static final Room[][] MAP = { 
+			{ null, null, 		null, 		null, 		null, 		null, 		null, 		null },
+			
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
+			
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null },
-			{ null, null, null, null, null, null, null, null } };
+			
+			{ null, null, 		null, 		null, 		null, 		null, 		null, 		null } };
 //	/**
 //	 * 
 //	 */
@@ -129,7 +139,7 @@ public final class Maze /* implements Serializable */ {
 	 * @param dir
 	 * @return
 	 */
-	protected static Room setRoom(final Direction theDirection) {
+	protected static void setRoom(final Direction theDirection) {
 		if (theDirection == Direction.North) {
 			y++;
 		}
@@ -142,28 +152,30 @@ public final class Maze /* implements Serializable */ {
 		if (theDirection == Direction.West) {
 			x--;
 		}
-		if (MAP == null) {
-			return null;
-		}
-		
-		return MAP[x][y];
 	}
+
 	/**
-	 * moves and returns new room.
+	 * moves and returns if successful.
 	 * 
 	 * @param dir
 	 * @return
 	 */
-	public static Room Move(final Direction theDirection) {
-		final Room current = MAP[x][y];
-		if(current.myDoors.get(theDirection)==DoorState.Blocked) {
-			return null;
-		}
-		if(current.myDoors.get(theDirection)==DoorState.Locked) {
-			SystemControl.triggerQuestion();
-		}
-		return null;
-		//TODO finish this.
+	public static boolean move(final Direction theDirection) {
+		//checks the room isn't null, checks that it is open
+		//if it is not open, checks that it is locked, then attempts to unlock it
+		return getRoom(theDirection) != null && getRoom().myDoors.get(theDirection) == DoorState.Open
+				|| getRoom().myDoors.get(theDirection) == DoorState.Locked && attempt(theDirection);
 	}
-	
+
+	private static boolean attempt(final Direction theDirection) {
+		if (SystemControl.triggerQuestion()) {
+			getRoom().unlock(theDirection);
+			setRoom(theDirection);
+			return true;
+		} else {
+			getRoom().block(theDirection);
+			return false;
+		}
+	}
+
 }
