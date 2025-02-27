@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class MazeTest {
 
 	@Test
-	void test() {
+	void testMovement() {
 		assertEquals(Maze.getX(), 0);
 		assertEquals(Maze.getY(), 0);
 		Maze.setRoom(Direction.North);

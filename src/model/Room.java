@@ -16,7 +16,7 @@ public class Room implements Serializable {
 	/**
 	 * Shows which doors are open.
 	 */
-	protected EnumMap<Direction, DoorState> myDoors;
+	protected final EnumMap<Direction, DoorState> myDoors = new EnumMap<>(Direction.class);
 //	/**
 //	 * Door to the north.
 //	 */
