@@ -38,7 +38,7 @@ public class GameState {
         questionsUsed.add(questionId);
     }
 
-    public void saveToFile(String filename) {
+    private void saveToFile(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(currentPosition + "\n");
             writer.write(lockedDoors.toString() + "\n");
@@ -48,7 +48,7 @@ public class GameState {
         }
     }
 
-    public static GameState loadFromFile(String filename) {
+    private static GameState loadFromFile(String filename) {
         GameState gameState = new GameState();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             gameState.currentPosition = Integer.parseInt(reader.readLine());
