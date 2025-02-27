@@ -14,9 +14,9 @@ public class GameView extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// private Maze maze; Will be used once Maze is implemented
-	// private Player player; Will be used once Player is implemented
-	// private GameState gameState; will be used once GameState is implemented
+	private Maze maze; Will be used once Maze is implemented
+	private Player player; Will be used once Player is implemented
+	private GameState gameState; will be used once GameState is implemented
 	/**
 	 * The card layout.
 	 */
@@ -99,23 +99,23 @@ public class GameView extends JFrame {
 	 * starts a new game.
 	 */
 	public void newGame() {
-		// maze = new Maze();
-		// player = new Player();
-		// gameState = new GameState();
+		maze = new Maze();
+		player = new Player();
+		gameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
 	/**
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		// gameState.saveState(maze, player);
+		gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
 	/**
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		// gameState.loadState();
+		gameState.loadState();
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
 		myCardLayout.show(myMainPanel, "Game");
 	}
