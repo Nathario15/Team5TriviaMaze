@@ -37,7 +37,7 @@ public class GameView extends JFrame {
 		myCardLayout = new CardLayout();
 		myMainPanel = new JPanel(myCardLayout);
 
-		// AddMainMenu();
+	    addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
 		// AddAboutPanel();
