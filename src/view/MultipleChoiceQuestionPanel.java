@@ -18,5 +18,4 @@ public class MultipleChoiceQuestionPanel extends JPanel {
     private ButtonGroup answerGroup;
     private JPanel answerPanel;
     private JButton submitButton;
-    
 }
