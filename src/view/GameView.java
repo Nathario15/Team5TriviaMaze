@@ -40,7 +40,7 @@ public class GameView extends JFrame {
 	    addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
-		// AddAboutPanel();
+		addAboutPanel();
 
 		add(myMainPanel);
 	}
@@ -95,6 +95,16 @@ public class GameView extends JFrame {
 		instructionsPanel.add(backButton);
 		myMainPanel.add(instructionsPanel, "Instructions");
 	}
+	
+	private void addAboutPanel() {
+        JPanel aboutPanel = new JPanel();
+        aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
+        JButton backBtn = new JButton("Back");
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
+        aboutPanel.add(backBtn);
+        mainPanel.add(aboutPanel, "About");
+    }
+	
 	/**
 	 * starts a new game.
 	 */
