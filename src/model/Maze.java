@@ -18,7 +18,7 @@ public final class Maze /* implements Serializable */ {
 	/**
 	 * A map of rooms.
 	 */
-	public static final Room[][] MAP = {
+	static final Room[][] MAP = {
 			// 0 1 2 3 4 5 6 7 8
 			{ null, null, null, null, null, null, null, null, null }, // 0
 
@@ -59,7 +59,7 @@ public final class Maze /* implements Serializable */ {
 	 * 
 	 * @return
 	 */
-	protected static int getY() {
+	public static int getY() {
 		return y;
 	}
 
@@ -68,7 +68,7 @@ public final class Maze /* implements Serializable */ {
 	 * 
 	 * @return
 	 */
-	protected static int getX() {
+	public static int getX() {
 		return x;
 	}
 
@@ -149,14 +149,13 @@ public final class Maze /* implements Serializable */ {
 	protected static void setRoom(final Direction theDirection) {
 		if (theDirection == Direction.North) {
 			y++;
-		}
+		}else
 		if (theDirection == Direction.South) {
 			y--;
-		}
+		}else
 		if (theDirection == Direction.East) {
 			x++;
-		}
-		if (theDirection == Direction.West) {
+		}else{
 			x--;
 		}
 	}

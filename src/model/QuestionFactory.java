@@ -26,11 +26,11 @@ public class QuestionFactory implements Serializable {
 	 * 
 	 * @param theQuestions the questions that will be asked.
 	 */
-	public QuestionFactory(final ArrayList<AbstractQuestion> theQuestions) {
-		myQuestions = theQuestions;
+	public QuestionFactory() {
 
 		@SuppressWarnings("unused")
 		Connection conn = null;
+		myQuestions=null;
 		// TODO make a question database.
 		try { // get connection will create a file if not found.
 			conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir"));

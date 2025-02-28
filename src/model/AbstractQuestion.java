@@ -15,11 +15,11 @@ public abstract class AbstractQuestion implements Serializable {
 	/**
 	 * The Question that will be asked.
 	 */
-	protected final String myQuestion;
+	public final String myQuestion;
 	/**
 	 * The correct answer.
 	 */
-	protected final String myAnswer;
+	public final String myAnswer;
 
 	/**
 	 * Creates abstract question.
@@ -30,6 +30,7 @@ public abstract class AbstractQuestion implements Serializable {
 	public AbstractQuestion(final String theQuestion, final String theAnswer) {
 		this.myQuestion = theQuestion;
 		this.myAnswer = theAnswer;
+		//TODO check data
 	}
 
 	/**
