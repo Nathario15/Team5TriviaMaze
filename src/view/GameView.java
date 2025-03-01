@@ -14,9 +14,7 @@ public class GameView extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Maze maze;
-	private Player player;
-	private GameState gameState;
+	// private GameState gameState;
 	/**
 	 * The card layout.
 	 */
@@ -25,6 +23,7 @@ public class GameView extends JFrame {
 	 * The main panel.
 	 */
 	private JPanel myMainPanel;
+
 	/**
 	 * Constructor.
 	 */
@@ -37,13 +36,14 @@ public class GameView extends JFrame {
 		myCardLayout = new CardLayout();
 		myMainPanel = new JPanel(myCardLayout);
 
-	    addMainMenu();
+		addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
 		addAboutPanel();
 
 		add(myMainPanel);
 	}
+
 	/**
 	 * 
 	 * @param args
@@ -95,46 +95,48 @@ public class GameView extends JFrame {
 		instructionsPanel.add(backButton);
 		myMainPanel.add(instructionsPanel, "Instructions");
 	}
-	
+
 	private void addAboutPanel() {
-        JPanel aboutPanel = new JPanel();
-        aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
-        JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
-        aboutPanel.add(backBtn);
-        mainPanel.add(aboutPanel, "About");
-    }
-	
+		JPanel aboutPanel = new JPanel();
+		aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
+		JButton backBtn = new JButton("Back");
+		backBtn.addActionListener(e -> myCardLayout.show(myMainPanel, "MainMenu"));
+		aboutPanel.add(backBtn);
+		myMainPanel.add(aboutPanel, "About");
+	}
+
 	/**
 	 * starts a new game.
 	 */
 	public void newGame() {
-		maze = new Maze();
-		player = new Player();
-		gameState = new GameState();
+		// gameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
+
 	/**
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		gameState.saveState(maze, player);
+		// gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
+
 	/**
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		gameState.loadState();
+		// gameState.loadState();
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
 		myCardLayout.show(myMainPanel, "Game");
 	}
+
 	/**
 	 * display instructions.
 	 */
 	public void displayInstructions() {
 		myCardLayout.show(myMainPanel, "Instructions");
 	}
+
 	/**
 	 * display about.
 	 */

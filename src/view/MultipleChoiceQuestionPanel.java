@@ -3,7 +3,6 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import model.MultipleChoiceQuestion;
-import model.Player;
 import model.GameState;
 
 public class MultipleChoiceQuestionPanel extends JPanel {
@@ -11,7 +10,7 @@ public class MultipleChoiceQuestionPanel extends JPanel {
     
     private GameView gameView;
     private MultipleChoiceQuestion question;
-    private Player player;
+//    private Player player;
     private GameState gameState;
     
     private JLabel questionLabel;

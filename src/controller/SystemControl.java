@@ -191,4 +191,9 @@ public final class SystemControl {
         currentRoom = null;
         // Additional cleanup as needed
     }
+
+	public static boolean triggerQuestion() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

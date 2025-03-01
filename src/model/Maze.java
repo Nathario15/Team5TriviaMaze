@@ -149,13 +149,11 @@ public final class Maze /* implements Serializable */ {
 	protected static void setRoom(final Direction theDirection) {
 		if (theDirection == Direction.North) {
 			y++;
-		}else
-		if (theDirection == Direction.South) {
+		} else if (theDirection == Direction.South) {
 			y--;
-		}else
-		if (theDirection == Direction.East) {
+		} else if (theDirection == Direction.East) {
 			x++;
-		}else{
+		} else {
 			x--;
 		}
 	}
