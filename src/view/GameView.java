@@ -8,15 +8,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import model.GameState;
 
-public class GameView extends JFrame {
+public final class GameView extends JFrame {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private Maze maze;
 	//private Player player;
-	//private GameState gameState;
+	private GameState gameState;
 	/**
 	 * The card layout.
 	 */
@@ -98,7 +98,7 @@ public class GameView extends JFrame {
 	
 	private void addAboutPanel() {
         JPanel aboutPanel = new JPanel();
-        aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
+        aboutPanel.add(new JLabel("Created by Group 5, consisting of Nathaniel, Jayden, and Ibrahim."));
         JButton backBtn = new JButton("Back");
         backBtn.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
         aboutPanel.add(backBtn);
@@ -109,9 +109,8 @@ public class GameView extends JFrame {
 	 * starts a new game.
 	 */
 	public void newGame() {
-		//maze = new Maze();
 		//player = new Player();
-		//gameState = new GameState();
+		gameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
 	/**
