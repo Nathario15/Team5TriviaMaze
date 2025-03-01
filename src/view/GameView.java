@@ -14,25 +14,9 @@ public class GameView extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// private Maze maze; Will be used once Maze is implemented
-	// private Player player; Will be used once Player is implemented
-	// private GameState gameState; will be used once GameState is implemented
-	/**
-	 * Game.
-	 */
-	private static String Game = "Game";
-	/**
-	 * Instructions.
-	 */
-	private static String Instructions = "Instructions";
-	/**
-	 * About.
-	 */
-	private static String About = "About";
-	/**
-	 * MainMenu.
-	 */
-	private static String MainMenu = "MainMenu";
+	private Maze maze;
+	private Player player;
+	private GameState gameState;
 	/**
 	 * The card layout.
 	 */
@@ -42,37 +26,21 @@ public class GameView extends JFrame {
 	 */
 	private JPanel myMainPanel;
 	/**
-	 * Determines the width of the window.
-	 */
-	private final int myWidth = 800;
-	/**
-	 * Determines the height of the window.
-	 */
-	private final int myHeight = 600;
-	/**
-	 * Determines the number of rows.
-	 */
-	private final int myRows = 5;
-	/**
-	 * Determines the number of columns.
-	 */
-	private final int myCols = 5;
-	/**
 	 * Constructor.
 	 */
 	public GameView() {
 		setTitle("Trivia Maze Game");
-		setSize(myWidth, myHeight);
+		setSize(800, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		myCardLayout = new CardLayout();
 		myMainPanel = new JPanel(myCardLayout);
 
-		// AddMainMenu();
+	    addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
-		// AddAboutPanel();
+		addAboutPanel();
 
 		add(myMainPanel);
 	}
@@ -87,15 +55,14 @@ public class GameView extends JFrame {
 		});
 	}
 
-	@SuppressWarnings("unused")
 	private void addMainMenu() {
 		final JPanel menuPanel = new JPanel();
-		menuPanel.setLayout(new GridLayout(myRows, myCols));
+		menuPanel.setLayout(new GridLayout(5, 1));
 
 		final JButton newGameButton = new JButton("New Game");
 		final JButton loadGameButton = new JButton("Load Game");
-		final JButton instructionsButton = new JButton(Instructions);
-		final JButton aboutBtn = new JButton(About);
+		final JButton instructionsButton = new JButton("Instructions");
+		final JButton aboutBtn = new JButton("About");
 		final JButton exitBtn = new JButton("Exit");
 
 		newGameButton.addActionListener(_ -> newGame());
@@ -110,13 +77,13 @@ public class GameView extends JFrame {
 		menuPanel.add(aboutBtn);
 		menuPanel.add(exitBtn);
 
-		myMainPanel.add(menuPanel, MainMenu);
+		myMainPanel.add(menuPanel, "MainMenu");
 	}
 
 	private void addGamePanel() {
 		final JPanel gamePanel = new JPanel();
 		gamePanel.add(new JLabel("Game currently in progress."));
-		myMainPanel.add(gamePanel, Game);
+		myMainPanel.add(gamePanel, "Game");
 	}
 
 	private void addInstructionsPanel() {
@@ -124,44 +91,54 @@ public class GameView extends JFrame {
 		instructionsPanel.add(
 				new JLabel("Instructions: You must navigate the maze by answering trivia questions about Minecraft."));
 		final JButton backButton = new JButton("Back");
-		backButton.addActionListener(_ -> myCardLayout.show(myMainPanel, MainMenu));
+		backButton.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
 		instructionsPanel.add(backButton);
-		myMainPanel.add(instructionsPanel, Instructions);
+		myMainPanel.add(instructionsPanel, "Instructions");
 	}
+	
+	private void addAboutPanel() {
+        JPanel aboutPanel = new JPanel();
+        aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
+        JButton backBtn = new JButton("Back");
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
+        aboutPanel.add(backBtn);
+        mainPanel.add(aboutPanel, "About");
+    }
+	
 	/**
 	 * starts a new game.
 	 */
 	public void newGame() {
-		// maze = new Maze();
-		// player = new Player();
-		// gameState = new GameState();
-		myCardLayout.show(myMainPanel, Game);
+		maze = new Maze();
+		player = new Player();
+		gameState = new GameState();
+		myCardLayout.show(myMainPanel, "Game");
 	}
 	/**
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		// gameState.saveState(maze, player);
+		gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
 	/**
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		// gameState.loadState();
+		gameState.loadState();
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-		myCardLayout.show(myMainPanel, Game);
+		myCardLayout.show(myMainPanel, "Game");
 	}
 	/**
 	 * display instructions.
 	 */
 	public void displayInstructions() {
-		myCardLayout.show(myMainPanel, Instructions);
+		myCardLayout.show(myMainPanel, "Instructions");
 	}
 	/**
 	 * display about.
 	 */
 	public void displayAbout() {
-		myCardLayout.show(myMainPanel, About);
+		myCardLayout.show(myMainPanel, "About");
 	}
 }
