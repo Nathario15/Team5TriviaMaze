@@ -14,9 +14,9 @@ public class GameView extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Maze maze;
-	private Player player;
-	private GameState gameState;
+	//private Maze maze;
+	//private Player player;
+	//private GameState gameState;
 	/**
 	 * The card layout.
 	 */
@@ -100,7 +100,7 @@ public class GameView extends JFrame {
         JPanel aboutPanel = new JPanel();
         aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
         JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(e -> myCardLayout.show(myMainPanel, "MainMenu"));
+        backBtn.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
         aboutPanel.add(backBtn);
         myMainPanel.add(aboutPanel, "About");
     }
@@ -109,23 +109,23 @@ public class GameView extends JFrame {
 	 * starts a new game.
 	 */
 	public void newGame() {
-		maze = new Maze();
-		player = new Player();
-		gameState = new GameState();
+		//maze = new Maze();
+		//player = new Player();
+		//gameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
 	/**
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		gameState.saveState(maze, player);
+		//gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
 	/**
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		gameState.loadState();
+		//gameState.loadState();
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
 		myCardLayout.show(myMainPanel, "Game");
 	}
