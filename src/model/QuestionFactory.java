@@ -30,7 +30,7 @@ public class QuestionFactory implements Serializable {
 
 		@SuppressWarnings("unused")
 		Connection conn = null;
-		myQuestions=null;
+		myQuestions = null;
 		// TODO make a question database.
 		try { // get connection will create a file if not found.
 			conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir"));
