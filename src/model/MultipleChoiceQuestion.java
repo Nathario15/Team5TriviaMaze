@@ -24,16 +24,33 @@ public class MultipleChoiceQuestion extends AbstractQuestion {
 	 */
 	public MultipleChoiceQuestion(final String theQuestion, final String theAnswer, final String[] theChoices) {
 		super(theQuestion, theAnswer);
-		myChoices = theChoices;
+		this.myChoices = theChoices;
 	}
 
-	/**
-	 * The whole point of this is to get the number of questions, so GUI elements
-	 * can be sized correctly.
-	 * 
-	 * @return
-	 */
-	public int getChoices() {
-		return myChoices.length;
-	}
+    /**
+     * Gets the number of choices.
+     * 
+     * @return the number of choices
+     */
+    public int getChoiceCount() {
+        return myChoices.length;
+    }
+    
+    /**
+     * Gets the choices.
+     * 
+     * @return array of choices
+     */
+    public String[] getChoices() {
+        return Arrays.copyOf(myChoices, myChoices.length);
+    }
+    
+    /**
+     * Gets the choices as a list.
+     * 
+     * @return list of choices
+     */
+    public List<String> getChoicesList() {
+        return Arrays.asList(myChoices);
+    }
 }
