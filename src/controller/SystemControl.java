@@ -24,8 +24,6 @@ public final class SystemControl {
     
     // Model components
     private final DatabaseManager databaseManager;
-    private Maze maze;
-    private Room currentRoom;
     private boolean gameActive;
     
     /**
@@ -60,8 +58,7 @@ public final class SystemControl {
                 return false;
             }
             
-            maze = new Maze(); // Initialize new maze
-            currentRoom = maze.getStartingRoom();
+
             gameActive = true;
             return true;
         } catch (Exception e) {
@@ -70,58 +67,60 @@ public final class SystemControl {
         }
     }
     
-    /**
-     * Handles player movement attempt in a direction.
-     * @param direction The direction to move
-     * @return true if movement successful
-     */
-    public boolean attemptMove(Direction direction) {
-        if (!gameActive) {
-            return false;
-        }
-        
-        Room nextRoom = maze.getRoom(direction);
-        if (nextRoom == null || !canEnterRoom(nextRoom)) {
-            return false;
-        }
-        
-        AbstractQuestion question = databaseManager.getRandomQuestion();
-        if (question == null) {
-            LOGGER.warning("Failed to get question for room entry");
-            return false;
-        }
-        
-        // The view will need to handle displaying the question and getting the answer
-        return true;
-    }
+//    /**
+//     * Handles player movement attempt in a direction.
+//     * @param direction The direction to move
+//     * @return true if movement successful
+//     */
+//    public boolean attemptMove(Direction direction) {
+//        if (!gameActive) {
+//            return false;
+//        }
+//        
+//        Room nextRoom = maze.getRoom(direction);
+//        if (nextRoom == null || !canEnterRoom(nextRoom)) {
+//            return false;
+//        }
+//        
+//        AbstractQuestion question = databaseManager.getRandomQuestion();
+//        if (question == null) {
+//            LOGGER.warning("Failed to get question for room entry");
+//            return false;
+//        }
+//        
+//        // The view will need to handle displaying the question and getting the answer
+//        return true;
+//    }
     
-    /**
-     * Processes the answer to a question.
-     * @param question The question being answered
-     * @param answer The player's answer
-     * @return true if answer is correct
-     */
-    public boolean processAnswer(AbstractQuestion question, String answer) {
-        if (!gameActive || question == null) {
-            return false;
-        }
-        
-        boolean correct = question.isCorrect(answer);
-        if (correct) {
-            moveToNextRoom();
-        } else {
-            handleIncorrectAnswer();
-        }
-        
-        return correct;
-    }
+//    /**
+//     * Processes the answer to a question.
+//     * @param question The question being answered
+//     * @param answer The player's answer
+//     * @return true if answer is correct
+//     */
+//    public boolean processAnswer(AbstractQuestion question, String answer) {
+//        if (!gameActive || question == null) {
+//            return false;
+//        }
+//        
+//        boolean correct = question.isCorrect(answer);
+//        if (correct) {
+//            moveToNextRoom();
+//        } else {
+//            handleIncorrectAnswer();
+//        }
+//        
+//        return correct;
+//    }
     
     /**
      * Checks if the game has been won.
      * @return true if player has reached the end room
      */
     public boolean checkWinCondition() {
-        return gameActive && currentRoom != null && currentRoom.isEndRoom();
+        //return gameActive && currentRoom != null && currentRoom.isEndRoom();
+    	return false;
+    	//TODO
     }
     
     /**
@@ -129,44 +128,46 @@ public final class SystemControl {
      * @return true if player can no longer reach the end
      */
     public boolean checkLoseCondition() {
-        return gameActive && !maze.hasValidPathToEnd();
+        //return gameActive && !maze.hasValidPathToEnd();
+    	return false;
+    	//TODO
     }
     
-    /**
-     * Updates game state after correct answer and movement.
-     */
-    private void moveToNextRoom() {
-        if (currentRoom != null) {
-            currentRoom = maze.getCurrentRoom();
-            if (checkWinCondition()) {
-                gameActive = false;
-                // View should be notified of win
-            }
-        }
-    }
+//    /**
+//     * Updates game state after correct answer and movement.
+//     */
+//    private void moveToNextRoom() {
+//        if (currentRoom != null) {
+//            currentRoom = maze.getCurrentRoom();
+//            if (checkWinCondition()) {
+//                gameActive = false;
+//                // View should be notified of win
+//            }
+//        }
+//    }
     
-    /**
-     * Handles consequences of incorrect answer.
-     */
-    private void handleIncorrectAnswer() {
-        if (currentRoom != null) {
-            currentRoom.lockDoor(maze.getLastAttemptedDirection());
-            if (checkLoseCondition()) {
-                gameActive = false;
-                // View should be notified of loss
-            }
-        }
-    }
+//    /**
+//     * Handles consequences of incorrect answer.
+//     */
+//    private void handleIncorrectAnswer() {
+//        if (currentRoom != null) {
+//            currentRoom.lockDoor(maze.getLastAttemptedDirection());
+//            if (checkLoseCondition()) {
+//                gameActive = false;
+//                // View should be notified of loss
+//            }
+//        }
+//    }
     
-    /**
-     * Checks if a room can be entered.
-     * @param room The room to check
-     * @return true if room can be entered
-     */
-    private boolean canEnterRoom(Room room) {
-        return room != null && !room.isLocked();
-    }
-    
+//    /**
+//     * Checks if a room can be entered.
+//     * @param room The room to check
+//     * @return true if room can be entered
+//     */
+//    private boolean canEnterRoom(Room room) {
+//        return room != null && !room.isLocked();
+//    }
+//    
     /**
      * Gets the current game difficulty.
      * @return current Difficulty
@@ -188,7 +189,6 @@ public final class SystemControl {
      */
     public void endGame() {
         gameActive = false;
-        currentRoom = null;
         // Additional cleanup as needed
     }
 
