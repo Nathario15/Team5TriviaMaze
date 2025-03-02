@@ -25,6 +25,7 @@ public final class GameView extends JFrame {
 	 * The main panel.
 	 */
 	private JPanel myMainPanel;
+
 	/**
 	 * Constructor.
 	 */
@@ -37,13 +38,14 @@ public final class GameView extends JFrame {
 		myCardLayout = new CardLayout();
 		myMainPanel = new JPanel(myCardLayout);
 
-	    addMainMenu();
+		addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
 		addAboutPanel();
 
 		add(myMainPanel);
 	}
+
 	/**
 	 * 
 	 * @param args
@@ -95,16 +97,16 @@ public final class GameView extends JFrame {
 		instructionsPanel.add(backButton);
 		myMainPanel.add(instructionsPanel, "Instructions");
 	}
-	
+
 	private void addAboutPanel() {
-        JPanel aboutPanel = new JPanel();
-        aboutPanel.add(new JLabel("Created by Group 5, consisting of Nathaniel, Jayden, and Ibrahim."));
-        JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
-        aboutPanel.add(backBtn);
-        myMainPanel.add(aboutPanel, "About");
-    }
-	
+		JPanel aboutPanel = new JPanel();
+		aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
+		JButton backBtn = new JButton("Back");
+		backBtn.addActionListener(e -> myCardLayout.show(myMainPanel, "MainMenu"));
+		aboutPanel.add(backBtn);
+		myMainPanel.add(aboutPanel, "About");
+	}
+
 	/**
 	 * starts a new game.
 	 */
@@ -113,6 +115,7 @@ public final class GameView extends JFrame {
 		gameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
+
 	/**
 	 * begins serialization.
 	 */
@@ -120,6 +123,7 @@ public final class GameView extends JFrame {
 		//gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
+
 	/**
 	 * begins deserialization.
 	 */
@@ -128,12 +132,14 @@ public final class GameView extends JFrame {
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
 		myCardLayout.show(myMainPanel, "Game");
 	}
+
 	/**
 	 * display instructions.
 	 */
 	public void displayInstructions() {
 		myCardLayout.show(myMainPanel, "Instructions");
 	}
+
 	/**
 	 * display about.
 	 */
