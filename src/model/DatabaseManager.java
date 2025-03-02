@@ -19,7 +19,7 @@ public final class DatabaseManager {
 	/**
 	 * path of database.
 	 */
-	private static final String DB_PATH = "minecraft_trivia.accdb";
+	private static final String DB_PATH = "minecraft_trivia.db";
 	/**
 	 * A code used to access questions.
 	 */

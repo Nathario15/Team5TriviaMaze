@@ -8,14 +8,14 @@ class MazeTest {
 
 	@Test
 	void testDoors() {
-		assertEquals(Maze.getRoom().myDoors.get(Direction.North), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.North).myDoors.get(Direction.North.getOpposite()), DoorState.Locked);
-		assertEquals(Maze.getRoom().myDoors.get(Direction.South), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.South).myDoors.get(Direction.South.getOpposite()), DoorState.Locked);
-		assertEquals(Maze.getRoom().myDoors.get(Direction.East), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.East).myDoors.get(Direction.East.getOpposite()), DoorState.Locked);
-		assertEquals(Maze.getRoom().myDoors.get(Direction.West), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.West).myDoors.get(Direction.West.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom().myDoors.get(Direction.NORTH), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.NORTH).myDoors.get(Direction.NORTH.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom().myDoors.get(Direction.SOUTH), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.SOUTH).myDoors.get(Direction.SOUTH.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom().myDoors.get(Direction.EAST), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.EAST).myDoors.get(Direction.EAST.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom().myDoors.get(Direction.WEST), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.WEST).myDoors.get(Direction.WEST.getOpposite()), DoorState.Locked);
 		
 		
 	}
@@ -24,13 +24,13 @@ class MazeTest {
 	void testMovement() {
 		assertEquals(Maze.getX(), 0);
 		assertEquals(Maze.getY(), 0);
-		Maze.setRoom(Direction.North);
+		Maze.setRoom(Direction.NORTH);
 		assertEquals(Maze.getY(), 1);
-		Maze.setRoom(Direction.South);
+		Maze.setRoom(Direction.SOUTH);
 		assertEquals(Maze.getY(), 0);
-		Maze.setRoom(Direction.East);
+		Maze.setRoom(Direction.EAST);
 		assertEquals(Maze.getX(), 1);
-		Maze.setRoom(Direction.West);
+		Maze.setRoom(Direction.WEST);
 		assertEquals(Maze.getX(), 0);
 	}
 }

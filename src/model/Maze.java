@@ -115,16 +115,16 @@ public final class Maze /* implements Serializable */ {
 	 */
 	public static Room getRoom(final Direction theDirection) {
 		Room temp = null;
-		if (theDirection == Direction.North) {
+		if (theDirection == Direction.NORTH) {
 			temp = MAP[x][y + 1];
 		}
-		if (theDirection == Direction.South) {
+		if (theDirection == Direction.SOUTH) {
 			temp = MAP[x][y - 1];
 		}
-		if (theDirection == Direction.East) {
+		if (theDirection == Direction.EAST) {
 			temp = MAP[x + 1][y];
 		}
-		if (theDirection == Direction.West) {
+		if (theDirection == Direction.WEST) {
 			temp = MAP[x + 1][y];
 		}
 		return temp;
@@ -147,13 +147,13 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	protected static void setRoom(final Direction theDirection) {
-		if (theDirection == Direction.North) {
+		if (theDirection == Direction.NORTH) {
 			y++;
 		}else
-		if (theDirection == Direction.South) {
+		if (theDirection == Direction.SOUTH) {
 			y--;
 		}else
-		if (theDirection == Direction.East) {
+		if (theDirection == Direction.EAST) {
 			x++;
 		}else{
 			x--;
