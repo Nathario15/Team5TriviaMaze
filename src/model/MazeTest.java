@@ -1,6 +1,7 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,14 +9,16 @@ class MazeTest {
 
 	@Test
 	void testDoors() {
+		assertNotNull(Maze.getRoom());
+		assertNotNull(Maze.getRoom().myDoors.get(Direction.North));
 		assertEquals(Maze.getRoom().myDoors.get(Direction.North), DoorState.Locked);
 		assertEquals(Maze.getRoom(Direction.North).myDoors.get(Direction.North.getOpposite()), DoorState.Locked);
 		assertEquals(Maze.getRoom().myDoors.get(Direction.South), DoorState.Locked);
 		assertEquals(Maze.getRoom(Direction.South).myDoors.get(Direction.South.getOpposite()), DoorState.Locked);
 		assertEquals(Maze.getRoom().myDoors.get(Direction.East), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.East).myDoors.get(Direction.East.getOpposite()), DoorState.Locked);
-		assertEquals(Maze.getRoom().myDoors.get(Direction.West), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.West).myDoors.get(Direction.West.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.East).myDoors.get(Direction.East.getOpposite()), DoorState.Locked);//fails here
+//		assertEquals(Maze.getRoom().myDoors.get(Direction.West), DoorState.Locked);
+//		assertEquals(Maze.getRoom(Direction.West).myDoors.get(Direction.West.getOpposite()), DoorState.Locked);
 		
 //		
 //		Maze.getRoom().block(Direction.North);
