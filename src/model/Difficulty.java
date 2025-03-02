@@ -9,13 +9,13 @@ public enum Difficulty {
 	/**
 	 * This question is very hard.
 	 */
-	Hard,
+	HARD,
 	/**
 	 * This question is of medium difficulty.
 	 */
-	Medium,
+	MEDIUM,
 	/**
 	 * This question is easy.
 	 */
-	Easy;
+	EASY;
 }

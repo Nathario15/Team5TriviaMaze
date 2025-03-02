@@ -9,36 +9,36 @@ public enum Direction {
 	/**
 	 * North.
 	 */
-	North,
+	NORTH,
 	/**
 	 * South.
 	 */
-	South,
+	SOUTH,
 	/**
 	 * East.
 	 */
-	East,
+	EAST,
 	/**
 	 * West.
 	 */
-	West;
+	WEST;
 	/**
 	 * Returns the opposite direction.
 	 * @return
 	 */
 	public Direction getOpposite() {
 		Direction dir = null;
-		if (this == North) {
-			dir = South;
+		if (this == NORTH) {
+			dir = SOUTH;
 		}
-		if (this == South) {
-			dir = North;
+		if (this == SOUTH) {
+			dir = NORTH;
 		}
-		if (this == East) {
-			dir = West;
+		if (this == EAST) {
+			dir = WEST;
 		}
-		if (this == West) {
-			dir = East;
+		if (this == WEST) {
+			dir = EAST;
 		}
 		return dir;
 	}

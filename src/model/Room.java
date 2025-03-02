@@ -38,10 +38,10 @@ public class Room implements Serializable {
 	 * Creates a room object.
 	 */
 	public Room() {
-		myDoors.put(Direction.North, DoorState.Locked);
-		myDoors.put(Direction.South, DoorState.Locked);
-		myDoors.put(Direction.East, DoorState.Locked);
-		myDoors.put(Direction.East, DoorState.Locked);
+		myDoors.put(Direction.NORTH, DoorState.Locked);
+		myDoors.put(Direction.SOUTH, DoorState.Locked);
+		myDoors.put(Direction.EAST, DoorState.Locked);
+		myDoors.put(Direction.EAST, DoorState.Locked);
 	}
 
 	/**
