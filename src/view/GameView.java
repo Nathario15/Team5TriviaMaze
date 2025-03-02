@@ -8,13 +8,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import model.GameState;
 
-public class GameView extends JFrame {
+public final class GameView extends JFrame {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// private GameState gameState;
+	//private Player player;
+	private GameState gameState;
 	/**
 	 * The card layout.
 	 */
@@ -109,7 +111,8 @@ public class GameView extends JFrame {
 	 * starts a new game.
 	 */
 	public void newGame() {
-		// gameState = new GameState();
+		//player = new Player();
+		gameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
 
@@ -117,7 +120,7 @@ public class GameView extends JFrame {
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		// gameState.saveState(maze, player);
+		//gameState.saveState(maze, player);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
 
@@ -125,7 +128,7 @@ public class GameView extends JFrame {
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		// gameState.loadState();
+		//gameState.loadState();
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
 		myCardLayout.show(myMainPanel, "Game");
 	}

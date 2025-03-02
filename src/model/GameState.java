@@ -3,7 +3,9 @@ import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameState {
+public final class GameState implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private int currentPosition;
     private Set<Integer> lockedDoors;
     private Set<Integer> questionsUsed;
@@ -13,51 +15,54 @@ public class GameState {
         this.lockedDoors = new HashSet<>();
         this.questionsUsed = new HashSet<>();
     }
-
-    private int getCurrentPosition() {
+    
+    public int getCurrentPosition() {
         return currentPosition;
     }
 
-    private void setCurrentPosition(int currentPosition) {
+    public void setCurrentPosition(int currentPosition) {
         this.currentPosition = currentPosition;
     }
 
-    private Set<Integer> getLockedDoors() {
-        return lockedDoors;
+    public Set<Integer> getLockedDoors() {
+        return new HashSet<>(lockedDoors);  // Return a copy to maintain encapsulation
     }
 
-    private void lockDoor(int door) {
+    public void lockDoor(int door) {
         lockedDoors.add(door);
     }
 
-    private Set<Integer> getQuestionsUsed() {
-        return questionsUsed;
+    public Set<Integer> getQuestionsUsed() {
+        return new HashSet<>(questionsUsed);
     }
 
-    private void useQuestion(int questionId) {
+    public void useQuestion(int questionId) {
         questionsUsed.add(questionId);
     }
 
-    private void saveToFile(String filename) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write(currentPosition + "\n");
-            writer.write(lockedDoors.toString() + "\n");
-            writer.write(questionsUsed.toString() + "\n");
+    public void saveToFile(String filename) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+            out.writeObject(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static GameState loadFromFile(String filename) {
-        GameState gameState = new GameState();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            gameState.currentPosition = Integer.parseInt(reader.readLine());
-            gameState.lockedDoors = new HashSet<>();
-            gameState.questionsUsed = new HashSet<>();
-        } catch (IOException e) {
+    public static GameState loadFromFile(String filename) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+            return (GameState) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            return new GameState(); // Return a new instance if loading fails
         }
-        return gameState;
+    }
+
+    public boolean isDoorLocked(int door) {
+        return lockedDoors.contains(door);
+    }
+
+    public boolean isQuestionUsed(int questionId) {
+        return questionsUsed.contains(questionId);
     }
 }
 
