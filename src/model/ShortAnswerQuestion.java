@@ -20,5 +20,23 @@ public class ShortAnswerQuestion extends AbstractQuestion {
 	public ShortAnswerQuestion(final String theQuestion, final String theAnswer) {
 		super(theQuestion, theAnswer);
 	}
-
+	
+	/**
+	 * Checks if provided answer is correct, with more flexible matching.
+	 * 
+	 * @param theAnswer the answer to check
+	 * @return true if the answer is correct
+	 */
+	@Override
+	public boolean isCorrect(final String theAnswer) {
+	    if (theAnswer == null) {
+	        return false;
+	    }
+	    
+	    // Convert both answers to lowercase for case-insensitive comparison
+	    String normalizedAnswer = theAnswer.trim().toLowerCase();
+	    String normalizedCorrect = myAnswer.trim().toLowerCase();
+	    
+	    return normalizedAnswer.equals(normalizedCorrect);
+	}
 }

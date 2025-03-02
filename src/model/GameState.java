@@ -64,5 +64,21 @@ public final class GameState implements Serializable {
     public boolean isQuestionUsed(int questionId) {
         return questionsUsed.contains(questionId);
     }
+    
+    /**
+     * Reinitialize any components after loading.
+     * This is necessary because some objects have transient fields.
+     */
+    private void readObject(java.io.ObjectInputStream in) 
+            throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        // Reconnect to the database
+        DatabaseManager.getInstance().setDifficulty(myDifficulty);
+        
+        // Reconnect the maze to any transient services
+        if (Maze != null) {
+            Maze.reconnectServices();
+        }
+    }
 }
 
