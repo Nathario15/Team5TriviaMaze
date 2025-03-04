@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MultipleChoiceQuestionPanel extends JPanel {
+public final class MultipleChoiceQuestionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private MultipleChoiceQuestion question;
