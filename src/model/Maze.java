@@ -78,6 +78,8 @@ public final class Maze /* implements Serializable */ {
 	protected static void loadMap() {
 
 	}
+	
+	private transient DatabaseManager myDatabaseManager;
 
 //	/**
 //	 * Returns room North of player.

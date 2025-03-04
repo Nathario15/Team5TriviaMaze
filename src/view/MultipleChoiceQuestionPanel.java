@@ -29,19 +29,20 @@ public class MultipleChoiceQuestionPanel extends JPanel {
         this.question = question;
         this.gameState = gameState;
 
-        setLayout(new GridLayout(question.getChoices() + 3, 1, 10, 10)); 
+        setLayout(new GridLayout(question.getChoiceCount() + 3, 1, 10, 10)); 
         // +3: question label, submit button, feedback label
 
         // Question Label
-        questionLabel = new JLabel("<html><b>Question:</b> " + question.myQuestion + "</html>");
+        questionLabel = new JLabel("<html><b>Question:</b> " + question.getQuestion() + "</html>");
         questionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(questionLabel);
 
         // Choice Buttons
         buttonGroup = new ButtonGroup();
-        choiceButtons = new JRadioButton[question.getChoices()];
-        for (int i = 0; i < question.getChoices(); i++) {
-            choiceButtons[i] = new JRadioButton(question.myAnswer); // Use myAnswer for this question (example)
+        choiceButtons = new JRadioButton[question.getChoiceCount()];
+        String[] choices = question.getChoices();
+        for (int i = 0; i < choices.length; i++) {
+            choiceButtons[i] = new JRadioButton(choices[i]); // Use myAnswer for this question (example)
             buttonGroup.add(choiceButtons[i]);
             add(choiceButtons[i]);
         }

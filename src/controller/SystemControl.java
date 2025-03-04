@@ -1,11 +1,6 @@
 package controller;
 
-import model.DatabaseManager;
-import model.AbstractQuestion;
-import model.Difficulty;
-import model.Direction;
-import model.Maze;
-import model.Room;
+import model.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 

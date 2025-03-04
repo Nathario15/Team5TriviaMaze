@@ -31,7 +31,7 @@ public class ShortAnswerQuestionPanel extends JPanel {
         setLayout(new GridLayout(3, 1, 10, 10));
 
         // Question Label
-        questionLabel = new JLabel("<html><b>Question:</b> " + question.myQuestion + "</html>");
+        questionLabel = new JLabel("<html><b>Question:</b> " + question.getQuestion() + "</html>");
         questionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(questionLabel);
 
