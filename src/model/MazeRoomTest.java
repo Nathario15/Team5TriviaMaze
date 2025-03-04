@@ -12,11 +12,11 @@ class MazeRoomTest {
 		assertNotNull(Maze.getRoom());
 		assertNotNull(Maze.getRoom().myDoors.get(Direction.NORTH));
 		assertEquals(Maze.getRoom().myDoors.get(Direction.NORTH), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.North).myDoors.get(Direction.North.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.NORTH).myDoors.get(Direction.NORTH.getOpposite()), DoorState.Locked);
 		assertEquals(Maze.getRoom().myDoors.get(Direction.SOUTH), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.South).myDoors.get(Direction.South.getOpposite()), DoorState.Locked);
+		assertEquals(Maze.getRoom(Direction.SOUTH).myDoors.get(Direction.SOUTH.getOpposite()), DoorState.Locked);
 		assertEquals(Maze.getRoom().myDoors.get(Direction.EAST), DoorState.Locked);
-		assertEquals(Maze.getRoom(Direction.East).myDoors.get(Direction.EAST.getOpposite()), DoorState.Locked);//fails here
+		assertEquals(Maze.getRoom(Direction.EAST).myDoors.get(Direction.EAST.getOpposite()), DoorState.Locked);//fails here
 //		assertEquals(Maze.getRoom().myDoors.get(Direction.West), DoorState.Locked);
 //		assertEquals(Maze.getRoom(Direction.West).myDoors.get(Direction.West.getOpposite()), DoorState.Locked);
 		
@@ -59,7 +59,7 @@ class MazeRoomTest {
 		assertEquals(Maze.getY(), 4);
 		Maze.setRoom(Direction.EAST);
 		assertEquals(Maze.getX(), 5);
-		Maze.setRoom(Direction.West);
+		Maze.setRoom(Direction.WEST);
 		assertEquals(Maze.getX(), 4);
 	}
 }
