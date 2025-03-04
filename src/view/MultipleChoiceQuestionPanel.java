@@ -3,13 +3,17 @@ package view;
 import model.MultipleChoiceQuestion;
 import model.GameState;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collections;
 
 public final class MultipleChoiceQuestionPanel extends QuestionPanel {
     private static final long serialVersionUID = 1L;
-    private ButtonGroup myButtonGroup;
-    private JRadioButton[] myChoiceButtons;
+    private ButtonGroup myChoiceGroup;
+    private JPanel myChoicePanel;
+    private JButton myClearButton;
 
     public MultipleChoiceQuestionPanel(MultipleChoiceQuestion question, GameState gameState) {
         super(question, gameState);
@@ -18,27 +22,56 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
 
     @Override
     protected void createAnswerInput() {
-        myButtonGroup = new ButtonGroup();
-        String[] choices = ((MultipleChoiceQuestion) myQuestion).getChoices();
-        myChoiceButtons = new JRadioButton[choices.length];
+        // Set up the layout for multiple choice options
+        JPanel answerPanel = new JPanel();
+        answerPanel.setLayout(new BorderLayout());
+        
+        myChoicePanel = new JPanel();
+        myChoicePanel.setLayout(new BoxLayout(myChoicePanel, BoxLayout.Y_AXIS));
 
-        // Choice Buttons
-        for (int i = 0; i < choices.length; i++) {
-            myChoiceButtons[i] = new JRadioButton(choices[i]);
-            myButtonGroup.add(myChoiceButtons[i]);
-            add(myChoiceButtons[i]);
+        myChoiceGroup = new ButtonGroup();
+        for (String choice : ((MultipleChoiceQuestion) myQuestion).getChoices()) {
+            JRadioButton radioButton = new JRadioButton(choice);
+            myChoiceGroup.add(radioButton);
+            myChoicePanel.add(radioButton);
         }
+
+        // Clear button for resetting input
+        myClearButton = new JButton("Clear Selection");
+        myClearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myChoiceGroup.clearSelection(); // Clears the radio button selection
+            }
+        });
+        
+        answerPanel.add(myChoicePanel, BorderLayout.CENTER);
+        answerPanel.add(myClearButton, BorderLayout.SOUTH);
+        add(answerPanel);
     }
 
     @Override
     protected boolean checkAnswer() {
-        for (JRadioButton choiceButton : myChoiceButtons) {
-            if (choiceButton.isSelected()) {
-                String selectedAnswer = choiceButton.getText();
-                return myQuestion.isCorrect(selectedAnswer);
+        String selectedAnswer = null;
+        for (AbstractButton button : Collections.list(myChoiceGroup.getElements())) {
+            if (button.isSelected()) {
+                selectedAnswer = button.getText();
+                break;
             }
         }
-        myFeedbackLabel.setText("Please select an answer.");
-        return false;
+
+        // Check if the selected answer is correct
+        boolean isCorrect = myQuestion.isCorrect(selectedAnswer);
+        
+        // Provide feedback to the user
+        if (isCorrect) {
+            myFeedbackLabel.setText("Correct! You can proceed.");
+            myFeedbackLabel.setForeground(Color.GREEN);
+        } else {
+            myFeedbackLabel.setText("Incorrect! Try again.");
+            myFeedbackLabel.setForeground(Color.RED);
+        }
+
+        return isCorrect;
     }
 }
