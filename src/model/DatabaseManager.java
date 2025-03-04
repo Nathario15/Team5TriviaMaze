@@ -1,17 +1,19 @@
 package model;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
  * DatabaseManager handles all database operations for the Minecraft Trivia Maze
- * game. Uses Microsoft Access database to store and retrieve questions.
+ * game. Uses SQLite database to store and retrieve questions.
  * @author Nathaniel
  * @version 0.7
  */
@@ -59,12 +61,35 @@ public final class DatabaseManager {
 	 * Initialize the database connection.
 	 */
 	private void initializeDatabase() {
-		try {
-			final String url = "jdbc:ucanaccess://" + DB_PATH;
-			myConnection = DriverManager.getConnection(url);
-		} catch (final SQLException e) {
-			System.err.println("Error connecting to database: " + e.getMessage());
-		}
+	    try {	        
+	        boolean newDatabase = !new File(DB_PATH).exists();
+	        myConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
+	        
+	        if (newDatabase) {
+	            createTables();
+//	            insertSampleQuestions();
+	        }
+	    } catch (final SQLException e) {
+	        System.err.println("Error connecting to database: " + e.getMessage());
+	    }
+	}
+	
+	private void createTables() {
+	    String sql = "CREATE TABLE IF NOT EXISTS trivia_questions (" +
+	                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+	                 "question_type TEXT NOT NULL, " +
+	                 "question TEXT NOT NULL, " +
+	                 "correct_answer TEXT NOT NULL, " +
+	                 "wrong_answer1 TEXT, " +
+	                 "wrong_answer2 TEXT, " +
+	                 "wrong_answer3 TEXT, " +
+	                 "difficulty TEXT NOT NULL)";
+	    
+	    try (Statement stmt = myConnection.createStatement()) {
+	        stmt.execute(sql);
+	    } catch (SQLException e) {
+	        System.err.println("Error creating tables: " + e.getMessage());
+	    }
 	}
 
 	/**
