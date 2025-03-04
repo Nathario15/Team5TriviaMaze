@@ -11,13 +11,13 @@ import java.awt.event.ActionListener;
 public final class MultipleChoiceQuestionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private MultipleChoiceQuestion question;
-    private GameState gameState;
-    private JLabel questionLabel;
-    private ButtonGroup buttonGroup;
-    private JRadioButton[] choiceButtons;
-    private JButton submitButton;
-    private JLabel feedbackLabel;
+    private MultipleChoiceQuestion myQuestion;
+    private GameState myGameState;
+    private JLabel myQuestionLabel;
+    private ButtonGroup myButtonGroup;
+    private JRadioButton[] myChoiceButtons;
+    private JButton mySubmitButton;
+    private JLabel myFeedbackLabel;
 
     /**
      * Constructor for MultipleChoiceQuestionPanel.
@@ -25,38 +25,38 @@ public final class MultipleChoiceQuestionPanel extends JPanel {
      * @param question  The multiple-choice question.
      * @param gameState The current game state.
      */
-    public MultipleChoiceQuestionPanel(MultipleChoiceQuestion question, GameState gameState) {
-        this.question = question;
-        this.gameState = gameState;
+    public MultipleChoiceQuestionPanel(MultipleChoiceQuestion theQuestion, GameState theGameState) {
+        this.myQuestion = theQuestion;
+        this.myGameState = theGameState;
 
-        setLayout(new GridLayout(question.getChoiceCount() + 3, 1, 10, 10)); 
+        setLayout(new GridLayout(myQuestion.getChoiceCount() + 3, 1, 10, 10)); 
         // +3: question label, submit button, feedback label
 
         // Question Label
-        questionLabel = new JLabel("<html><b>Question:</b> " + question.myQuestion + "</html>");
-        questionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(questionLabel);
+        myQuestionLabel = new JLabel("<html><b>Question:</b> " + myQuestion.myQuestion + "</html>");
+        myQuestionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(myQuestionLabel);
 
         // Choice Buttons
-        buttonGroup = new ButtonGroup();
-        String[] choices = question.getChoices();
-        choiceButtons = new JRadioButton[choices.length];
+        myButtonGroup = new ButtonGroup();
+        String[] choices = myQuestion.getChoices();
+        myChoiceButtons = new JRadioButton[choices.length];
         for (int i = 0; i < choices.length; i++) {
-            choiceButtons[i] = new JRadioButton(choices[i]); // Use the actual choices from getChoices()
-            buttonGroup.add(choiceButtons[i]);
-            add(choiceButtons[i]);
+        	myChoiceButtons[i] = new JRadioButton(choices[i]); // Use the actual choices from getChoices()
+            myButtonGroup.add(myChoiceButtons[i]);
+            add(myChoiceButtons[i]);
         }
 
         // Submit Button
-        submitButton = new JButton("Submit Answer");
-        submitButton.addActionListener(new SubmitAnswerListener());
-        add(submitButton);
+        mySubmitButton = new JButton("Submit Answer");
+        mySubmitButton.addActionListener(new SubmitAnswerListener());
+        add(mySubmitButton);
 
         // Feedback Label
-        feedbackLabel = new JLabel("");
-        feedbackLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        feedbackLabel.setForeground(Color.RED);
-        add(feedbackLabel);
+        myFeedbackLabel = new JLabel("");
+        myFeedbackLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        myFeedbackLabel.setForeground(Color.RED);
+        add(myFeedbackLabel);
     }
 
     /**
@@ -65,21 +65,21 @@ public final class MultipleChoiceQuestionPanel extends JPanel {
     private class SubmitAnswerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (JRadioButton choiceButton : choiceButtons) {
+            for (JRadioButton choiceButton : myChoiceButtons) {
                 if (choiceButton.isSelected()) {
                     String selectedAnswer = choiceButton.getText();
-                    if (question.isCorrect(selectedAnswer)) { // Check correctness using isCorrect
-                        feedbackLabel.setText("Correct! You can proceed.");
-                        feedbackLabel.setForeground(Color.GREEN);
-                        gameState.useQuestion(question.hashCode()); // Mark question as answered
+                    if (myQuestion.isCorrect(selectedAnswer)) { // Check correctness using isCorrect
+                    	myFeedbackLabel.setText("Correct! You can proceed.");
+                    	myFeedbackLabel.setForeground(Color.GREEN);
+                    	myGameState.useQuestion(myQuestion.hashCode()); // Mark question as answered
                     } else {
-                        feedbackLabel.setText("Incorrect! Try again.");
-                        feedbackLabel.setForeground(Color.RED);
+                    	myFeedbackLabel.setText("Incorrect! Try again.");
+                    	myFeedbackLabel.setForeground(Color.RED);
                     }
                     return;
                 }
             }
-            feedbackLabel.setText("Please select an answer.");
+            myFeedbackLabel.setText("Please select an answer.");
         }
     }
 }

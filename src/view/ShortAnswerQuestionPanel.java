@@ -8,15 +8,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ShortAnswerQuestionPanel extends JPanel {
+public final class ShortAnswerQuestionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private ShortAnswerQuestion question;
-    private GameState gameState;
-    private JLabel questionLabel;
-    private JTextField answerField;
-    private JButton submitButton;
-    private JLabel feedbackLabel;
+    private ShortAnswerQuestion myQuestion;
+    private GameState myGameState;
+    private JLabel myQuestionLabel;
+    private JTextField myAnswerField;
+    private JButton mySubmitButton;
+    private JLabel myFeedbackLabel;
 
     /**
      * Constructor for ShortAnswerQuestionPanel.
@@ -25,30 +25,30 @@ public class ShortAnswerQuestionPanel extends JPanel {
      * @param gameState The current game state.
      */
     public ShortAnswerQuestionPanel(ShortAnswerQuestion question, GameState gameState) {
-        this.question = question;
-        this.gameState = gameState;
+        this.myQuestion = question;
+        this.myGameState = gameState;
 
         setLayout(new GridLayout(3, 1, 10, 10));
 
         // Question Label
-        questionLabel = new JLabel("<html><b>Question:</b> " + question.myQuestion + "</html>");
-        questionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(questionLabel);
+        myQuestionLabel = new JLabel("<html><b>Question:</b> " + question.myQuestion + "</html>");
+        myQuestionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(myQuestionLabel);
 
         // Answer Field
-        answerField = new JTextField();
-        add(answerField);
+        myAnswerField = new JTextField();
+        add(myAnswerField);
 
         // Submit Button
-        submitButton = new JButton("Submit Answer");
-        submitButton.addActionListener(new SubmitAnswerListener());
-        add(submitButton);
+        mySubmitButton = new JButton("Submit Answer");
+        mySubmitButton.addActionListener(new SubmitAnswerListener());
+        add(mySubmitButton);
 
         // Feedback Label
-        feedbackLabel = new JLabel("");
-        feedbackLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        feedbackLabel.setForeground(Color.RED);
-        add(feedbackLabel);
+        myFeedbackLabel = new JLabel("");
+        myFeedbackLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        myFeedbackLabel.setForeground(Color.RED);
+        add(myFeedbackLabel);
     }
 
     /**
@@ -57,14 +57,14 @@ public class ShortAnswerQuestionPanel extends JPanel {
     private class SubmitAnswerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String answer = answerField.getText().trim();
-            if (question.isCorrect(answer)) { // Check correctness using isCorrect
-                feedbackLabel.setText("Correct! You can proceed.");
-                feedbackLabel.setForeground(Color.GREEN);
-                gameState.useQuestion(question.hashCode()); // Mark question as answered
+            String answer = myAnswerField.getText().trim();
+            if (myQuestion.isCorrect(answer)) { // Check correctness using isCorrect
+                myFeedbackLabel.setText("Correct! You can proceed.");
+                myFeedbackLabel.setForeground(Color.GREEN);
+                myGameState.useQuestion(myQuestion.hashCode()); // Mark question as answered
             } else {
-                feedbackLabel.setText("Incorrect! Try again.");
-                feedbackLabel.setForeground(Color.RED);
+                myFeedbackLabel.setText("Incorrect! Try again.");
+                myFeedbackLabel.setForeground(Color.RED);
             }
         }
     }
