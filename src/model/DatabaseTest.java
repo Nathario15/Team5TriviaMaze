@@ -42,8 +42,8 @@ public class DatabaseTest {
         // Test getting a random question
         AbstractQuestion q = dbManager.getRandomQuestion();
         if (q != null) {
-            System.out.println("Sample question: " + q.getQuestion());
-            System.out.println("Correct answer: " + q.getAnswer());
+            System.out.println("Sample question: " + q.myQuestion);
+            System.out.println("Correct answer: " + q.myAnswer);
             
             // Test specific question types
             if (q instanceof MultipleChoiceQuestion) {
@@ -57,7 +57,7 @@ public class DatabaseTest {
             }
             
             // Test answer verification
-            boolean correctResult = q.isCorrect(q.getAnswer());
+            boolean correctResult = q.isCorrect(q.myAnswer);
             boolean incorrectResult = q.isCorrect("Definitely wrong answer");
             System.out.println("Correct answer test: " + correctResult);
             System.out.println("Incorrect answer test: " + incorrectResult);
