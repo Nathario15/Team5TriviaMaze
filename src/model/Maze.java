@@ -184,23 +184,23 @@ public final class Maze /* implements Serializable */ {
 		}
 	}
 	
-	/**
-	 * Reconnect to any services after deserialization.
-	 * This is called from GameState's readObject method.
-	 */
-	public void reconnectServices() {
-	    myDatabaseManager = DatabaseManager.getInstance();
-	}
-
-	/**
-	 * Special method called during deserialization to 
-	 * reestablish the database manager.
-	 */
-	private void readObject(java.io.ObjectInputStream in) 
-	        throws java.io.IOException, ClassNotFoundException {
-	    in.defaultReadObject();
-	    // Reconnect to the database
-	    myDatabaseManager = DatabaseManager.getInstance();
-	}
+//	/**
+//	 * Reconnect to any services after deserialization.
+//	 * This is called from GameState's readObject method.
+//	 */
+//	public void reconnectServices() {
+//	    myDatabaseManager = DatabaseManager.getInstance();
+//	}
+//
+//	/**
+//	 * Special method called during deserialization to 
+//	 * reestablish the database manager.
+//	 */
+//	private void readObject(java.io.ObjectInputStream in) 
+//	        throws java.io.IOException, ClassNotFoundException {
+//	    in.defaultReadObject();
+//	    // Reconnect to the database
+//	    myDatabaseManager = DatabaseManager.getInstance();
+//	}
 
 }

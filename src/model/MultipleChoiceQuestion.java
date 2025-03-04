@@ -1,5 +1,8 @@
 package model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A multiple Choice Question, Has a multiple options for you to  pick, and you have to chose the right one.
  * @author Ibrahim Elnikety

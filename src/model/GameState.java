@@ -73,12 +73,12 @@ public final class GameState implements Serializable {
             throws java.io.IOException, ClassNotFoundException {
         in.defaultReadObject();
         // Reconnect to the database
-        DatabaseManager.getInstance().setDifficulty(myDifficulty);
+//        DatabaseManager.getInstance().setDifficulty(myDifficulty);
         
         // Reconnect the maze to any transient services
-        if (Maze != null) {
-            Maze.reconnectServices();
-        }
+//        if (Maze != null) {
+//            Maze.reconnectServices();
+//        }
     }
 }
 
