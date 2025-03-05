@@ -1,68 +1,124 @@
 package model;
 
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
 /**
- * Test class for DatabaseManager functionality.
- * Run this class to verify database operations.
+ * JUnit test class for DatabaseManager functionality.
+ * Includes console output to show test progress and results.
  */
 public class DatabaseTest {
     
-    /**
-     * Main method to test database operations.
-     * 
-     * @param args command line arguments
-     */
-    public static void main(String[] args) {
+    private static DatabaseManager myDatabaseManager;
+    
+    @BeforeAll
+    public static void setUp() {
         System.out.println("Testing Database Manager...");
-        
-        // Get database instance
-        DatabaseManager dbManager = DatabaseManager.getInstance();
-        
-        // Test connection
-        System.out.println("Connected to database: " + dbManager.isConnected());
-        
-        // Test each difficulty level
-        testDifficulty(dbManager, Difficulty.EASY);
-        testDifficulty(dbManager, Difficulty.MEDIUM);
-        testDifficulty(dbManager, Difficulty.HARD);
-        
-        System.out.println("Database testing complete.");
+        myDatabaseManager = DatabaseManager.getInstance();
     }
     
-    /**
-     * Test a specific difficulty level.
-     * 
-     * @param dbManager the database manager
-     * @param difficulty the difficulty to test
-     */
-    private static void testDifficulty(DatabaseManager dbManager, Difficulty difficulty) {
-        dbManager.setDifficulty(difficulty);
-        System.out.println("\nTesting " + difficulty + " difficulty:");
-        System.out.println("Questions available: " + dbManager.getQuestionCount());
+    @BeforeEach
+    void displayTestInfo(TestInfo testInfo) {
+        System.out.println("\n-----------------------------------------");
+        System.out.println("Executing: " + testInfo.getDisplayName());
+        System.out.println("-----------------------------------------");
+    }
+    
+    @Test
+    @DisplayName("Test database connection")
+    public void testConnection() {
+        boolean isConnected = myDatabaseManager.isConnected();
+        System.out.println("Connected to database: " + isConnected);
+        assertTrue(isConnected, "Database should be connected");
+    }
+    
+    @ParameterizedTest
+    @EnumSource(Difficulty.class)
+    @DisplayName("Test questions available for each difficulty")
+    public void testQuestionsAvailable(Difficulty difficulty) {
+        myDatabaseManager.setDifficulty(difficulty);
+        int count = myDatabaseManager.getQuestionCount();
+        System.out.println("Testing " + difficulty + " difficulty:");
+        System.out.println("Questions available: " + count);
+        assertTrue(count > 0, "There should be questions available for " + difficulty + " difficulty");
+    }
+    
+    @ParameterizedTest
+    @EnumSource(Difficulty.class)
+    @DisplayName("Test random question retrieval for each difficulty")
+    public void testRandomQuestion(Difficulty difficulty) {
+        myDatabaseManager.setDifficulty(difficulty);
+        AbstractQuestion question = myDatabaseManager.getRandomQuestion();
         
-        // Test getting a random question
-        AbstractQuestion q = dbManager.getRandomQuestion();
-        if (q != null) {
-            System.out.println("Sample question: " + q.myQuestion);
-            System.out.println("Correct answer: " + q.myAnswer);
+        System.out.println("Testing " + difficulty + " difficulty question retrieval:");
+        
+        if (question != null) {
+            System.out.println("Sample question: " + question.getQuestion());
+            System.out.println("Correct answer: " + question.getAnswer());
             
-            // Test specific question types
-            if (q instanceof MultipleChoiceQuestion) {
-                MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) q;
+            if (question instanceof MultipleChoiceQuestion) {
+                MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
                 System.out.println("Question type: Multiple Choice");
                 System.out.println("Choices: " + String.join(", ", mcq.getChoices()));
-            } else if (q instanceof TrueFalseQuestion) {
+            } else if (question instanceof TrueFalseQuestion) {
                 System.out.println("Question type: True/False");
-            } else if (q instanceof ShortAnswerQuestion) {
+            } else if (question instanceof ShortAnswerQuestion) {
                 System.out.println("Question type: Short Answer");
             }
             
-            // Test answer verification
-            boolean correctResult = q.isCorrect(q.myAnswer);
-            boolean incorrectResult = q.isCorrect("Definitely wrong answer");
-            System.out.println("Correct answer test: " + correctResult);
-            System.out.println("Incorrect answer test: " + incorrectResult);
+            assertNotNull(question, "Should retrieve a non-null question");
+            assertNotNull(question.getQuestion(), "Question text should not be null");
+            assertNotNull(question.getAnswer(), "Answer should not be null");
         } else {
             System.out.println("No questions found for " + difficulty + " difficulty");
+            fail("No question retrieved for " + difficulty + " difficulty");
         }
+    }
+    
+    @ParameterizedTest
+    @EnumSource(Difficulty.class)
+    @DisplayName("Test answer verification for questions")
+    public void testAnswerVerification(Difficulty difficulty) {
+        myDatabaseManager.setDifficulty(difficulty);
+        AbstractQuestion question = myDatabaseManager.getRandomQuestion();
+        
+        System.out.println("Testing " + difficulty + " difficulty answer verification:");
+        
+        if (question != null) {
+            boolean correctResult = question.isCorrect(question.getAnswer());
+            boolean incorrectResult = question.isCorrect("Definitely wrong answer");
+            
+            System.out.println("Question: " + question.getQuestion());
+            System.out.println("Correct answer test: " + correctResult);
+            System.out.println("Incorrect answer test: " + incorrectResult);
+            
+            assertTrue(correctResult, "Correct answer should be verified as correct");
+            assertFalse(incorrectResult, "Incorrect answer should be verified as incorrect");
+        } else {
+            System.out.println("No questions found for " + difficulty + " difficulty");
+            fail("No question retrieved for " + difficulty + " difficulty");
+        }
+    }
+    
+    @Test
+    @DisplayName("Test overall database functionality summary")
+    public void testDatabaseSummary() {
+        System.out.println("\nDatabase testing summary:");
+        System.out.println("=======================");
+        
+        for (Difficulty difficulty : Difficulty.values()) {
+            myDatabaseManager.setDifficulty(difficulty);
+            int count = myDatabaseManager.getQuestionCount();
+            System.out.println(difficulty + " questions: " + count);
+        }
+        
+        System.out.println("Database connection: " + (myDatabaseManager.isConnected() ? "ACTIVE" : "INACTIVE"));
+        System.out.println("Database testing complete.");
     }
 }
