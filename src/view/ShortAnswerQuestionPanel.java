@@ -8,64 +8,58 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ShortAnswerQuestionPanel extends JPanel {
+public final class ShortAnswerQuestionPanel extends QuestionPanel {
     private static final long serialVersionUID = 1L;
+    private JTextField myAnswerField;
+    private JButton myClearButton;
 
-    private ShortAnswerQuestion question;
-    private GameState gameState;
-    private JLabel questionLabel;
-    private JTextField answerField;
-    private JButton submitButton;
-    private JLabel feedbackLabel;
-
-    /**
-     * Constructor for ShortAnswerQuestionPanel.
-     *
-     * @param question  The short answer question.
-     * @param gameState The current game state.
-     */
     public ShortAnswerQuestionPanel(ShortAnswerQuestion question, GameState gameState) {
-        this.question = question;
-        this.gameState = gameState;
-
-        setLayout(new GridLayout(3, 1, 10, 10));
-
-        // Question Label
-        questionLabel = new JLabel("<html><b>Question:</b> " + question.getQuestion() + "</html>");
-        questionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(questionLabel);
-
-        // Answer Field
-        answerField = new JTextField();
-        add(answerField);
-
-        // Submit Button
-        submitButton = new JButton("Submit Answer");
-        submitButton.addActionListener(new SubmitAnswerListener());
-        add(submitButton);
-
-        // Feedback Label
-        feedbackLabel = new JLabel("");
-        feedbackLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        feedbackLabel.setForeground(Color.RED);
-        add(feedbackLabel);
+        super(question, gameState);
+        createAnswerInput();
     }
 
-    /**
-     * Inner class to handle answer submission.
-     */
-    private class SubmitAnswerListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String answer = answerField.getText().trim();
-            if (question.isCorrect(answer)) { // Check correctness using isCorrect
-                feedbackLabel.setText("Correct! You can proceed.");
-                feedbackLabel.setForeground(Color.GREEN);
-                gameState.useQuestion(question.hashCode()); // Mark question as answered
-            } else {
-                feedbackLabel.setText("Incorrect! Try again.");
-                feedbackLabel.setForeground(Color.RED);
+    @Override
+    protected void createAnswerInput() {
+        // Set up the layout for the answer section
+        JPanel answerPanel = new JPanel();
+        answerPanel.setLayout(new BorderLayout());
+
+        // Text field for user input
+        myAnswerField = new JTextField();
+        myAnswerField.setToolTipText("Type your answer here...");
+        answerPanel.add(myAnswerField, BorderLayout.CENTER);
+
+        // Clear button for resetting input
+        myClearButton = new JButton("Clear Answer");
+        myClearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myAnswerField.setText(""); // Clears the text field
             }
+        });
+        answerPanel.add(myClearButton, BorderLayout.EAST);
+
+        add(answerPanel);
+    }
+
+    @Override
+    protected boolean checkAnswer() {
+        String answer = myAnswerField.getText().trim();
+
+        // Check if the answer is correct
+        boolean isCorrect = myQuestion.isCorrect(answer);
+        
+        // Provide feedback to the user
+        if (isCorrect) {
+            myFeedbackLabel.setText("Correct! You can proceed.");
+            myFeedbackLabel.setForeground(Color.GREEN);
+            myAnswerField.setBackground(Color.GREEN);  // Green background for correct answer
+        } else {
+            myFeedbackLabel.setText("Incorrect! Try again.");
+            myFeedbackLabel.setForeground(Color.RED);
+            myAnswerField.setBackground(Color.RED);  // Red background for incorrect answer
         }
+
+        return isCorrect;
     }
 }
