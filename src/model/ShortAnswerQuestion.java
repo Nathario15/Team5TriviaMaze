@@ -34,8 +34,8 @@ public class ShortAnswerQuestion extends AbstractQuestion {
 	    }
 	    
 	    // Convert both answers to lowercase for case-insensitive comparison
-	    String normalizedAnswer = theAnswer.trim().toLowerCase();
-	    String normalizedCorrect = myAnswer.trim().toLowerCase();
+	    final String normalizedAnswer = theAnswer.trim().toLowerCase();
+	    final String normalizedCorrect = myAnswer.trim().toLowerCase();
 	    
 	    return normalizedAnswer.equals(normalizedCorrect);
 	}
