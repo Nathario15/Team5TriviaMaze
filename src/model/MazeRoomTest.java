@@ -17,6 +17,7 @@ class MazeRoomTest {
 
 		assertEquals(Maze.getX(), Maze.MAP_SIZE / 2);
 		assertEquals(Maze.getY(), Maze.MAP_SIZE / 2);
+    
 		assertNotNull(Maze.getRoom());
 		assertNotNull(Maze.getRoom().myDoors.get(Direction.NORTH));
 		assertEquals(Maze.getRoom().myDoors.get(Direction.NORTH), DoorState.Locked);

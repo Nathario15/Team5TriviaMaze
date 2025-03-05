@@ -40,6 +40,14 @@ public abstract class AbstractQuestion implements Serializable {
 	 * @return
 	 */
 	public boolean isCorrect(final String theAnswer) {
-		return myAnswer == theAnswer;
+		return myAnswer.equalsIgnoreCase(theAnswer.trim());
 	}
+	
+    public String getQuestion() {
+        return myQuestion;
+    }
+    
+    public String getAnswer() {
+        return myAnswer;
+    }
 }

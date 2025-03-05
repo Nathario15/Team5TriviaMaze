@@ -9,6 +9,8 @@ public final class GameState implements Serializable {
     private int currentPosition;
     private Set<Integer> lockedDoors;
     private Set<Integer> questionsUsed;
+    private Maze myMaze;
+    private Difficulty myDifficulty;
 
     public GameState() {
         this.currentPosition = 0;
@@ -73,12 +75,12 @@ public final class GameState implements Serializable {
             throws java.io.IOException, ClassNotFoundException {
         in.defaultReadObject();
         // Reconnect to the database
-//        DatabaseManager.getInstance().setDifficulty(myDifficulty);
+        DatabaseManager.getInstance().setDifficulty(myDifficulty);
         
         // Reconnect the maze to any transient services
-//        if (Maze != null) {
-//            Maze.reconnectServices();
-//        }
+        if (myMaze != null) {
+            myMaze.reconnectServices();
+        }
     }
 }
 
