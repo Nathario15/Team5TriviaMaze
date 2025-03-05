@@ -28,7 +28,7 @@ public class ShortAnswerQuestion extends AbstractQuestion {
 	 * @return true if the answer is correct
 	 */
 	@Override
-	public Boolean isCorrect(final String theAnswer) {
+	public boolean isCorrect(final String theAnswer) {
 	    if (theAnswer == null) {
 	        return false;
 	    }

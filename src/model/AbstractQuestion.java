@@ -39,7 +39,7 @@ public abstract class AbstractQuestion implements Serializable {
 	 * @param theAnswer
 	 * @return
 	 */
-	public Boolean isCorrect(final String theAnswer) {
+	public boolean isCorrect(final String theAnswer) {
 		return myAnswer == theAnswer;
 	}
 }

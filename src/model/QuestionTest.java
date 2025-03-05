@@ -13,8 +13,6 @@ class QuestionTest {
 
 	@Test
 	void testQuestions() {
-//		System.out.print(this.getClass().getProtectionDomain().getCodeSource().getLocation());
-//		System.out.print("hello "+ System.getProperty("user.dir"));
 		final String a = "A";
 		final String b = "B";
 		final String[] str = { a, b, "C" };

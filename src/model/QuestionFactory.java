@@ -1,9 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -27,17 +24,8 @@ public class QuestionFactory implements Serializable {
 	 * @param theQuestions the questions that will be asked.
 	 */
 	public QuestionFactory() {
-
-		@SuppressWarnings("unused")
-		Connection conn = null;
+//		myQuestions=DatabaseManager.getInstance().getRandomQuestion();
 		myQuestions = null;
-		// TODO make a question database.
-		try { // get connection will create a file if not found.
-			conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir"));
-		} catch (final SQLException e) {
-
-		}
-		// TODO write rest, when database is set up
 	}
 
 	/**
