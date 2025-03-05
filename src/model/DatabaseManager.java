@@ -107,7 +107,7 @@ public final class DatabaseManager {
 	 * @return Question object or null if no questions available
 	 */
 	public AbstractQuestion getRandomQuestion() {
-		final String sql = "SELECT TOP 1 * FROM trivia_questions WHERE difficulty = ? ORDER BY Rnd()";
+		final String sql = "SELECT * FROM trivia_questions WHERE difficulty = ? ORDER BY RANDOM() LIMIT 1";
 
 		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
 			pstmt.setString(1, myDifficulty.toString());
@@ -140,7 +140,8 @@ public final class DatabaseManager {
 			answers.add(theRS.getString("wrong_answer3"));
 			// Shuffle answers for randomized order
 			shuffleAnswers(answers);
-			return new MultipleChoiceQuestion(questionText, correctAnswer, (String[]) answers.toArray());
+			return new MultipleChoiceQuestion(questionText, correctAnswer, 
+					answers.toArray(new String[answers.size()]));
 
 		case "TRUE_FALSE":
 			return new TrueFalseQuestion(questionText, Boolean.valueOf(correctAnswer));
