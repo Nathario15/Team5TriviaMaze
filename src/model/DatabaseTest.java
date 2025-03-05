@@ -6,7 +6,11 @@ package model;
  * @author Team 5
  * @version 1.0
  */
-public class DatabaseTest {
+public final class DatabaseTest {
+	
+	private DatabaseTest() {
+		
+	}
     
     /**
      * Main method to test database operations.
