@@ -78,6 +78,8 @@ public final class Maze /* implements Serializable */ {
 	protected static void loadMap() {
 
 	}
+	
+	private transient DatabaseManager myDatabaseManager;
 
 //	/**
 //	 * Returns room North of player.
@@ -191,16 +193,16 @@ public final class Maze /* implements Serializable */ {
 	public void reconnectServices() {
 	    myDatabaseManager = DatabaseManager.getInstance();
 	}
-
-	/**
-	 * Special method called during deserialization to 
-	 * reestablish the database manager.
-	 */
-	private void readObject(java.io.ObjectInputStream in) 
-	        throws java.io.IOException, ClassNotFoundException {
-	    in.defaultReadObject();
-	    // Reconnect to the database
-	    myDatabaseManager = DatabaseManager.getInstance();
-	}
+//
+//	/**
+//	 * Special method called during deserialization to 
+//	 * reestablish the database manager.
+//	 */
+//	private void readObject(java.io.ObjectInputStream in) 
+//	        throws java.io.IOException, ClassNotFoundException {
+//	    in.defaultReadObject();
+//	    // Reconnect to the database
+//	    myDatabaseManager = DatabaseManager.getInstance();
+//	}
 
 }

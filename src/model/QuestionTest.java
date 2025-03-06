@@ -4,13 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
-
+/**
+ * This is a test class for Abstract Question and it's child classes and Question Factory.
+ * @author Team 5
+ * @version 1.0
+ */
 class QuestionTest {
 
 	@Test
 	void testQuestions() {
-//		System.out.print(this.getClass().getProtectionDomain().getCodeSource().getLocation());
-//		System.out.print("hello "+ System.getProperty("user.dir"));
 		final String a = "A";
 		final String b = "B";
 		final String[] str = { a, b, "C" };
