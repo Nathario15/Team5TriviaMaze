@@ -10,14 +10,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DatabaseManager handles all database operations for the Minecraft Trivia Maze
  * game. Uses SQLite database to store and retrieve questions.
  * @author Nathaniel
- * @version 0.7
+ * @version 0.8
  */
-public final class DatabaseManager {
+public final class DatabaseManager implements AutoCloseable {
+    /**
+     * Logger for database operations.
+     */
+    private static final Logger LOGGER = Logger.getLogger(DatabaseManager.class.getName());
 	/**
 	 * path of database.
 	 */
@@ -45,6 +51,7 @@ public final class DatabaseManager {
 	 */
 	private DatabaseManager() {
 		initializeDatabase();
+		registerShutdownHook();
 	}
 
 	/**
@@ -60,20 +67,57 @@ public final class DatabaseManager {
 	/**
 	 * Initialize the database connection.
 	 */
-	private void initializeDatabase() {
-	    try {	        
-	        boolean newDatabase = !new File(DB_PATH).exists();
-	        myConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
-	        
-	        if (newDatabase) {
-	            createTables();
-//	            insertSampleQuestions();
-	        }
-	    } catch (final SQLException e) {
-	        System.err.println("Error connecting to database: " + e.getMessage());
-	    }
-	}
+    private void initializeDatabase() {
+        try {
+            File dbFile = new File(DB_PATH);
+            if (!dbFile.exists()) {
+                LOGGER.warning("Database file not found: " + DB_PATH);
+                LOGGER.info("Creating new database file");
+                // Only create tables if the database doesn't exist
+                myConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
+                createTables();
+                LOGGER.info("Database tables created successfully");
+            } else {
+                LOGGER.info("Connecting to existing database: " + DB_PATH);
+                myConnection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
+            }
+            
+            // Set default difficulty
+            myDifficulty = Difficulty.MEDIUM;
+            
+            // Verify database connection and content
+            verifyDatabase();
+            
+        } catch (final SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error connecting to database: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Verify database connection and content.
+     */
+    private void verifyDatabase() {
+        try {
+            // Check if the database has the expected table
+            try (Statement stmt = myConnection.createStatement()) {
+                ResultSet rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='trivia_questions'");
+                if (!rs.next()) {
+                    LOGGER.warning("trivia_questions table not found in database");
+                    createTables();
+                } else {
+                    // Check if table has questions
+                    int count = getQuestionCount();
+                    LOGGER.info("Database contains " + count + " questions");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error verifying database: " + e.getMessage(), e);
+        }
+    }
 	
+    /**
+     * Create the database tables if they don't exist.
+     */
 	private void createTables() {
 	    String sql = "CREATE TABLE IF NOT EXISTS trivia_questions (" +
 	                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -99,6 +143,7 @@ public final class DatabaseManager {
 	 */
 	public void setDifficulty(final Difficulty theDifficulty) {
 		this.myDifficulty = theDifficulty;
+		LOGGER.info("Difficulty set to: " + theDifficulty);
 	}
 
 	/**
@@ -115,9 +160,11 @@ public final class DatabaseManager {
 
 			if (rs.next()) {
 				return createQuestionFromResultSet(rs);
+			} else {
+				LOGGER.warning("No questions found for difficulty: " + myDifficulty);
 			}
 		} catch (final SQLException e) {
-			System.err.println("Error getting random question: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error getting random question: " + e.getMessage(), e);
 		}
 
 		return null;
@@ -125,6 +172,9 @@ public final class DatabaseManager {
 
 	/**
 	 * Create appropriate Question object from database result.
+	 * @param theRS The result set containing question data
+     * @return An appropriate question object based on type
+     * @throws SQLException If there is an error accessing the result set
 	 */
 	private AbstractQuestion createQuestionFromResultSet(final ResultSet theRS) throws SQLException {
 		final String questionType = theRS.getString("question_type");
@@ -136,8 +186,18 @@ public final class DatabaseManager {
 			final List<String> answers = new ArrayList<>();
 			answers.add(correctAnswer);
 			answers.add(theRS.getString("wrong_answer1"));
-			answers.add(theRS.getString("wrong_answer2"));
-			answers.add(theRS.getString("wrong_answer3"));
+
+            String wrong2 = theRS.getString("wrong_answer2");
+            String wrong3 = theRS.getString("wrong_answer3");
+            
+            if (wrong2 != null && !wrong2.isEmpty()) {
+                answers.add(wrong2);
+            }
+            
+            if (wrong3 != null && !wrong3.isEmpty()) {
+                answers.add(wrong3);
+            }
+            
 			// Shuffle answers for randomized order
 			shuffleAnswers(answers);
 			return new MultipleChoiceQuestion(questionText, correctAnswer, 
@@ -150,6 +210,7 @@ public final class DatabaseManager {
 			return new ShortAnswerQuestion(questionText, correctAnswer);
 
 		default:
+			LOGGER.warning("Unknown question type: " + questionType);
 			throw new SQLException("Unknown question type: " + questionType);
 		}
 	}
@@ -178,10 +239,12 @@ public final class DatabaseManager {
 			final ResultSet rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				return rs.getInt(1) > 0;
+                int count = rs.getInt(1);
+                LOGGER.info("Found " + count + " questions for difficulty: " + myDifficulty);
+                return count > 0;				
 			}
 		} catch (final SQLException e) {
-			System.err.println("Error checking questions: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error checking questions: " + e.getMessage(), e);
 		}
 
 		return false;
@@ -197,19 +260,6 @@ public final class DatabaseManager {
 	}
 
 	/**
-	 * Close the database connection.
-	 */
-	public void closeConnection() {
-		try {
-			if (myConnection != null && !myConnection.isClosed()) {
-				myConnection.close();
-			}
-		} catch (final SQLException e) {
-			System.err.println("Error closing database connection: " + e.getMessage());
-		}
-	}
-
-	/**
 	 * Test the database connection.
 	 * 
 	 * @return true if connected, false otherwise
@@ -218,6 +268,7 @@ public final class DatabaseManager {
 		try {
 			return myConnection != null && !myConnection.isClosed();
 		} catch (final SQLException e) {
+			LOGGER.log(Level.SEVERE, "Error checking connection: " + e.getMessage(), e);
 			return false;
 		}
 	}
@@ -236,19 +287,40 @@ public final class DatabaseManager {
 				return rs.getInt(1);
 			}
 		} catch (final SQLException e) {
-			System.err.println("Error getting question count: " + e.getMessage());
+			LOGGER.log(Level.SEVERE, "Error getting question count: " + e.getMessage(), e);
 		}
 
 		return 0;
 	}
-
+	
+    /**
+     * Register a shutdown hook to ensure database connection is closed when the 
+     * application exits.
+     */
+    private void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::closeConnection));
+    }
+	
 	/**
-	 * Finalize method to ensure database connection is closed.
+	 * Close the database connection.
 	 */
-	@SuppressWarnings("removal")
-	@Override
-	protected void finalize() throws Throwable {
-		closeConnection();
-		super.finalize();
+	private void closeConnection() {
+		try {
+			if (myConnection != null && !myConnection.isClosed()) {
+				myConnection.close();
+				LOGGER.info("Database connection closed");
+			}
+		} catch (final SQLException e) {
+			LOGGER.log(Level.SEVERE, "Error closing database connection: " + e.getMessage(), e);
+		}
 	}
+	
+    /**
+     * Implements AutoCloseable interface to support try-with-resources.
+     * Closes the database connection.
+     */
+    @Override
+    public void close() {
+        closeConnection();
+    }
 }
