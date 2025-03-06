@@ -151,11 +151,13 @@ public final class Maze /* implements Serializable */ {
 	protected static void setRoom(final Direction theDirection) {
 		if (theDirection == Direction.NORTH) {
 			y++;
-		} else if (theDirection == Direction.SOUTH) {
+		}else
+		if (theDirection == Direction.SOUTH) {
 			y--;
-		} else if (theDirection == Direction.EAST) {
+		}else
+		if (theDirection == Direction.EAST) {
 			x++;
-		} else {
+		}else{
 			x--;
 		}
 	}
@@ -183,14 +185,14 @@ public final class Maze /* implements Serializable */ {
 			return false;
 		}
 	}
-
-//	/**
-//	 * Reconnect to any services after deserialization.
-//	 * This is called from GameState's readObject method.
-//	 */
-//	public void reconnectServices() {
-//	    myDatabaseManager = DatabaseManager.getInstance();
-//	}
+	
+	/**
+	 * Reconnect to any services after deserialization.
+	 * This is called from GameState's readObject method.
+	 */
+	public void reconnectServices() {
+	    myDatabaseManager = DatabaseManager.getInstance();
+	}
 //
 //	/**
 //	 * Special method called during deserialization to 
