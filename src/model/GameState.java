@@ -1,29 +1,41 @@
 package model;
+
 import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    private int currentPosition;
+
+    // Player position in the maze
+    private int playerX;
+    private int playerY;
+
     private Set<Integer> lockedDoors;
     private Set<Integer> questionsUsed;
     private Maze myMaze;
     private Difficulty myDifficulty;
 
     public GameState() {
-        this.currentPosition = 0;
+        this.playerX = Maze.getX();
+        this.playerY = Maze.getY();
         this.lockedDoors = new HashSet<>();
         this.questionsUsed = new HashSet<>();
     }
-    
-    public int getCurrentPosition() {
-        return currentPosition;
+
+    // Get the player's current position in the maze
+    public int getPlayerX() {
+        return playerX;
     }
 
-    public void setCurrentPosition(int currentPosition) {
-        this.currentPosition = currentPosition;
+    public int getPlayerY() {
+        return playerY;
+    }
+
+    // Set the player's position in the maze
+    public void setPlayerPosition(int x, int y) {
+        this.playerX = x;
+        this.playerY = y;
     }
 
     public Set<Integer> getLockedDoors() {
@@ -66,7 +78,7 @@ public final class GameState implements Serializable {
     public boolean isQuestionUsed(int questionId) {
         return questionsUsed.contains(questionId);
     }
-    
+
     /**
      * Reinitialize any components after loading.
      * This is necessary because some objects have transient fields.
@@ -83,4 +95,3 @@ public final class GameState implements Serializable {
         }
     }
 }
-
