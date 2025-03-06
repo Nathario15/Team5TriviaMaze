@@ -45,11 +45,11 @@ public final class SystemControl {
      * @param difficulty The game difficulty level
      * @return true if initialization successful
      */
-    public boolean initializeGame(Difficulty difficulty) {
+    public boolean initializeGame(final Difficulty theDifficulty) {
         try {
-            databaseManager.setDifficulty(difficulty);
+            databaseManager.setDifficulty(theDifficulty);
             if (!databaseManager.hasQuestionsForDifficulty()) {
-                LOGGER.warning("No questions available for difficulty: " + difficulty);
+                LOGGER.warning("No questions available for difficulty: " + theDifficulty);
                 return false;
             }
             
@@ -186,7 +186,10 @@ public final class SystemControl {
         gameActive = false;
         // Additional cleanup as needed
     }
-
+    /**
+     * Triggers a question.
+     * @return
+     */
 	public static boolean triggerQuestion() {
 		// TODO Auto-generated method stub
 		return false;

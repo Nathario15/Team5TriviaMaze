@@ -56,7 +56,7 @@ public abstract class QuestionPanel extends JPanel {
      */
     private class SubmitAnswerListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent e) {
             if (checkAnswer()) {
                 myFeedbackLabel.setText("Correct! You can proceed.");
                 myFeedbackLabel.setForeground(Color.GREEN);

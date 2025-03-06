@@ -23,7 +23,7 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
     @Override
     protected void createAnswerInput() {
         // Set up the layout for multiple choice options
-        JPanel answerPanel = new JPanel();
+        final JPanel answerPanel = new JPanel();
         answerPanel.setLayout(new BorderLayout());
         
         myChoicePanel = new JPanel();
@@ -31,7 +31,7 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
 
         myChoiceGroup = new ButtonGroup();
         for (String choice : ((MultipleChoiceQuestion) myQuestion).getChoices()) {
-            JRadioButton radioButton = new JRadioButton(choice);
+            final JRadioButton radioButton = new JRadioButton(choice);
             myChoiceGroup.add(radioButton);
             myChoicePanel.add(radioButton);
         }
@@ -40,7 +40,7 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
         myClearButton = new JButton("Clear Selection");
         myClearButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent theE) {
                 myChoiceGroup.clearSelection(); // Clears the radio button selection
             }
         });

@@ -43,10 +43,15 @@ public abstract class AbstractQuestion implements Serializable {
 		return myAnswer.equalsIgnoreCase(theAnswer.trim());
 	}
 	
+	/**
+	 * The Question that will be asked.
+	 */
     public String getQuestion() {
         return myQuestion;
     }
-    
+    /**
+	 * The correct answer.
+	 */
     public String getAnswer() {
         return myAnswer;
     }

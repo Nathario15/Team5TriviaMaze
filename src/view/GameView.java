@@ -99,9 +99,9 @@ public final class GameView extends JFrame {
 	}
 
 	private void addAboutPanel() {
-		JPanel aboutPanel = new JPanel();
+		final JPanel aboutPanel = new JPanel();
 		aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
-		JButton backBtn = new JButton("Back");
+		final JButton backBtn = new JButton("Back");
 		backBtn.addActionListener(e -> myCardLayout.show(myMainPanel, "MainMenu"));
 		aboutPanel.add(backBtn);
 		myMainPanel.add(aboutPanel, "About");

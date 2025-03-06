@@ -21,7 +21,7 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
     @Override
     protected void createAnswerInput() {
         // Set up the layout for True/False buttons
-        JPanel answerPanel = new JPanel();
+        final JPanel answerPanel = new JPanel();
         answerPanel.setLayout(new GridLayout(1, 2));
 
         myTrueButton = new JButton("True");
@@ -29,14 +29,14 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
 
         myTrueButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 checkAnswer();
             }
         });
 
         myFalseButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 checkAnswer();
             }
         });
@@ -49,8 +49,8 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
     @Override
     protected boolean checkAnswer() {
         // Check if the selected answer is correct
-        String answer = myTrueButton.getModel().isPressed() ? "True" : "False";
-        boolean isCorrect = myQuestion.isCorrect(answer);
+        final String answer = myTrueButton.getModel().isPressed() ? "True" : "False";
+        final boolean isCorrect = myQuestion.isCorrect(answer);
 
         // Provide feedback to the user
         if (isCorrect) {
