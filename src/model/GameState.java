@@ -1,45 +1,73 @@
 package model;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class GameState implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    private int currentPosition;
-    private Set<Integer> lockedDoors;
-    private Set<Integer> questionsUsed;
-    private Maze myMaze;
+    /**
+     * The current position.
+     */
+	private int myCurrentPosition;
+    /**
+     * The Locked Doors.
+     */
+    private Set<Integer> myLockedDoors;
+    /**
+     * The questions used.
+     */
+    private Set<Integer> myQuestionsUsed;
+//    private Maze myMaze;
+    /**
+     * The difficulty.
+     */
     private Difficulty myDifficulty;
 
+    /**
+     * constructor.
+     */
     public GameState() {
-        this.currentPosition = 0;
-        this.lockedDoors = new HashSet<>();
-        this.questionsUsed = new HashSet<>();
+        this.myCurrentPosition = 0;
+        this.myLockedDoors = new HashSet<>();
+        this.myQuestionsUsed = new HashSet<>();
     }
     
+    /**
+     * returns current  postion.
+     * @return
+     */
     public int getCurrentPosition() {
-        return currentPosition;
+        return myCurrentPosition;
     }
 
-    public void setCurrentPosition(int currentPosition) {
-        this.currentPosition = currentPosition;
+    /**
+     * 
+     * @param theCurrentPosition
+     */
+    public void setCurrentPosition(final int theCurrentPosition) {
+        this.myCurrentPosition = theCurrentPosition;
     }
 
     public Set<Integer> getLockedDoors() {
-        return new HashSet<>(lockedDoors);  // Return a copy to maintain encapsulation
+        return new HashSet<>(myLockedDoors);  // Return a copy to maintain encapsulation
     }
 
     public void lockDoor(int door) {
-        lockedDoors.add(door);
+        myLockedDoors.add(door);
     }
 
     public Set<Integer> getQuestionsUsed() {
-        return new HashSet<>(questionsUsed);
+        return new HashSet<>(myQuestionsUsed);
     }
 
     public void useQuestion(int questionId) {
-        questionsUsed.add(questionId);
+        myQuestionsUsed.add(questionId);
     }
 
     public void saveToFile(String filename) {
@@ -60,11 +88,11 @@ public final class GameState implements Serializable {
     }
 
     public boolean isDoorLocked(int door) {
-        return lockedDoors.contains(door);
+        return myLockedDoors.contains(door);
     }
 
     public boolean isQuestionUsed(int questionId) {
-        return questionsUsed.contains(questionId);
+        return myQuestionsUsed.contains(questionId);
     }
     
     /**
@@ -77,10 +105,10 @@ public final class GameState implements Serializable {
         // Reconnect to the database
         DatabaseManager.getInstance().setDifficulty(myDifficulty);
         
-        // Reconnect the maze to any transient services
-        if (myMaze != null) {
-            myMaze.reconnectServices();
-        }
+//        // Reconnect the maze to any transient services
+//        if (myMaze != null) {
+//            myMaze.reconnectServices();
+//        }
     }
 }
 
