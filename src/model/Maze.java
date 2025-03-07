@@ -58,7 +58,7 @@ public final class Maze /* implements Serializable */ {
 
 	private Maze() {
 
-	} // might make the class not static later
+	}
 	
 	
 	/**
