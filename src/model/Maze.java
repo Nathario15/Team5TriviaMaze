@@ -135,7 +135,7 @@ public final class Maze /* implements Serializable */ {
 			temp = MAP[x + 1][y];
 		}
 		if (theDirection == Direction.WEST) {
-			temp = MAP[x + 1][y];
+			temp = MAP[x - 1][y];
 		}
 		return temp;
 	}
