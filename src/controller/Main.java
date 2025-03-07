@@ -4,24 +4,32 @@ import javax.swing.SwingUtilities;
 import view.GameView;
 import model.DatabaseManager;
 
-public class Main {
-    public static void main(String[] args) {
-        try {
-            // Initialize database
-            DatabaseManager dbManager = DatabaseManager.getInstance();
-            
-            // Create SystemControl (controller)
-            SystemControl controller = SystemControl.getInstance();
-            
-            // Create and display the view
-            SwingUtilities.invokeLater(() -> {
-                GameView view = new GameView();
-                view.setVisible(true);
-            });
-            
-        } catch (Exception e) {
-            System.err.println("Error starting application: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+public final class Main {
+	private Main() {
+	}
+
+	/**
+	 * Starts game.
+	 * 
+	 * @param args
+	 */
+	public static void main(final String[] theArgs) {
+		try {
+			// Initialize database
+			final DatabaseManager dbManager = DatabaseManager.getInstance();
+
+			// Create SystemControl (controller)
+			final SystemControl controller = SystemControl.getInstance();
+
+			// Create and display the view
+			SwingUtilities.invokeLater(() -> {
+				final GameView view = new GameView();
+				view.setVisible(true);
+			});
+
+		} catch (final Exception TheE) {
+			System.err.println("Error starting application: " + TheE.getMessage());
+			TheE.printStackTrace();
+		}
+	}
 }

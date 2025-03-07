@@ -21,7 +21,7 @@ public final class ShortAnswerQuestionPanel extends QuestionPanel {
     @Override
     protected void createAnswerInput() {
         // Set up the layout for the answer section
-        JPanel answerPanel = new JPanel();
+        final JPanel answerPanel = new JPanel();
         answerPanel.setLayout(new BorderLayout());
 
         // Text field for user input
@@ -33,7 +33,7 @@ public final class ShortAnswerQuestionPanel extends QuestionPanel {
         myClearButton = new JButton("Clear Answer");
         myClearButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 myAnswerField.setText(""); // Clears the text field
             }
         });
@@ -44,10 +44,10 @@ public final class ShortAnswerQuestionPanel extends QuestionPanel {
 
     @Override
     protected boolean checkAnswer() {
-        String answer = myAnswerField.getText().trim();
+        final String answer = myAnswerField.getText().trim();
 
         // Check if the answer is correct
-        boolean isCorrect = myQuestion.isCorrect(answer);
+        final boolean isCorrect = myQuestion.isCorrect(answer);
         
         // Provide feedback to the user
         if (isCorrect) {

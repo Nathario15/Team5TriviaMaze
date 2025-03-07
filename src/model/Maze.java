@@ -18,7 +18,7 @@ public final class Maze /* implements Serializable */ {
 	/**
 	 * A map of rooms.
 	 */
-	static final Room[][] MAP = {
+	private static Room[][] MAP = {
 			// 0 1 2 3 4 5 6 7 8
 			{ null, null, null, null, null, null, null, null, null }, // 0
 
@@ -49,11 +49,18 @@ public final class Maze /* implements Serializable */ {
 	 * x coordinate.
 	 */
 	private static int x = MAP_SIZE / 2;
+	
+	/**
+	 * The Database manager.
+	 */
+	@SuppressWarnings("unused")
+	private transient DatabaseManager myDatabaseManager;
 
 	private Maze() {
 
-	} // might make the class not static later
-
+	}
+	
+	
 	/**
 	 * used for testing.
 	 * 
@@ -62,7 +69,7 @@ public final class Maze /* implements Serializable */ {
 	public static int getY() {
 		return y;
 	}
-
+	
 	/**
 	 * used for testing.
 	 * 
@@ -76,10 +83,11 @@ public final class Maze /* implements Serializable */ {
 	 * The map will stay the same size, but it's contents will change.
 	 */
 	protected static void loadMap() {
-
+		
 	}
 	
-	private transient DatabaseManager myDatabaseManager;
+	
+	
 
 //	/**
 //	 * Returns room North of player.
@@ -151,13 +159,11 @@ public final class Maze /* implements Serializable */ {
 	protected static void setRoom(final Direction theDirection) {
 		if (theDirection == Direction.NORTH) {
 			y++;
-		}else
-		if (theDirection == Direction.SOUTH) {
+		} else if (theDirection == Direction.SOUTH) {
 			y--;
-		}else
-		if (theDirection == Direction.EAST) {
+		} else if (theDirection == Direction.EAST) {
 			x++;
-		}else{
+		} else {
 			x--;
 		}
 	}
@@ -185,13 +191,13 @@ public final class Maze /* implements Serializable */ {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Reconnect to any services after deserialization.
-	 * This is called from GameState's readObject method.
+	 * Reconnect to any services after deserialization. This is called from
+	 * GameState's readObject method.
 	 */
 	public void reconnectServices() {
-	    myDatabaseManager = DatabaseManager.getInstance();
+		myDatabaseManager = DatabaseManager.getInstance();
 	}
 //
 //	/**
