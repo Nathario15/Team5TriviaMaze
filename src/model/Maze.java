@@ -69,7 +69,7 @@ public final class Maze /* implements Serializable */ {
 	public static int getY() {
 		return y;
 	}
-
+	
 	/**
 	 * used for testing.
 	 * 
@@ -83,7 +83,7 @@ public final class Maze /* implements Serializable */ {
 	 * The map will stay the same size, but it's contents will change.
 	 */
 	protected static void loadMap() {
-
+		
 	}
 	
 	
