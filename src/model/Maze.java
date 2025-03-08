@@ -12,7 +12,7 @@ import controller.SystemControl;
  */
 public final class Maze /* implements Serializable */ {
 	/**
-	 * How big the map is.
+	 * How big the map is, .
 	 */
 	public static final int MAP_SIZE = 8;
 	/**
@@ -49,7 +49,7 @@ public final class Maze /* implements Serializable */ {
 	 * x coordinate.
 	 */
 	private static int x = MAP_SIZE / 2;
-	
+
 	/**
 	 * The Database manager.
 	 */
@@ -59,8 +59,7 @@ public final class Maze /* implements Serializable */ {
 	private Maze() {
 
 	}
-	
-	
+
 	/**
 	 * used for testing.
 	 * 
@@ -69,7 +68,7 @@ public final class Maze /* implements Serializable */ {
 	public static int getY() {
 		return y;
 	}
-	
+
 	/**
 	 * used for testing.
 	 * 
@@ -82,12 +81,18 @@ public final class Maze /* implements Serializable */ {
 	/**
 	 * The map will stay the same size, but it's contents will change.
 	 */
-	protected static void loadMap() {
-		
+	protected static void loadMap(final Room[][] theMap, final int theX, final int theY) {
+		MAP = theMap;
+		x = theX;
+		y = theY;
 	}
-	
-	
-	
+
+	/**
+	 * The map will stay the same size, but it's contents will change.
+	 */
+	protected static Room[][] returnMap() {
+		return MAP;
+	}
 
 //	/**
 //	 * Returns room North of player.

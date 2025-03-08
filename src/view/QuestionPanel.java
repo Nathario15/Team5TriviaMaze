@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 
 public abstract class QuestionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * the Question.
+     */
     protected AbstractQuestion myQuestion;
     protected GameState myGameState;
     protected JLabel myQuestionLabel;
@@ -30,7 +33,7 @@ public abstract class QuestionPanel extends JPanel {
         setLayout(new GridLayout(3, 1, 10, 10)); // Adjust this depending on the number of components
 
         // Question Label
-        myQuestionLabel = new JLabel("<html><b>Question:</b> " + question.myQuestion + "</html>");
+        myQuestionLabel = new JLabel("<html><b>Question:</b> " + question.getQuestion() + "</html>");
         myQuestionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(myQuestionLabel);
 

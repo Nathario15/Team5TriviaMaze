@@ -15,11 +15,11 @@ public abstract class AbstractQuestion implements Serializable {
 	/**
 	 * The Question that will be asked.
 	 */
-	public final String myQuestion;
+	protected final String myQuestion;
 	/**
 	 * The correct answer.
 	 */
-	public final String myAnswer;
+	protected final String myAnswer;
 
 	/**
 	 * Creates abstract question.

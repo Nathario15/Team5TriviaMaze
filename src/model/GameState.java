@@ -1,154 +1,174 @@
 package model;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * GameState class captures and manages the state of the trivia maze game.
- * This class handles saving and loading game state through serialization.
- */
 public final class GameState implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    // Player position in the maze
-    private int playerX;
-    private int playerY;
+	/**
+	 * The current X.
+	 */
+	private int myCurrentX;
 
-    private Set<Integer> lockedDoors;
-    private Set<Integer> questionsUsed;
-    private Maze myMaze;
-    private Difficulty myDifficulty;
-    
-    private boolean myGameActive;
+	/**
+	 * The current Y.
+	 */
+	private int myCurrentY;
 
-    /**
-     * Creates a new game state with default values
-     */
-    public GameState() {
-        this.playerX = Maze.getX();
-        this.playerY = Maze.getY();
-        this.lockedDoors = new HashSet<>();
-        this.questionsUsed = new HashSet<>();
-        this.myDifficulty = Difficulty.MEDIUM;
-        this.myGameActive = true;
-        
-//        this.myMaze = Maze.getInstance();
-    }
+	/**
+	 * The Locked Doors.
+	 */
+	private Set<Integer> myLockedDoors;
+	/**
+	 * The questions used.
+	 */
+	private Set<Integer> myQuestionsUsed;
+//    private Maze myMaze;
+	/**
+	 * The difficulty.
+	 */
+	private Difficulty myDifficulty;
 
-    // Get the player's current position in the maze
-    public int getPlayerX() {
-        return playerX;
-    }
+	/**
+	 * the map.
+	 */
+	private Room[][] myMap;
 
-    public int getPlayerY() {
-        return playerY;
-    }
+	/**
+	 * constructor.
+	 */
+	public GameState() {
+		this.myCurrentX = 0;
+		this.myLockedDoors = new HashSet<>();
+		this.myQuestionsUsed = new HashSet<>();
+	}
 
-    // Set the player's position in the maze
-    public void setPlayerPosition(int x, int y) {
-        this.playerX = x;
-        this.playerY = y;
-    }
+	/**
+	 * returns current postion.
+	 * 
+	 * @return
+	 */
+	public int getCurrentPosition() {
+		return myCurrentX;
+	}
 
-    public Set<Integer> getLockedDoors() {
-        return new HashSet<>(lockedDoors);  // Return a copy to maintain encapsulation
-    }
+	/**
+	 * 
+	 * @param theCurrentPosition
+	 */
+	public void setCurrentPosition(final int theCurrentPosition) {
+		this.myCurrentX = theCurrentPosition;
+	}
 
-    public void lockDoor(int door) {
-        lockedDoors.add(door);
-    }
+	/**
+	 * return locked doors.
+	 * @return
+	 */
+	public Set<Integer> getLockedDoors() {
+		return new HashSet<>(myLockedDoors); // Return a copy to maintain encapsulation
+	}
 
-    public Set<Integer> getQuestionsUsed() {
-        return new HashSet<>(questionsUsed);
-    }
+	/**
+	 * locks a door.
+	 * @param theDoor
+	 */
+	public void lockDoor(final int theDoor) {
+		myLockedDoors.add(theDoor);
+	}
 
-    public void useQuestion(int questionId) {
-        questionsUsed.add(questionId);
-    }
+	/**
+	 * Returns questions used.
+	 * @return
+	 */
+	public Set<Integer> getQuestionsUsed() {
+		return new HashSet<>(myQuestionsUsed);
+	}
 
-    public void saveToFile(String filename) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
-            out.writeObject(this);
-            System.out.println("Game saved to " + filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * use a question.
+	 * @param theQuestionId
+	 */
+	public void useQuestion(final int theQuestionId) {
+		myQuestionsUsed.add(theQuestionId);
+	}
 
-    public static GameState loadFromFile(String filename) {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
-            GameState state = (GameState) in.readObject();
-            System.out.println("Game loaded from " + filename);
-        	return state;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new GameState(); // Return a new instance if loading fails
-        }
-    }
+	/**
+	 * saves.
+	 * @param theFilename
+	 */
+	public void saveToFile(final String theFilename) {
+		myMap = Maze.returnMap();
+		this.myCurrentX = Maze.getX();
+		this.myCurrentY = Maze.getY();
 
-    public boolean isDoorLocked(int door) {
-        return lockedDoors.contains(door);
-    }
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(theFilename))) {
+			out.writeObject(this);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public boolean isQuestionUsed(int questionId) {
-        return questionsUsed.contains(questionId);
-    }
+	/**
+	 * loads a file into a game sate.
+	 * @param theFilename
+	 * @return
+	 */
+	public static GameState loadFromFile(final String theFilename) {
+		GameState other;
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(theFilename))) {
+			other = (GameState) in.readObject();
+		} catch (final IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			other = new GameState(); // Return a new instance if loading fails
+		}
+		other.loadToMaze();
+		return other;
+	}
 
-    /**
-     * Gets the maze.
-     * @return The maze
-     */
-    public Maze getMaze() {
-        return myMaze;
-    }
-    
-    /**
-     * Gets the current difficulty level.
-     * @return The current difficulty
-     */
-    public Difficulty getDifficulty() {
-        return myDifficulty;
-    }
-    
-    /**
-     * Sets the difficulty level.
-     * @param theDifficulty The difficulty to set
-     */
-    public void setDifficulty(Difficulty theDifficulty) {
-        this.myDifficulty = theDifficulty;
-        DatabaseManager.getInstance().setDifficulty(theDifficulty);
-    }
-    
-    /**
-     * Check if the game is active.
-     * @return true if the game is active
-     */
-    public boolean isGameActive() {
-        return myGameActive;
-    }
-    
-    /**
-     * Set the game active state.
-     * @param theActive The active state to set
-     */
-    public void setGameActive(boolean theActive) {
-        this.myGameActive = theActive;
-    }
-    
-    /**
-     * Reinitialize any components after loading.
-     * This is necessary because some objects have transient fields.
-     */
-    private void readObject(java.io.ObjectInputStream in) 
-            throws java.io.IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        // Reconnect to the database
-        DatabaseManager.getInstance().setDifficulty(myDifficulty);
-        
-        // Reconnect the maze to any transient services
-        if (myMaze != null) {
-            myMaze.reconnectServices();
-        }
-    }
+	/**
+	 * loads to a maze.
+	 */
+	public void loadToMaze() {
+		Maze.loadMap(myMap, myCurrentX, myCurrentY);
+	}
+
+	/**
+	 * checks if locked.
+	 * @param theDoor
+	 * @return
+	 */
+	public boolean isDoorLocked(final int theDoor) {
+		return myLockedDoors.contains(theDoor);
+	}
+
+	/**
+	 * checks if question used.
+	 * @param theQuestionId
+	 * @return
+	 */
+	public boolean isQuestionUsed(final int theQuestionId) {
+		return myQuestionsUsed.contains(theQuestionId);
+	}
+
+	/**
+	 * Reinitialize any components after loading. This is necessary because some
+	 * objects have transient fields.
+	 */
+	private void readObject(final java.io.ObjectInputStream theIn) throws java.io.IOException, ClassNotFoundException {
+		theIn.defaultReadObject();
+		// Reconnect to the database
+		DatabaseManager.getInstance().setDifficulty(myDifficulty);
+
+//        // Reconnect the maze to any transient services
+//        if (myMaze != null) {
+//            myMaze.reconnectServices();
+//        }
+	}
 }

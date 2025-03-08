@@ -1,22 +1,41 @@
 package view;
 
-import model.MultipleChoiceQuestion;
-import model.GameState;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import model.GameState;
+import model.MultipleChoiceQuestion;
 
 public final class MultipleChoiceQuestionPanel extends QuestionPanel {
     private static final long serialVersionUID = 1L;
+    /**
+     * Buttons.
+     */
     private ButtonGroup myChoiceGroup;
+    /**
+     * Choices.
+     */
     private JPanel myChoicePanel;
+    /**
+     * Clear.
+     */
     private JButton myClearButton;
 
-    public MultipleChoiceQuestionPanel(MultipleChoiceQuestion question, GameState gameState) {
-        super(question, gameState);
+    /**
+     * Creates panel.
+     * @param theQuestion
+     * @param theGameState
+     */
+    public MultipleChoiceQuestionPanel(final MultipleChoiceQuestion theQuestion, final GameState theGameState) {
+        super(theQuestion, theGameState);
         createAnswerInput();
     }
 
@@ -61,7 +80,7 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
         }
 
         // Check if the selected answer is correct
-        boolean isCorrect = myQuestion.isCorrect(selectedAnswer);
+        final boolean isCorrect = myQuestion.isCorrect(selectedAnswer);
         
         // Provide feedback to the user
         if (isCorrect) {
