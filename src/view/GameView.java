@@ -16,7 +16,10 @@ public final class GameView extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	//private Player player;
-	private GameState gameState;
+	/**
+	 * games save data.
+	 */
+	private GameState myGameState;
 	/**
 	 * The card layout.
 	 */
@@ -25,6 +28,11 @@ public final class GameView extends JFrame {
 	 * The main panel.
 	 */
 	private JPanel myMainPanel;
+	
+	/**
+	 * The file name for the save file.
+	 */
+	private String myFilename = ""; //TODO fix filename
 
 	/**
 	 * Constructor.
@@ -98,6 +106,7 @@ public final class GameView extends JFrame {
 		myMainPanel.add(instructionsPanel, "Instructions");
 	}
 
+	@SuppressWarnings("unused")
 	private void addAboutPanel() {
 		final JPanel aboutPanel = new JPanel();
 		aboutPanel.add(new JLabel("Trivia Maze Game Initialization"));
@@ -111,8 +120,7 @@ public final class GameView extends JFrame {
 	 * starts a new game.
 	 */
 	public void newGame() {
-		//player = new Player();
-		gameState = new GameState();
+		myGameState = new GameState();
 		myCardLayout.show(myMainPanel, "Game");
 	}
 
@@ -120,7 +128,7 @@ public final class GameView extends JFrame {
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		//gameState.saveState(maze, player);
+		myGameState.saveToFile(myFilename);
 		JOptionPane.showMessageDialog(this, "Game saved successfully!");
 	}
 
@@ -128,7 +136,7 @@ public final class GameView extends JFrame {
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		//gameState.loadState();
+		myGameState = GameState.loadFromFile(myFilename);
 		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
 		myCardLayout.show(myMainPanel, "Game");
 	}
