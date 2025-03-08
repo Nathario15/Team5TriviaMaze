@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 
 public abstract class QuestionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * the Question.
+     */
     protected AbstractQuestion myQuestion;
     protected GameState myGameState;
     protected JLabel myQuestionLabel;
