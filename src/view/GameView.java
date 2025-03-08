@@ -17,6 +17,7 @@ public final class GameView extends JFrame {
     private GameState gameState;
     private CardLayout myCardLayout;
     private JPanel myMainPanel;
+    private boolean myInGame;
 
     /**
      * Constructor.
@@ -29,6 +30,7 @@ public final class GameView extends JFrame {
 
         myCardLayout = new CardLayout();
         myMainPanel = new JPanel(myCardLayout);
+        myInGame = false;
 
         addMainMenu();
         addGamePanel();
@@ -84,7 +86,13 @@ public final class GameView extends JFrame {
         instructionsPanel.add(instructionsLabel, BorderLayout.CENTER);
 
         final JButton backButton = new JButton("Back");
-        backButton.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
+        backButton.addActionListener(_ -> {
+        	if (myInGame) {
+        		myCardLayout.show(myMainPanel, "Game");
+        	} else {
+        		myCardLayout.show(myMainPanel, "MainMenu");
+        	}
+        });
         instructionsPanel.add(backButton, BorderLayout.SOUTH);
 
         myMainPanel.add(instructionsPanel, "Instructions");
@@ -97,10 +105,47 @@ public final class GameView extends JFrame {
         aboutPanel.add(aboutLabel, BorderLayout.CENTER);
 
         final JButton backBtn = new JButton("Back");
-        backBtn.addActionListener(_ -> myCardLayout.show(myMainPanel, "MainMenu"));
+        backBtn.addActionListener(_ -> {
+        	if (myInGame) {
+        		myCardLayout.show(myMainPanel, "Game");
+        	} else {
+        		myCardLayout.show(myMainPanel, "MainMenu");
+        	}
+        });
         aboutPanel.add(backBtn, BorderLayout.SOUTH);
 
         myMainPanel.add(aboutPanel, "About");
+    }
+    
+    private void addMenuBar() {
+    	JMenuBar menuBar = new JMenuBar();
+    	
+    	JMenu fileMenu = new JMenu("File");
+    	JMenuItem saveGameItem = new JMenuItem("Save Game");
+    	JMenuItem loadGameItem = new JMenuItem("Load Game");
+    	JMenuItem newGameItem = new JMenuItem("New Game");
+    	JMenuItem exitGameItem = new JMenuItem("Exit");
+    	saveGameItem.addActionListener(_ -> saveGame());
+    	loadGameItem.addActionListener(_ -> loadGame());
+    	newGameItem.addActionListener(_ -> newGame());
+    	exitGameItem.addActionListener(_ -> System.exit(0));
+    	fileMenu.add(saveGameItem);
+    	fileMenu.add(loadGameItem);
+    	fileMenu.add(newGameItem);
+    	fileMenu.add(exitGameItem);
+    	
+    	JMenu helpMenu = new JMenu("Help");
+    	JMenuItem instructionsGameItem = new JMenuItem("Instructions");
+    	JMenuItem aboutGameItem = new JMenuItem("About");
+    	instructionsGameItem.addActionListener(_ -> displayInstructions());
+    	aboutGameItem.addActionListener(_ -> displayAbout());
+    	helpMenu.add(instructionsGameItem);
+    	helpMenu.add(aboutGameItem);
+    	
+    	menuBar.add(fileMenu);
+    	menuBar.add(helpMenu);
+    	
+    	setJMenuBar(menuBar);
     }
 
     /**
@@ -115,7 +160,9 @@ public final class GameView extends JFrame {
         if (selectedDifficulty != null) {
             gameState = new GameState();
             JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
+            myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
+            addMenuBar();
         }
     }
 
@@ -139,7 +186,9 @@ public final class GameView extends JFrame {
         if (saveFile.exists()) {
             gameState = GameState.loadFromFile(SAVE_FILE);
             JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+            myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
+            addMenuBar();
         } else {
             JOptionPane.showMessageDialog(this, "No saved game found.");
         }
