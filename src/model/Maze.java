@@ -82,10 +82,18 @@ public final class Maze /* implements Serializable */ {
 	/**
 	 * The map will stay the same size, but it's contents will change.
 	 */
-	protected static void loadMap() {
-		
+	protected static void loadMap(Room[][] theMap,int theX,int theY) {
+		MAP=theMap;
+		x=theX;
+		y=theY;
 	}
 	
+	/**
+	 * The map will stay the same size, but it's contents will change.
+	 */
+	protected static Room[][] returnMap() {
+		return MAP;
+	}
 	
 	
 
