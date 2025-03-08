@@ -4,20 +4,37 @@ import model.GameState;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 /**
  * The main view for the Trivia Maze Game.
  */
 public final class GameView extends JFrame {
-    private static final long serialVersionUID = 1L;
-    
-    private static final String SAVE_FILE = "game_save.dat";
-    
-    private GameState gameState;
-    private CardLayout myCardLayout;
-    private JPanel myMainPanel;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//private Player player;
+	/**
+	 * games save data.
+	 */
+	private GameState myGameState;
+	/**
+	 * The card layout.
+	 */
+	private CardLayout myCardLayout;
+	/**
+	 * The main panel.
+	 */
+	private JPanel myMainPanel;
+	/**
+	 * Whether or not the player is currently in game.
+	 */
     private boolean myInGame;
+    
+    /**
+	 * The file name for the save file.
+	 */
+	private String myFilename = ""; //TODO fix filename
 
     /**
      * Constructor.
@@ -125,10 +142,12 @@ public final class GameView extends JFrame {
     	JMenuItem loadGameItem = new JMenuItem("Load Game");
     	JMenuItem newGameItem = new JMenuItem("New Game");
     	JMenuItem exitGameItem = new JMenuItem("Exit");
+    	
     	saveGameItem.addActionListener(_ -> saveGame());
     	loadGameItem.addActionListener(_ -> loadGame());
     	newGameItem.addActionListener(_ -> newGame());
     	exitGameItem.addActionListener(_ -> System.exit(0));
+    	
     	fileMenu.add(saveGameItem);
     	fileMenu.add(loadGameItem);
     	fileMenu.add(newGameItem);
@@ -137,8 +156,10 @@ public final class GameView extends JFrame {
     	JMenu helpMenu = new JMenu("Help");
     	JMenuItem instructionsGameItem = new JMenuItem("Instructions");
     	JMenuItem aboutGameItem = new JMenuItem("About");
+    	
     	instructionsGameItem.addActionListener(_ -> displayInstructions());
     	aboutGameItem.addActionListener(_ -> displayAbout());
+    	
     	helpMenu.add(instructionsGameItem);
     	helpMenu.add(aboutGameItem);
     	
@@ -158,7 +179,7 @@ public final class GameView extends JFrame {
                 JOptionPane.QUESTION_MESSAGE, null, difficulties, difficulties[0]);
 
         if (selectedDifficulty != null) {
-            gameState = new GameState();
+            myGameState = new GameState();
             JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
             myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
@@ -167,32 +188,21 @@ public final class GameView extends JFrame {
     }
 
     /**
-     * Saves the current game state.
-     */
-    public void saveGame() {
-        if (gameState != null) {
-            gameState.saveToFile(SAVE_FILE);
-            JOptionPane.showMessageDialog(this, "Game saved successfully!");
-        } else {
-            JOptionPane.showMessageDialog(this, "No game in progress to save.");
-        }
-    }
+	 * begins serialization.
+	 */
+	public void saveGame() {
+		myGameState.saveToFile(myFilename);
+		JOptionPane.showMessageDialog(this, "Game saved successfully!");
+	}
 
-    /**
-     * Loads a saved game.
-     */
-    public void loadGame() {
-        File saveFile = new File(SAVE_FILE);
-        if (saveFile.exists()) {
-            gameState = GameState.loadFromFile(SAVE_FILE);
-            JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-            myInGame = true;
-            myCardLayout.show(myMainPanel, "Game");
-            addMenuBar();
-        } else {
-            JOptionPane.showMessageDialog(this, "No saved game found.");
-        }
-    }
+	/**
+	 * begins deserialization.
+	 */
+	public void loadGame() {
+		myGameState = GameState.loadFromFile(myFilename);
+		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+		myCardLayout.show(myMainPanel, "Game");
+	}
 
     /**
      * Displays the instructions screen.
