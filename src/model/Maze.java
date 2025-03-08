@@ -12,7 +12,7 @@ import controller.SystemControl;
  */
 public final class Maze /* implements Serializable */ {
 	/**
-	 * How big the map is.
+	 * How big the map is, -1.
 	 */
 	public static final int MAP_SIZE = 8;
 	/**

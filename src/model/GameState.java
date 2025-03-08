@@ -36,7 +36,10 @@ public final class GameState implements Serializable {
 	 */
 	private Difficulty myDifficulty;
 
-	private Room[][] map;
+	/**
+	 * the map.
+	 */
+	private Room[][] myMap;
 
 	/**
 	 * constructor.
@@ -64,39 +67,64 @@ public final class GameState implements Serializable {
 		this.myCurrentX = theCurrentPosition;
 	}
 
+	/**
+	 * return locked doors.
+	 * @return
+	 */
 	public Set<Integer> getLockedDoors() {
 		return new HashSet<>(myLockedDoors); // Return a copy to maintain encapsulation
 	}
 
-	public void lockDoor(int door) {
-		myLockedDoors.add(door);
+	/**
+	 * locks a door.
+	 * @param theDoor
+	 */
+	public void lockDoor(final int theDoor) {
+		myLockedDoors.add(theDoor);
 	}
 
+	/**
+	 * Returns questions used.
+	 * @return
+	 */
 	public Set<Integer> getQuestionsUsed() {
 		return new HashSet<>(myQuestionsUsed);
 	}
 
-	public void useQuestion(int questionId) {
-		myQuestionsUsed.add(questionId);
+	/**
+	 * use a question.
+	 * @param theQuestionId
+	 */
+	public void useQuestion(final int theQuestionId) {
+		myQuestionsUsed.add(theQuestionId);
 	}
 
-	public void saveToFile(String filename) {
-		map = Maze.returnMap();
+	/**
+	 * saves.
+	 * @param theFilename
+	 */
+	public void saveToFile(final String theFilename) {
+		myMap = Maze.returnMap();
 		this.myCurrentX = Maze.getX();
 		this.myCurrentY = Maze.getY();
 
-		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(theFilename))) {
 			out.writeObject(this);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static GameState loadFromFile(String filename) {
+	/**
+	 * loads a file into a game sate.
+	 * @param theFilename
+	 * @return
+	 */
+	public static GameState loadFromFile(final String theFilename) {
 		GameState other;
-		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(theFilename))) {
 			other = (GameState) in.readObject();
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (final IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 			other = new GameState(); // Return a new instance if loading fails
 		}
@@ -104,24 +132,37 @@ public final class GameState implements Serializable {
 		return other;
 	}
 
+	/**
+	 * loads to a maze.
+	 */
 	public void loadToMaze() {
-		Maze.loadMap(map, myCurrentX, myCurrentY);
+		Maze.loadMap(myMap, myCurrentX, myCurrentY);
 	}
 
-	public boolean isDoorLocked(int door) {
-		return myLockedDoors.contains(door);
+	/**
+	 * checks if locked.
+	 * @param theDoor
+	 * @return
+	 */
+	public boolean isDoorLocked(final int theDoor) {
+		return myLockedDoors.contains(theDoor);
 	}
 
-	public boolean isQuestionUsed(int questionId) {
-		return myQuestionsUsed.contains(questionId);
+	/**
+	 * checks if question used.
+	 * @param theQuestionId
+	 * @return
+	 */
+	public boolean isQuestionUsed(final int theQuestionId) {
+		return myQuestionsUsed.contains(theQuestionId);
 	}
 
 	/**
 	 * Reinitialize any components after loading. This is necessary because some
 	 * objects have transient fields.
 	 */
-	private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-		in.defaultReadObject();
+	private void readObject(final java.io.ObjectInputStream theIn) throws java.io.IOException, ClassNotFoundException {
+		theIn.defaultReadObject();
 		// Reconnect to the database
 		DatabaseManager.getInstance().setDifficulty(myDifficulty);
 
