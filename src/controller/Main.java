@@ -1,8 +1,8 @@
 package controller;
 
 import javax.swing.SwingUtilities;
-import view.GameView;
 import model.DatabaseManager;
+import view.GameView;
 
 public final class Main {
 	private Main() {

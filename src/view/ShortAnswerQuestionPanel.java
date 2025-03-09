@@ -1,20 +1,33 @@
 package view;
 
-import model.ShortAnswerQuestion;
-import model.GameState;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import model.GameState;
+import model.ShortAnswerQuestion;
 
 public final class ShortAnswerQuestionPanel extends QuestionPanel {
     private static final long serialVersionUID = 1L;
+    /**
+     * answer field.
+     */
     private JTextField myAnswerField;
+    /**
+     * clear button.
+     */
     private JButton myClearButton;
-
-    public ShortAnswerQuestionPanel(ShortAnswerQuestion question, GameState gameState) {
-        super(question, gameState);
+    
+    /**
+     * constructor.
+     * @param theQuestion
+     * @param theGameState
+     */
+    public ShortAnswerQuestionPanel(final ShortAnswerQuestion theQuestion, final GameState theGameState) {
+        super(theQuestion, theGameState);
         createAnswerInput();
     }
 
@@ -33,7 +46,7 @@ public final class ShortAnswerQuestionPanel extends QuestionPanel {
         myClearButton = new JButton("Clear Answer");
         myClearButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent theE) {
                 myAnswerField.setText(""); // Clears the text field
             }
         });
