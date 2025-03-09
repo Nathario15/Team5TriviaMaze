@@ -1,6 +1,8 @@
 package view;
 
 import model.GameState;
+import model.Direction;
+import model.Maze;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,15 +32,14 @@ public final class GameView extends JFrame {
 	 * Whether or not the player is currently in game.
 	 */
     private boolean myInGame;
-    
     /**
 	 * The file name for the save file.
 	 */
 	private String myFilename = ""; //TODO fix filename
 
-    /**
-     * Constructor.
-     */
+	/**
+	 * Constructor.
+	 */
     public GameView() {
         setTitle("Trivia Maze Game");
         setSize(800, 600);
@@ -90,8 +91,28 @@ public final class GameView extends JFrame {
 
     private void addGamePanel() {
         final JPanel gamePanel = new JPanel(new BorderLayout());
-        JLabel gameLabel = new JLabel("Game currently in progress.", SwingConstants.CENTER);
-        gamePanel.add(gameLabel, BorderLayout.CENTER);
+
+        MazePanel mazePanel = new MazePanel();
+        gamePanel.add(mazePanel, BorderLayout.CENTER);
+
+        JPanel controlPanel = new JPanel(new GridLayout(1, 4));
+        JButton northButton = new JButton("North");
+        JButton southButton = new JButton("South");
+        JButton eastButton = new JButton("East");
+        JButton westButton = new JButton("West");
+
+        northButton.addActionListener(_ -> movePlayer(Direction.NORTH, mazePanel));
+        southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, mazePanel));
+        eastButton.addActionListener(_ -> movePlayer(Direction.EAST, mazePanel));
+        westButton.addActionListener(_ -> movePlayer(Direction.WEST, mazePanel));
+
+        controlPanel.add(northButton);
+        controlPanel.add(southButton);
+        controlPanel.add(eastButton);
+        controlPanel.add(westButton);
+
+        gamePanel.add(controlPanel, BorderLayout.SOUTH);
+
         myMainPanel.add(gamePanel, "Game");
     }
 
@@ -104,11 +125,11 @@ public final class GameView extends JFrame {
 
         final JButton backButton = new JButton("Back");
         backButton.addActionListener(_ -> {
-        	if (myInGame) {
-        		myCardLayout.show(myMainPanel, "Game");
-        	} else {
-        		myCardLayout.show(myMainPanel, "MainMenu");
-        	}
+            if (myInGame) {
+                myCardLayout.show(myMainPanel, "Game");
+            } else {
+                myCardLayout.show(myMainPanel, "MainMenu");
+            }
         });
         instructionsPanel.add(backButton, BorderLayout.SOUTH);
 
@@ -123,50 +144,50 @@ public final class GameView extends JFrame {
 
         final JButton backBtn = new JButton("Back");
         backBtn.addActionListener(_ -> {
-        	if (myInGame) {
-        		myCardLayout.show(myMainPanel, "Game");
-        	} else {
-        		myCardLayout.show(myMainPanel, "MainMenu");
-        	}
+            if (myInGame) {
+                myCardLayout.show(myMainPanel, "Game");
+            } else {
+                myCardLayout.show(myMainPanel, "MainMenu");
+            }
         });
         aboutPanel.add(backBtn, BorderLayout.SOUTH);
 
         myMainPanel.add(aboutPanel, "About");
     }
-    
+
     private void addMenuBar() {
-    	JMenuBar menuBar = new JMenuBar();
-    	
-    	JMenu fileMenu = new JMenu("File");
-    	JMenuItem saveGameItem = new JMenuItem("Save Game");
-    	JMenuItem loadGameItem = new JMenuItem("Load Game");
-    	JMenuItem newGameItem = new JMenuItem("New Game");
-    	JMenuItem exitGameItem = new JMenuItem("Exit");
-    	
-    	saveGameItem.addActionListener(_ -> saveGame());
-    	loadGameItem.addActionListener(_ -> loadGame());
-    	newGameItem.addActionListener(_ -> newGame());
-    	exitGameItem.addActionListener(_ -> System.exit(0));
-    	
-    	fileMenu.add(saveGameItem);
-    	fileMenu.add(loadGameItem);
-    	fileMenu.add(newGameItem);
-    	fileMenu.add(exitGameItem);
-    	
-    	JMenu helpMenu = new JMenu("Help");
-    	JMenuItem instructionsGameItem = new JMenuItem("Instructions");
-    	JMenuItem aboutGameItem = new JMenuItem("About");
-    	
-    	instructionsGameItem.addActionListener(_ -> displayInstructions());
-    	aboutGameItem.addActionListener(_ -> displayAbout());
-    	
-    	helpMenu.add(instructionsGameItem);
-    	helpMenu.add(aboutGameItem);
-    	
-    	menuBar.add(fileMenu);
-    	menuBar.add(helpMenu);
-    	
-    	setJMenuBar(menuBar);
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem saveGameItem = new JMenuItem("Save Game");
+        JMenuItem loadGameItem = new JMenuItem("Load Game");
+        JMenuItem newGameItem = new JMenuItem("New Game");
+        JMenuItem exitGameItem = new JMenuItem("Exit");
+
+        saveGameItem.addActionListener(_ -> saveGame());
+        loadGameItem.addActionListener(_ -> loadGame());
+        newGameItem.addActionListener(_ -> newGame());
+        exitGameItem.addActionListener(_ -> System.exit(0));
+
+        fileMenu.add(saveGameItem);
+        fileMenu.add(loadGameItem);
+        fileMenu.add(newGameItem);
+        fileMenu.add(exitGameItem);
+
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem instructionsGameItem = new JMenuItem("Instructions");
+        JMenuItem aboutGameItem = new JMenuItem("About");
+
+        instructionsGameItem.addActionListener(_ -> displayInstructions());
+        aboutGameItem.addActionListener(_ -> displayAbout());
+
+        helpMenu.add(instructionsGameItem);
+        helpMenu.add(aboutGameItem);
+
+        menuBar.add(fileMenu);
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
     }
 
     /**
@@ -190,19 +211,19 @@ public final class GameView extends JFrame {
     /**
 	 * begins serialization.
 	 */
-	public void saveGame() {
-		myGameState.saveToFile(myFilename);
-		JOptionPane.showMessageDialog(this, "Game saved successfully!");
-	}
+    public void saveGame() {
+        myGameState.saveToFile(myFilename);
+        JOptionPane.showMessageDialog(this, "Game saved successfully!");
+    }
 
-	/**
+    /**
 	 * begins deserialization.
 	 */
-	public void loadGame() {
-		myGameState = GameState.loadFromFile(myFilename);
-		JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-		myCardLayout.show(myMainPanel, "Game");
-	}
+    public void loadGame() {
+        myGameState = GameState.loadFromFile(myFilename);
+        JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+        myCardLayout.show(myMainPanel, "Game");
+    }
 
     /**
      * Displays the instructions screen.
@@ -216,5 +237,15 @@ public final class GameView extends JFrame {
      */
     public void displayAbout() {
         myCardLayout.show(myMainPanel, "About");
+    }
+
+    private void movePlayer(Direction direction, MazePanel mazePanel) {
+        boolean success = Maze.move(direction);
+
+        if (success) {
+            mazePanel.repaint();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cannot move in that direction!");
+        }
     }
 }
