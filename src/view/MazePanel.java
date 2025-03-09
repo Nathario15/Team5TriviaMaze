@@ -10,7 +10,7 @@ import java.awt.*;
  * @version 1.0
  */
 public final class MazePanel extends JPanel {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
