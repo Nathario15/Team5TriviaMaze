@@ -1,8 +1,16 @@
 package controller;
 
-import model.*;
-import java.util.logging.Logger;
+import model.AbstractQuestion;
+import model.DatabaseManager;
+import model.Direction;
+import model.Difficulty;
+import model.DoorState;
+import model.Maze;
+import model.QuestionFactory;
+import model.Room;
+
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * SystemControl serves as the main controller in the MVC pattern,
@@ -12,21 +20,31 @@ import java.util.logging.Level;
  * @version 1.0
  */
 public final class SystemControl {
+    /** Logger for this class. */
     private static final Logger LOGGER = Logger.getLogger(SystemControl.class.getName());
     
-    // Singleton instance
-    private static SystemControl instance;
+    /** Singleton instance. */
+    private static SystemControl myInstance;
     
-    // Model components
-    private final DatabaseManager databaseManager;
-    private boolean gameActive;
+    /** Database manager for question retrieval. */
+    private final DatabaseManager myDatabaseManager;
+    
+    /** Whether a game is currently active. */
+    private boolean myGameActive;
+    
+    /** The last direction the player attempted to move in. */
+    private Direction myLastAttemptedDirection;
+    
+    /** Factory for creating questions. */
+    private final QuestionFactory myQuestionFactory;
     
     /**
      * Private constructor for singleton pattern.
      */
     private SystemControl() {
-        databaseManager = DatabaseManager.getInstance();
-        gameActive = false;
+        myDatabaseManager = DatabaseManager.getInstance();
+        myQuestionFactory = new QuestionFactory();
+        myGameActive = false;
     }
     
     /**
@@ -34,164 +52,224 @@ public final class SystemControl {
      * @return SystemControl instance
      */
     public static synchronized SystemControl getInstance() {
-        if (instance == null) {
-            instance = new SystemControl();
+        if (myInstance == null) {
+            myInstance = new SystemControl();
         }
-        return instance;
+        return myInstance;
     }
     
     /**
      * Initialize a new game with specified difficulty.
-     * @param difficulty The game difficulty level
+     * 
+     * @param theDifficulty The game difficulty level
      * @return true if initialization successful
      */
     public boolean initializeGame(final Difficulty theDifficulty) {
         try {
-            databaseManager.setDifficulty(theDifficulty);
-            if (!databaseManager.hasQuestionsForDifficulty()) {
+            myDatabaseManager.setDifficulty(theDifficulty);
+            if (!myDatabaseManager.hasQuestionsForDifficulty()) {
                 LOGGER.warning("No questions available for difficulty: " + theDifficulty);
                 return false;
             }
             
-
-            gameActive = true;
+            // Mark current room (entrance) as visited
+            Maze.getRoom().setEntrance(true);
+            Maze.getRoom().setVisited(true);
+            
+            // Initialize questions for adjacent rooms
+            setupQuestionsForCurrentRoom();
+            
+            myGameActive = true;
             return true;
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to initialize game", e);
+        } catch (final Exception theE) {
+            LOGGER.log(Level.SEVERE, "Failed to initialize game", theE);
             return false;
         }
     }
     
-//    /**
-//     * Handles player movement attempt in a direction.
-//     * @param direction The direction to move
-//     * @return true if movement successful
-//     */
-//    public boolean attemptMove(Direction direction) {
-//        if (!gameActive) {
-//            return false;
-//        }
-//        
-//        Room nextRoom = maze.getRoom(direction);
-//        if (nextRoom == null || !canEnterRoom(nextRoom)) {
-//            return false;
-//        }
-//        
-//        AbstractQuestion question = databaseManager.getRandomQuestion();
-//        if (question == null) {
-//            LOGGER.warning("Failed to get question for room entry");
-//            return false;
-//        }
-//        
-//        // The view will need to handle displaying the question and getting the answer
-//        return true;
-//    }
+    /**
+     * Sets up questions for doors in the current room.
+     */
+    private void setupQuestionsForCurrentRoom() {
+        for (final Direction theDir : Direction.values()) {
+            final Room nextRoom = Maze.getRoom(theDir);
+            if (nextRoom != null && !Maze.getRoom().hasQuestion(theDir)) {
+                final AbstractQuestion question = 
+                    myQuestionFactory.getQuestion(myDatabaseManager.getCurrentDifficulty());
+                if (question != null) {
+                    Maze.getRoom().setQuestion(theDir, question);
+                }
+            }
+        }
+    }
     
-//    /**
-//     * Processes the answer to a question.
-//     * @param question The question being answered
-//     * @param answer The player's answer
-//     * @return true if answer is correct
-//     */
-//    public boolean processAnswer(AbstractQuestion question, String answer) {
-//        if (!gameActive || question == null) {
-//            return false;
-//        }
-//        
-//        boolean correct = question.isCorrect(answer);
-//        if (correct) {
-//            moveToNextRoom();
-//        } else {
-//            handleIncorrectAnswer();
-//        }
-//        
-//        return correct;
-//    }
+    /**
+     * Handles player movement attempt in a direction.
+     * 
+     * @param theDirection The direction to move
+     * @return true if movement successful without needing a question
+     */
+    public boolean attemptMove(final Direction theDirection) {
+        if (!myGameActive) {
+            return false;
+        }
+        
+        myLastAttemptedDirection = theDirection;
+        
+        final Room currentRoom = Maze.getRoom();
+        final Room nextRoom = Maze.getRoom(theDirection);
+        
+        if (nextRoom == null) {
+            return false;  // Can't move out of bounds
+        }
+        
+        // Check door state
+        final DoorState doorState = currentRoom.getDoorState(theDirection);
+        if (doorState == DoorState.Open) {
+            // Door is already open, move using Maze.move
+            return Maze.move(theDirection);
+        } else if (doorState == DoorState.Blocked) {
+            // Door is permanently blocked
+            return false;
+        } else {
+            // Door is locked, need question to unlock
+            return false;  // Return false to trigger question in view
+        }
+    }
+    
+    /**
+     * Gets the last direction the player attempted to move.
+     * 
+     * @return The last attempted direction
+     */
+    public Direction getLastAttemptedDirection() {
+        return myLastAttemptedDirection;
+    }
+    
+    /**
+     * Processes the answer to a question.
+     * 
+     * @param theQuestion The question being answered
+     * @param theAnswer The player's answer
+     * @return true if answer is correct
+     */
+    public boolean processAnswer(final AbstractQuestion theQuestion, final String theAnswer) {
+        if (!myGameActive || theQuestion == null || myLastAttemptedDirection == null) {
+            return false;
+        }
+        
+        final boolean correct = theQuestion.isCorrect(theAnswer);
+        if (correct) {
+            Maze.getRoom().unlock(myLastAttemptedDirection);
+            Maze.move(myLastAttemptedDirection);
+            
+            // Check if player has reached the exit
+            if (Maze.getRoom().isExit()) {
+                myGameActive = false;
+                LOGGER.info("Game won! Player reached the exit room.");
+            }
+        } else {
+            Maze.getRoom().block(myLastAttemptedDirection);
+            
+            // Check if player can still reach the exit
+            if (checkLoseCondition()) {
+                myGameActive = false;
+                LOGGER.info("Game lost! No valid path to exit remains.");
+            }
+        }
+        
+        return correct;
+    }
     
     /**
      * Checks if the game has been won.
+     * 
      * @return true if player has reached the end room
      */
     public boolean checkWinCondition() {
-        //return gameActive && currentRoom != null && currentRoom.isEndRoom();
-    	return false;
-    	//TODO
+        return myGameActive && Maze.getRoom() != null && Maze.getRoom().isExit();
     }
     
     /**
      * Checks if the game has been lost.
+     * 
      * @return true if player can no longer reach the end
      */
     public boolean checkLoseCondition() {
-        //return gameActive && !maze.hasValidPathToEnd();
-    	return false;
-    	//TODO
+        if (!myGameActive) {
+            return false;
+        }
+        
+        // Check if all doors from current room are blocked
+        boolean allBlocked = true;
+        for (final Direction theDir : Direction.values()) {
+            final Room nextRoom = Maze.getRoom(theDir);
+            if (nextRoom != null && Maze.getRoom().getDoorState(theDir) != DoorState.Blocked) {
+                allBlocked = false;
+                break;
+            }
+        }
+        
+        // Simplified loss detection - if all doors blocked, game is lost
+        return allBlocked;
     }
     
-//    /**
-//     * Updates game state after correct answer and movement.
-//     */
-//    private void moveToNextRoom() {
-//        if (currentRoom != null) {
-//            currentRoom = maze.getCurrentRoom();
-//            if (checkWinCondition()) {
-//                gameActive = false;
-//                // View should be notified of win
-//            }
-//        }
-//    }
-    
-//    /**
-//     * Handles consequences of incorrect answer.
-//     */
-//    private void handleIncorrectAnswer() {
-//        if (currentRoom != null) {
-//            currentRoom.lockDoor(maze.getLastAttemptedDirection());
-//            if (checkLoseCondition()) {
-//                gameActive = false;
-//                // View should be notified of loss
-//            }
-//        }
-//    }
-    
-//    /**
-//     * Checks if a room can be entered.
-//     * @param room The room to check
-//     * @return true if room can be entered
-//     */
-//    private boolean canEnterRoom(Room room) {
-//        return room != null && !room.isLocked();
-//    }
-//    
     /**
      * Gets the current game difficulty.
+     * 
      * @return current Difficulty
      */
     public Difficulty getCurrentDifficulty() {
-        return databaseManager.getCurrentDifficulty();
+        return myDatabaseManager.getCurrentDifficulty();
     }
     
     /**
      * Checks if a game is currently active.
+     * 
      * @return true if game is active
      */
     public boolean isGameActive() {
-        return gameActive;
+        return myGameActive;
     }
     
     /**
      * Ends the current game session.
      */
     public void endGame() {
-        gameActive = false;
+        myGameActive = false;
         // Additional cleanup as needed
     }
+    
     /**
-     * Triggers a question.
-     * @return
+     * Triggers a question for movement. This method is called from the Maze class.
+     * The actual question handling is delegated to the view through the controller.
+     * 
+     * @return true if question answered correctly, false otherwise
      */
-	public static boolean triggerQuestion() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public static boolean triggerQuestion() {
+        // This is a placeholder for integration with Maze.move()
+        // The actual question handling is done in the GameView
+        return false;
+    }
+    
+    /**
+     * Gets a random question for a specific door.
+     * 
+     * @param theDirection The direction of the door
+     * @return A question object or null if none available
+     */
+    public AbstractQuestion getQuestionForDoor(final Direction theDirection) {
+        // Try to get an existing question from the room
+        AbstractQuestion question = Maze.getRoom().getQuestion(theDirection);
+        
+        // If no question exists, get a random one from the database
+        if (question == null) {
+            question = myDatabaseManager.getRandomQuestion();
+            if (question != null) {
+                Maze.getRoom().setQuestion(theDirection, question);
+            }
+        }
+        
+        return question;
+    }
 }
