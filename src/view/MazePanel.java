@@ -1,8 +1,10 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import javax.swing.JPanel;
 import model.Maze;
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * MazePanel is responsible for rendering the maze visually.

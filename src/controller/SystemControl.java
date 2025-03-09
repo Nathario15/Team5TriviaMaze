@@ -1,8 +1,9 @@
 package controller;
 
-import model.*;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.DatabaseManager;
+import model.Difficulty;
 
 /**
  * SystemControl serves as the main controller in the MVC pattern,
@@ -12,21 +13,32 @@ import java.util.logging.Level;
  * @version 1.0
  */
 public final class SystemControl {
+	/**
+	 * logger.
+	 */
     private static final Logger LOGGER = Logger.getLogger(SystemControl.class.getName());
     
-    // Singleton instance
+    /**
+     * Singleton instance.
+     */
     private static SystemControl instance;
     
     // Model components
-    private final DatabaseManager databaseManager;
-    private boolean gameActive;
+    /**
+     * database.
+     */
+    private final DatabaseManager myDatabaseManager;
+    /**
+     * gameActive.
+     */
+    private boolean myGameActive;
     
     /**
      * Private constructor for singleton pattern.
      */
     private SystemControl() {
-        databaseManager = DatabaseManager.getInstance();
-        gameActive = false;
+        myDatabaseManager = DatabaseManager.getInstance();
+        myGameActive = false;
     }
     
     /**
@@ -47,16 +59,16 @@ public final class SystemControl {
      */
     public boolean initializeGame(final Difficulty theDifficulty) {
         try {
-            databaseManager.setDifficulty(theDifficulty);
-            if (!databaseManager.hasQuestionsForDifficulty()) {
+            myDatabaseManager.setDifficulty(theDifficulty);
+            if (!myDatabaseManager.hasQuestionsForDifficulty()) {
                 LOGGER.warning("No questions available for difficulty: " + theDifficulty);
                 return false;
             }
             
 
-            gameActive = true;
+            myGameActive = true;
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to initialize game", e);
             return false;
         }
@@ -168,7 +180,7 @@ public final class SystemControl {
      * @return current Difficulty
      */
     public Difficulty getCurrentDifficulty() {
-        return databaseManager.getCurrentDifficulty();
+        return myDatabaseManager.getCurrentDifficulty();
     }
     
     /**
@@ -176,14 +188,14 @@ public final class SystemControl {
      * @return true if game is active
      */
     public boolean isGameActive() {
-        return gameActive;
+        return myGameActive;
     }
     
     /**
      * Ends the current game session.
      */
     public void endGame() {
-        gameActive = false;
+        myGameActive = false;
         // Additional cleanup as needed
     }
     /**

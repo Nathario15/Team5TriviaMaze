@@ -15,25 +15,37 @@ public abstract class QuestionPanel extends JPanel {
      * the Question.
      */
     protected AbstractQuestion myQuestion;
+    /**
+     * GameState.
+     */
     protected GameState myGameState;
+    /**
+     * Question.
+     */
     protected JLabel myQuestionLabel;
+    /**
+     * SUbmit.
+     */
     protected JButton mySubmitButton;
+    /**
+     * Feedback.
+     */
     protected JLabel myFeedbackLabel;
 
     /**
      * Constructor for the question panel.
      *
-     * @param question  The question for this panel.
-     * @param gameState The current game state.
+     * @param theQuestion  The question for this panel.
+     * @param theGameState The current game state.
      */
-    public QuestionPanel(AbstractQuestion question, GameState gameState) {
-        this.myQuestion = question;
-        this.myGameState = gameState;
+    public QuestionPanel(final AbstractQuestion theQuestion, final GameState theGameState) {
+        this.myQuestion = theQuestion;
+        this.myGameState = theGameState;
 
         setLayout(new GridLayout(3, 1, 10, 10)); // Adjust this depending on the number of components
 
         // Question Label
-        myQuestionLabel = new JLabel("<html><b>Question:</b> " + question.getQuestion() + "</html>");
+        myQuestionLabel = new JLabel("<html><b>Question:</b> " + theQuestion.getQuestion() + "</html>");
         myQuestionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(myQuestionLabel);
 
@@ -53,13 +65,20 @@ public abstract class QuestionPanel extends JPanel {
      * Abstract method to be implemented by subclasses to define how the user provides answers.
      */
     protected abstract void createAnswerInput();
-
+    
+    /**
+     * Abstract method that must be implemented in subclasses to check the user's answer.
+     *
+     * @return true if the answer is correct, false otherwise.
+     */
+    protected abstract boolean checkAnswer();
+    
     /**
      * Inner class to handle answer submission.
      */
-    private class SubmitAnswerListener implements ActionListener {
+    private final class SubmitAnswerListener implements ActionListener {
         @Override
-        public void actionPerformed(final ActionEvent e) {
+        public void actionPerformed(final ActionEvent theE) {
             if (checkAnswer()) {
                 myFeedbackLabel.setText("Correct! You can proceed.");
                 myFeedbackLabel.setForeground(Color.GREEN);
@@ -71,10 +90,5 @@ public abstract class QuestionPanel extends JPanel {
         }
     }
 
-    /**
-     * Abstract method that must be implemented in subclasses to check the user's answer.
-     *
-     * @return true if the answer is correct, false otherwise.
-     */
-    protected abstract boolean checkAnswer();
+    
 }

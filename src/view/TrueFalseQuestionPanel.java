@@ -1,20 +1,32 @@
 package view;
 
-import model.TrueFalseQuestion;
-import model.GameState;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import model.GameState;
+import model.TrueFalseQuestion;
 
 public final class TrueFalseQuestionPanel extends QuestionPanel {
     private static final long serialVersionUID = 1L;
+    /**
+     * True Button.
+     */
     private JButton myTrueButton;
+    /**
+     * False Button.
+     */
     private JButton myFalseButton;
 
-    public TrueFalseQuestionPanel(TrueFalseQuestion question, GameState gameState) {
-        super(question, gameState);
+    /**
+     * Constructor.
+     * @param theQuestion
+     * @param theGameState
+     */
+    public TrueFalseQuestionPanel(final TrueFalseQuestion theQuestion, final GameState theGameState) {
+        super(theQuestion, theGameState);
         createAnswerInput();
     }
 
@@ -29,14 +41,14 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
 
         myTrueButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent theE) {
                 checkAnswer();
             }
         });
 
         myFalseButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent theE) {
                 checkAnswer();
             }
         });
