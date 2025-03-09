@@ -51,7 +51,7 @@ public final class GameState implements Serializable {
 	}
 
 	/**
-	 * returns current postion.
+	 * returns current position.
 	 * 
 	 * @return
 	 */
@@ -98,6 +98,22 @@ public final class GameState implements Serializable {
 	public void useQuestion(final int theQuestionId) {
 		myQuestionsUsed.add(theQuestionId);
 	}
+	
+	/**
+	 * Returns current difficulty.
+	 * @return
+	 */
+	public Difficulty getDifficulty() {
+        return myDifficulty;
+    }
+
+	/**
+	 * 
+	 * @param difficulty
+	 */
+    public void setDifficulty(Difficulty difficulty) {
+        this.myDifficulty = difficulty;
+    }
 
 	/**
 	 * saves.
