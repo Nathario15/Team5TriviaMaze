@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 /**
@@ -31,7 +32,8 @@ class QuestionTest {
 
 	@Test
 	void testQuestionManager() {
-		// TODO
+		final QuestionFactory f = new QuestionFactory();
+		assertNotNull(f.getQuestion(Difficulty.EASY));
 	}
 
 }

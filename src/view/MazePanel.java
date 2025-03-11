@@ -51,8 +51,8 @@ public final class MazePanel extends JPanel {
         }
 
         // Draw Player Position
-        final int playerX = Maze.getX();
-        final int playerY = Maze.getY();
+        final int playerX = Maze.getDisplayX();
+        final int playerY = Maze.getDisplayY();
         theG.setColor(Color.RED);
         theG.fillOval(playerX * CELL_SIZE + 10, playerY * CELL_SIZE + 10, CELL_SIZE - 20, CELL_SIZE - 20);
     }
