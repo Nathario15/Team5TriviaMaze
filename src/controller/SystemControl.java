@@ -1,9 +1,15 @@
 package controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import model.AbstractQuestion;
 import model.DatabaseManager;
-import model.Direction;
 import model.Difficulty;
+import model.Direction;
 import model.DoorState;
 import model.Maze;
 import model.MultipleChoiceQuestion;
@@ -16,15 +22,6 @@ import view.QuestionPanel;
 import view.ShortAnswerQuestionPanel;
 import view.TrueFalseQuestionPanel;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-//import java.util.LinkedList;
-//import java.util.Queue;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 /**
  * SystemControl serves as the main controller in the MVC pattern,
  * managing game flow and communication between model and view.
@@ -35,6 +32,12 @@ import javax.swing.JPanel;
 public final class SystemControl {
     /** Logger for this class. */
     private static final Logger LOGGER = Logger.getLogger(SystemControl.class.getName());
+    
+    /** Standard dialog width. */
+    private static final int DIALOG_WIDTH = 400;
+    
+    /** Standard dialog height. */
+    private static final int DIALOG_HEIGHT = 300;
     
     /** Singleton instance. */
     private static SystemControl myInstance;
@@ -78,39 +81,45 @@ public final class SystemControl {
      * @return true if initialization successful
      */
     public boolean initializeGame(final Difficulty theDifficulty) {
+        boolean success = false;
+        
         try {
             myDatabaseManager.setDifficulty(theDifficulty);
-            if (!myDatabaseManager.hasQuestionsForDifficulty()) {
+            final boolean hasQuestions = myDatabaseManager.hasQuestionsForDifficulty();
+            
+            if (hasQuestions) {
+                // Mark current room (entrance) as visited
+                Maze.getRoom().setEntrance(true);
+                Maze.getRoom().setVisited(true);
+                
+                // Initialize questions for adjacent rooms
+                setupQuestionsForCurrentRoom();
+                
+                myGameActive = true;
+                success = true;
+            } else {
                 LOGGER.warning("No questions available for difficulty: " + theDifficulty);
-                return false;
             }
-            
-            // Mark current room (entrance) as visited
-            Maze.getRoom().setEntrance(true);
-            Maze.getRoom().setVisited(true);
-            
-            // Initialize questions for adjacent rooms
-            setupQuestionsForCurrentRoom();
-            
-            myGameActive = true;
-            return true;
-        } catch (final Exception theE) {
-            LOGGER.log(Level.SEVERE, "Failed to initialize game", theE);
-            return false;
+        } catch (final IllegalStateException ex1) {
+            LOGGER.log(Level.SEVERE, "Failed to initialize game due to illegal state", ex1);
+        } catch (final NullPointerException ex2) {
+            LOGGER.log(Level.SEVERE, "Failed to initialize game due to null pointer", ex2);
         }
+        
+        return success;
     }
     
     /**
      * Sets up questions for doors in the current room.
      */
     private void setupQuestionsForCurrentRoom() {
-        for (final Direction theDir : Direction.values()) {
-            final Room nextRoom = Maze.getRoom(theDir);
-            if (nextRoom != null && !Maze.getRoom().hasQuestion(theDir)) {
+        for (final Direction dir : Direction.values()) {
+            final Room nextRoom = Maze.getRoom(dir);
+            if (nextRoom != null && !Maze.getRoom().hasQuestion(dir)) {
                 final AbstractQuestion question = 
                     myQuestionFactory.getQuestion(myDatabaseManager.getCurrentDifficulty());
                 if (question != null) {
-                    Maze.getRoom().setQuestion(theDir, question);
+                    Maze.getRoom().setQuestion(dir, question);
                 }
             }
         }
@@ -136,18 +145,29 @@ public final class SystemControl {
             return false;  // Can't move out of bounds
         }
         
-        // Check door state
-        final DoorState doorState = currentRoom.getDoorState(theDirection);
+        // Check door state and return appropriate result
+        return checkDoorStateForMovement(currentRoom, theDirection);
+    }
+    
+    /**
+     * Checks the door state to determine if movement is possible.
+     * 
+     * @param theRoom The current room
+     * @param theDirection The direction to move
+     * @return true if movement is possible, false otherwise
+     */
+    private boolean checkDoorStateForMovement(final Room theRoom, final Direction theDirection) {
+        final DoorState doorState = theRoom.getDoorState(theDirection);
+        
         if (doorState == DoorState.OPEN) {
-            // Door is already open, move using Maze.move
-            return Maze.move(theDirection);
-        } else if (doorState == DoorState.BLOCKED) {
-            // Door is permanently blocked
-            return false;
-        } else {
-            // Door is locked, need question to unlock
-            return false;  // Return false to trigger question in view
+            return Maze.move(theDirection);  // Door is open, move
         }
+        
+        if (doorState == DoorState.LOCKED) {
+            return false;  // Door is locked, need question in view
+        }
+        
+        return false;  // Door is blocked
     }
     
     /**
@@ -160,6 +180,15 @@ public final class SystemControl {
     }
     
     /**
+     * Sets the last attempted direction.
+     * 
+     * @param theDirection The direction to set
+     */
+    public void setLastAttemptedDirection(final Direction theDirection) {
+        myLastAttemptedDirection = theDirection;
+    }
+    
+    /**
      * Processes the answer to a question.
      * 
      * @param theQuestion The question being answered
@@ -167,31 +196,47 @@ public final class SystemControl {
      * @return true if answer is correct
      */
     public boolean processAnswer(final AbstractQuestion theQuestion, final String theAnswer) {
+        // Invalid state checks
         if (!myGameActive || theQuestion == null || myLastAttemptedDirection == null) {
             return false;
         }
         
         final boolean correct = theQuestion.isCorrect(theAnswer);
+        
         if (correct) {
-            Maze.getRoom().unlock(myLastAttemptedDirection);
-            Maze.move(myLastAttemptedDirection);
-            
-            // Check if player has reached the exit
-            if (Maze.getRoom().isExit()) {
-                myGameActive = false;
-                LOGGER.info("Game won! Player reached the exit room.");
-            }
+            handleCorrectAnswer();
         } else {
-            Maze.getRoom().block(myLastAttemptedDirection);
-            
-            // Check if player can still reach the exit
-            if (checkLoseCondition()) {
-                myGameActive = false;
-                LOGGER.info("Game lost! No valid path to exit remains.");
-            }
+            handleIncorrectAnswer();
         }
         
         return correct;
+    }
+    
+    /**
+     * Handles correct answer processing.
+     */
+    private void handleCorrectAnswer() {
+        Maze.getRoom().unlock(myLastAttemptedDirection);
+        Maze.move(myLastAttemptedDirection);
+        
+        // Check if player has reached the exit
+        if (Maze.getRoom().isExit()) {
+            myGameActive = false;
+            LOGGER.info("Game won! Player reached the exit room.");
+        }
+    }
+    
+    /**
+     * Handles incorrect answer processing.
+     */
+    private void handleIncorrectAnswer() {
+        Maze.getRoom().block(myLastAttemptedDirection);
+        
+        // Check if player can still reach the exit
+        if (checkLoseCondition()) {
+            myGameActive = false;
+            LOGGER.info("Game lost! No valid path to exit remains.");
+        }
     }
     
     /**
@@ -215,9 +260,9 @@ public final class SystemControl {
         
         // Check if all doors from current room are blocked
         boolean allBlocked = true;
-        for (final Direction theDir : Direction.values()) {
-            final Room nextRoom = Maze.getRoom(theDir);
-            if (nextRoom != null && Maze.getRoom().getDoorState(theDir) != DoorState.BLOCKED) {
+        for (final Direction dir : Direction.values()) {
+            final Room nextRoom = Maze.getRoom(dir);
+            if (nextRoom != null && Maze.getRoom().getDoorState(dir) != DoorState.BLOCKED) {
                 allBlocked = false;
                 break;
             }
@@ -254,63 +299,112 @@ public final class SystemControl {
     }
     
     /**
+     * Creates the appropriate question panel based on question type.
+     * 
+     * @param theQuestion The question to display
+     * @return The question panel created
+     */
+    private static JPanel createQuestionPanel(final AbstractQuestion theQuestion) {
+        JPanel panel1 = null;
+        
+        if (theQuestion instanceof MultipleChoiceQuestion) {
+            panel1 = new MultipleChoiceQuestionPanel(
+                    (MultipleChoiceQuestion) theQuestion, null);
+        } else if (theQuestion instanceof TrueFalseQuestion) {
+            panel1 = new TrueFalseQuestionPanel(
+                    (TrueFalseQuestion) theQuestion, null);
+        } else if (theQuestion instanceof ShortAnswerQuestion) {
+            panel1 = new ShortAnswerQuestionPanel(
+                    (ShortAnswerQuestion) theQuestion, null);
+        }
+        
+        return panel1;
+    }
+    
+    /**
+     * Sets up and displays the question dialog.
+     * 
+     * @param thePanel The panel containing the question
+     * @param theDialog The dialog to display the question in
+     * @return true if answered correctly, false otherwise
+     */
+    private static boolean displayQuestionDialog(final JPanel thePanel, final JDialog theDialog) {
+        final boolean[] result = new boolean[1];
+        
+        final JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            result[0] = ((QuestionPanel) thePanel).checkAnswer();
+            handleQuestionResult(result[0], theDialog);
+        });
+        
+        thePanel.add(submitButton);
+        theDialog.add(thePanel);
+        theDialog.setVisible(true);
+        
+        return result[0];
+    }
+    
+    /**
+     * Handles the result of answering a question.
+     * 
+     * @param theCorrect Whether the answer was correct
+     * @param theDialog The dialog showing the question
+     */
+    private static void handleQuestionResult(final boolean theCorrect, final JDialog theDialog) {
+        if (theCorrect) {
+            JOptionPane.showMessageDialog(theDialog, 
+                    "Correct! The door is now open.", "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(theDialog, 
+                    "Incorrect! The door is now permanently blocked.", "Failed", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        theDialog.dispose();
+    }
+    
+    /**
      * Triggers a question for movement. This method is called from the Maze class.
      * The actual question handling is delegated to the view through the controller.
      * 
      * @return true if question answered correctly, false otherwise
      */
     public static boolean triggerQuestion() {
-        final AbstractQuestion question = SystemControl.getInstance().getQuestionForDoor(
-                SystemControl.getInstance().getLastAttemptedDirection());
+        // Get direction and question
+        final Direction attemptedDir = SystemControl.getInstance().getLastAttemptedDirection();
+        if (attemptedDir == null) {
+            return false;
+        }
         
+        // Get question for the door
+        final AbstractQuestion question = SystemControl.getInstance().getQuestionForDoor(attemptedDir);
         if (question == null) {
             return false;
         }
         
-        // Create and display appropriate question dialog based on question type
+        // Create dialog and panel
+        return triggerQuestionDialog(question);
+    }
+    
+    /**
+     * Creates and shows a question dialog.
+     * 
+     * @param theQuestion The question to display
+     * @return true if answered correctly, false otherwise
+     */
+    private static boolean triggerQuestionDialog(final AbstractQuestion theQuestion) {
         final JDialog questionDialog = new JDialog();
         questionDialog.setTitle("Answer Question to Proceed");
         questionDialog.setModal(true);
-        questionDialog.setSize(400, 300);
+        questionDialog.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
         questionDialog.setLocationRelativeTo(null);
         
-        JPanel questionPanel;
-        if (question instanceof MultipleChoiceQuestion) {
-            questionPanel = new MultipleChoiceQuestionPanel(
-                    (MultipleChoiceQuestion) question, null);
-        } else if (question instanceof TrueFalseQuestion) {
-            questionPanel = new TrueFalseQuestionPanel(
-                    (TrueFalseQuestion) question, null);
-        } else if (question instanceof ShortAnswerQuestion) {
-            questionPanel = new ShortAnswerQuestionPanel(
-                    (ShortAnswerQuestion) question, null);
-        } else {
+        final JPanel questionPanel = createQuestionPanel(theQuestion);
+        if (questionPanel == null) {
             return false;
         }
         
-        final boolean[] result = new boolean[1];
-        
-        JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            result[0] = ((QuestionPanel) questionPanel).checkAnswer();
-            if (result[0]) {
-                JOptionPane.showMessageDialog(questionDialog, 
-                        "Correct! The door is now open.", "Success", 
-                        JOptionPane.INFORMATION_MESSAGE);
-                questionDialog.dispose();
-            } else {
-                JOptionPane.showMessageDialog(questionDialog, 
-                        "Incorrect! The door is now permanently blocked.", "Failed", 
-                        JOptionPane.ERROR_MESSAGE);
-                questionDialog.dispose();
-            }
-        });
-        
-        questionPanel.add(submitButton);
-        questionDialog.add(questionPanel);
-        questionDialog.setVisible(true);
-        
-        return result[0];
+        return displayQuestionDialog(questionPanel, questionDialog);
     }
     
     /**
@@ -321,16 +415,27 @@ public final class SystemControl {
      */
     public AbstractQuestion getQuestionForDoor(final Direction theDirection) {
         // Try to get an existing question from the room
-        AbstractQuestion question = Maze.getRoom().getQuestion(theDirection);
+        AbstractQuestion question1 = Maze.getRoom().getQuestion(theDirection);
         
-        // If no question exists, get a random one from the database
-        if (question == null) {
-            question = myDatabaseManager.getRandomQuestion();
-            if (question != null) {
-                Maze.getRoom().setQuestion(theDirection, question);
-            }
+        // If no question exists, get a random one
+        if (question1 == null) {
+            question1 = getNewQuestionForDoor(theDirection);
         }
         
-        return question;
+        return question1;
+    }
+    
+    /**
+     * Gets a new question from the database and assigns it to the door.
+     * 
+     * @param theDirection The direction of the door
+     * @return A new question or null if none available
+     */
+    private AbstractQuestion getNewQuestionForDoor(final Direction theDirection) {
+        final AbstractQuestion question1 = myDatabaseManager.getRandomQuestion();
+        if (question1 != null) {
+            Maze.getRoom().setQuestion(theDirection, question1);
+        }
+        return question1;
     }
 }
