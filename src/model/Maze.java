@@ -65,8 +65,17 @@ public final class Maze /* implements Serializable */ {
 	 * 
 	 * @return
 	 */
-	public static int getY() {
+	static int getY() {
 		return y;
+	}
+
+	/**
+	 * used for display.
+	 * 
+	 * @return
+	 */
+	public static int getDisplayY() {
+		return y - 1;
 	}
 
 	/**
@@ -74,8 +83,17 @@ public final class Maze /* implements Serializable */ {
 	 * 
 	 * @return
 	 */
-	public static int getX() {
+	static int getX() {
 		return x;
+	}
+
+	/**
+	 * used for display.
+	 * 
+	 * @return
+	 */
+	public static int getDisplayX() {
+		return x - 1;
 	}
 
 	/**
