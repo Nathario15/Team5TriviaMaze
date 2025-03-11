@@ -59,7 +59,7 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
     }
 
     @Override
-    protected boolean checkAnswer() {
+    public boolean checkAnswer() {
         // Check if the selected answer is correct
         final String answer = myTrueButton.getModel().isPressed() ? "True" : "False";
         final boolean isCorrect = myQuestion.isCorrect(answer);

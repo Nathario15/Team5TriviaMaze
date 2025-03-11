@@ -6,11 +6,24 @@ import model.Direction;
 import model.Difficulty;
 import model.DoorState;
 import model.Maze;
+import model.MultipleChoiceQuestion;
 import model.QuestionFactory;
 import model.Room;
+import model.ShortAnswerQuestion;
+import model.TrueFalseQuestion;
+import view.MultipleChoiceQuestionPanel;
+import view.QuestionPanel;
+import view.ShortAnswerQuestionPanel;
+import view.TrueFalseQuestionPanel;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//import java.util.LinkedList;
+//import java.util.Queue;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  * SystemControl serves as the main controller in the MVC pattern,
@@ -247,9 +260,57 @@ public final class SystemControl {
      * @return true if question answered correctly, false otherwise
      */
     public static boolean triggerQuestion() {
-        // This is a placeholder for integration with Maze.move()
-        // The actual question handling is done in the GameView
-        return false;
+        final AbstractQuestion question = SystemControl.getInstance().getQuestionForDoor(
+                SystemControl.getInstance().getLastAttemptedDirection());
+        
+        if (question == null) {
+            return false;
+        }
+        
+        // Create and display appropriate question dialog based on question type
+        final JDialog questionDialog = new JDialog();
+        questionDialog.setTitle("Answer Question to Proceed");
+        questionDialog.setModal(true);
+        questionDialog.setSize(400, 300);
+        questionDialog.setLocationRelativeTo(null);
+        
+        JPanel questionPanel;
+        if (question instanceof MultipleChoiceQuestion) {
+            questionPanel = new MultipleChoiceQuestionPanel(
+                    (MultipleChoiceQuestion) question, null);
+        } else if (question instanceof TrueFalseQuestion) {
+            questionPanel = new TrueFalseQuestionPanel(
+                    (TrueFalseQuestion) question, null);
+        } else if (question instanceof ShortAnswerQuestion) {
+            questionPanel = new ShortAnswerQuestionPanel(
+                    (ShortAnswerQuestion) question, null);
+        } else {
+            return false;
+        }
+        
+        final boolean[] result = new boolean[1];
+        
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            result[0] = ((QuestionPanel) questionPanel).checkAnswer();
+            if (result[0]) {
+                JOptionPane.showMessageDialog(questionDialog, 
+                        "Correct! The door is now open.", "Success", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                questionDialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(questionDialog, 
+                        "Incorrect! The door is now permanently blocked.", "Failed", 
+                        JOptionPane.ERROR_MESSAGE);
+                questionDialog.dispose();
+            }
+        });
+        
+        questionPanel.add(submitButton);
+        questionDialog.add(questionPanel);
+        questionDialog.setVisible(true);
+        
+        return result[0];
     }
     
     /**

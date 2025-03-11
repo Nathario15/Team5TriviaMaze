@@ -6,6 +6,9 @@ import model.Maze;
 
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Random;
 
 /**
  * The main view for the Trivia Maze Game.

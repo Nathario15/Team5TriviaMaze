@@ -56,7 +56,7 @@ public final class ShortAnswerQuestionPanel extends QuestionPanel {
     }
 
     @Override
-    protected boolean checkAnswer() {
+    public boolean checkAnswer() {
         final String answer = myAnswerField.getText().trim();
 
         // Check if the answer is correct
