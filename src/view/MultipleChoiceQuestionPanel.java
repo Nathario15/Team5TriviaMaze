@@ -70,7 +70,7 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
     }
 
     @Override
-    protected boolean checkAnswer() {
+    public boolean checkAnswer() {
         String selectedAnswer = null;
         for (AbstractButton button : Collections.list(myChoiceGroup.getElements())) {
             if (button.isSelected()) {

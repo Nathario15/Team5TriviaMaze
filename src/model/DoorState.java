@@ -4,13 +4,13 @@ public enum DoorState {
 	/**
 	 * The Door is Locked.
 	 */
-	Locked,
+	LOCKED,
 	/**
 	 * The Door is Open.
 	 */
-	Open,
+	OPEN,
 	/**
 	 * The Door is Blocked.
 	 */
-	Blocked;
+	BLOCKED;
 }

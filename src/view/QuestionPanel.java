@@ -71,7 +71,7 @@ public abstract class QuestionPanel extends JPanel {
      *
      * @return true if the answer is correct, false otherwise.
      */
-    protected abstract boolean checkAnswer();
+    public abstract boolean checkAnswer();
     
     /**
      * Inner class to handle answer submission.

@@ -55,10 +55,10 @@ public class Room implements Serializable {
         myIsExit = false;
         myIsEntrance = false;
         
-		myDoors.put(Direction.NORTH, DoorState.Locked);
-		myDoors.put(Direction.SOUTH, DoorState.Locked);
-		myDoors.put(Direction.EAST, DoorState.Locked);
-		myDoors.put(Direction.WEST, DoorState.Locked);
+		myDoors.put(Direction.NORTH, DoorState.LOCKED);
+		myDoors.put(Direction.SOUTH, DoorState.LOCKED);
+		myDoors.put(Direction.EAST, DoorState.LOCKED);
+		myDoors.put(Direction.WEST, DoorState.LOCKED);
     }
 
 	/**
@@ -67,7 +67,7 @@ public class Room implements Serializable {
 	 * @param theDir the direction you are going when you enter the room.
 	 */
 	private void unlocked(final Direction theDir) {
-		myDoors.put(theDir.getOpposite(), DoorState.Open);
+		myDoors.put(theDir.getOpposite(), DoorState.OPEN);
 	}
 	/**
 	 * When player leaves a room.
@@ -75,7 +75,7 @@ public class Room implements Serializable {
 	 * @param theDir the direction you are going when you leave the room.
 	 */
 	public void unlock(final Direction theDir) {
-		myDoors.put(theDir, DoorState.Open);
+		myDoors.put(theDir, DoorState.OPEN);
 		Maze.getRoom(theDir).unlocked(theDir);
 	}
 	
@@ -85,7 +85,7 @@ public class Room implements Serializable {
 	 * @param theDir the direction you are going when you fail to enter the room.
 	 */
 	private void blocked(final Direction theDir) {
-		myDoors.put(theDir.getOpposite(), DoorState.Blocked);
+		myDoors.put(theDir.getOpposite(), DoorState.BLOCKED);
 	}
 	/**
 	 * When player fails to leave a room.
@@ -93,7 +93,7 @@ public class Room implements Serializable {
 	 * @param theDir the direction you are going when you fail to leave the room.
 	 */
 	public void block(final Direction theDir) {
-		myDoors.put(theDir, DoorState.Blocked);
+		myDoors.put(theDir, DoorState.BLOCKED);
 		Maze.getRoom(theDir).blocked(theDir);
 	}
 	
