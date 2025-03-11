@@ -237,12 +237,10 @@ public final class DatabaseManager {
 	}
 
 	/**
-	 * Finalize method to ensure database connection is closed.
+	 * Properly close database resources when application shuts down.
+	 * Should be called during application shutdown.
 	 */
-	@SuppressWarnings("removal")
-	@Override
-	protected void finalize() throws Throwable {
-		closeConnection();
-		super.finalize();
+	public void shutdown() {
+	    closeConnection();
 	}
 }
