@@ -125,10 +125,10 @@ public final class SystemControl {
         
         // Check door state
         final DoorState doorState = currentRoom.getDoorState(theDirection);
-        if (doorState == DoorState.Open) {
+        if (doorState == DoorState.OPEN) {
             // Door is already open, move using Maze.move
             return Maze.move(theDirection);
-        } else if (doorState == DoorState.Blocked) {
+        } else if (doorState == DoorState.BLOCKED) {
             // Door is permanently blocked
             return false;
         } else {
@@ -204,7 +204,7 @@ public final class SystemControl {
         boolean allBlocked = true;
         for (final Direction theDir : Direction.values()) {
             final Room nextRoom = Maze.getRoom(theDir);
-            if (nextRoom != null && Maze.getRoom().getDoorState(theDir) != DoorState.Blocked) {
+            if (nextRoom != null && Maze.getRoom().getDoorState(theDir) != DoorState.BLOCKED) {
                 allBlocked = false;
                 break;
             }
