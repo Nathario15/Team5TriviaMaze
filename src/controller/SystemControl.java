@@ -34,10 +34,10 @@ public final class SystemControl {
     private static final Logger LOGGER = Logger.getLogger(SystemControl.class.getName());
     
     /** Standard dialog width. */
-    private static final int DIALOG_WIDTH = 400;
+    private static final int DIALOG_WIDTH = 500;
     
     /** Standard dialog height. */
-    private static final int DIALOG_HEIGHT = 300;
+    private static final int DIALOG_HEIGHT = 500;
     
     /** Singleton instance. */
     private static SystemControl myInstance;
@@ -105,7 +105,7 @@ public final class SystemControl {
         } catch (final NullPointerException ex2) {
             LOGGER.log(Level.SEVERE, "Failed to initialize game due to null pointer", ex2);
         }
-        
+
         return success;
     }
     
@@ -145,8 +145,26 @@ public final class SystemControl {
             return false;  // Can't move out of bounds
         }
         
-        // Check door state and return appropriate result
-        return checkDoorStateForMovement(currentRoom, theDirection);
+        // Check if the next room has been visited
+        if (!nextRoom.isVisited()) {
+            // Unvisited room - show a question regardless of door state
+            boolean answered = triggerQuestion();
+            
+            if (answered) {
+                // Correct answer - unlock door and move
+                currentRoom.unlock(theDirection);
+                Maze.move(theDirection);
+                nextRoom.setVisited(true);
+                return true;
+            } else {
+                // Wrong answer - block door
+                currentRoom.block(theDirection);
+                return false;
+            }
+        } else {
+            // Already visited room - just check door state
+            return checkDoorStateForMovement(currentRoom, theDirection);
+        }
     }
     
     /**

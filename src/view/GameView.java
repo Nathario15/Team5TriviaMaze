@@ -1,6 +1,7 @@
 package view;
 
 import model.GameState;
+import model.Difficulty;
 import model.Direction;
 import model.Maze;
 
@@ -8,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import controller.SystemControl;
+
 import java.util.Random;
 
 /**
@@ -197,17 +201,28 @@ public final class GameView extends JFrame {
      * Starts a new game, prompting the user to select a difficulty level.
      */
     public void newGame() {
-        String[] difficulties = {"Easy", "Medium", "Hard"};
+        String[] difficulties = {"EASY", "MEDIUM", "HARD"};
         String selectedDifficulty = (String) JOptionPane.showInputDialog(this, 
                 "Select Difficulty:", "New Game",
                 JOptionPane.QUESTION_MESSAGE, null, difficulties, difficulties[0]);
 
         if (selectedDifficulty != null) {
+            // Convert string to Difficulty enum
+            Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
+            
+            // Create new game state
             myGameState = new GameState();
-            JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
-            myInGame = true;
-            myCardLayout.show(myMainPanel, "Game");
-            addMenuBar();
+            myGameState.setDifficulty(difficulty);
+            
+            // Initialize game through controller
+            if (SystemControl.getInstance().initializeGame(difficulty)) {
+                myInGame = true;
+                myCardLayout.show(myMainPanel, "Game");
+                addMenuBar();
+                repaint(); // Refresh display
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to start game. Check database connection.");
+            }
         }
     }
 
@@ -243,12 +258,17 @@ public final class GameView extends JFrame {
     }
 
     private void movePlayer(Direction direction, MazePanel mazePanel) {
-        boolean success = Maze.move(direction);
+        // Set direction in controller first
+        SystemControl.getInstance().setLastAttemptedDirection(direction);
+        
+        // Then attempt move through controller
+        boolean success = SystemControl.getInstance().attemptMove(direction);
 
         if (success) {
             mazePanel.repaint();
         } else {
-            JOptionPane.showMessageDialog(this, "Cannot move in that direction!");
+            // Don't show message - controller will handle question or blocking
+            mazePanel.repaint(); // Still repaint to show updated door states
         }
     }
 }
