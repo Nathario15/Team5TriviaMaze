@@ -79,12 +79,13 @@ public abstract class QuestionPanel extends JPanel {
     private final class SubmitAnswerListener implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent theE) {
-            if (checkAnswer()) {
+            boolean correct = checkAnswer();
+            
+            if (correct) {
                 myFeedbackLabel.setText("Correct! You can proceed.");
                 myFeedbackLabel.setForeground(Color.GREEN);
-                myGameState.useQuestion(myQuestion.hashCode()); // Mark question as answered
             } else {
-                myFeedbackLabel.setText("Incorrect! Try again.");
+                myFeedbackLabel.setText("Incorrect! Door is now permanently blocked.");
                 myFeedbackLabel.setForeground(Color.RED);
             }
         }
