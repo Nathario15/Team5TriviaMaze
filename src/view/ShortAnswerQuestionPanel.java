@@ -68,7 +68,7 @@ public final class ShortAnswerQuestionPanel extends QuestionPanel {
             myFeedbackLabel.setForeground(Color.GREEN);
             myAnswerField.setBackground(Color.GREEN);  // Green background for correct answer
         } else {
-            myFeedbackLabel.setText("Incorrect! Try again.");
+            myFeedbackLabel.setText("Incorrect! Door is now permanently blocked.");
             myFeedbackLabel.setForeground(Color.RED);
             myAnswerField.setBackground(Color.RED);  // Red background for incorrect answer
         }
