@@ -1,5 +1,7 @@
 package model;
 
+import javax.swing.JOptionPane;
+
 import controller.SystemControl;
 
 //import java.io.Serializable;
@@ -149,10 +151,10 @@ public final class Maze /* implements Serializable */ {
 	public static Room getRoom(final Direction theDirection) {
 	    // Add boundary checks to prevent array index errors
 	    if (theDirection == Direction.NORTH && y + 1 < MAP.length) {
-	        return MAP[x][y + 1];
+	        return MAP[x][y - 1];
 	    }
 	    if (theDirection == Direction.SOUTH && y - 1 >= 0) {
-	        return MAP[x][y - 1];
+	        return MAP[x][y + 1];
 	    }
 	    if (theDirection == Direction.EAST && x + 1 < MAP.length) {
 	        return MAP[x + 1][y];
@@ -180,15 +182,15 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	protected static void setRoom(final Direction theDirection) {
-		if (theDirection == Direction.NORTH) {
-			y--;
-		} else if (theDirection == Direction.SOUTH) {
-			y++;
-		} else if (theDirection == Direction.EAST) {
-			x++;
-		} else {
-			x--;
-		}
+	    if (theDirection == Direction.NORTH) {
+	        y--;  // NORTH decreases y (moves up)
+	    } else if (theDirection == Direction.SOUTH) {
+	        y++;  // SOUTH increases y (moves down)
+	    } else if (theDirection == Direction.EAST) {
+	        x++;  // EAST decreases x (moves right)
+	    } else if (theDirection == Direction.WEST) {
+	        x--;  // WEST increases x (moves left)
+	    }
 	}
 
 	/**
@@ -198,15 +200,34 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	public static boolean move(final Direction theDirection) {
-		// checks the room isn't null, checks that it is open
-		// if it is not open, checks that it is locked, then attempts to unlock it
-		if( getRoom(theDirection) != null && getRoom().myDoors.get(theDirection) == DoorState.OPEN
-				|| getRoom().myDoors.get(theDirection) == DoorState.LOCKED && attempt(theDirection)) {
-			setRoom(theDirection);
-			return true;
-		}
-		return false;
-			
+	    // Check if room exists in that direction
+	    if (getRoom(theDirection) == null) {
+	        return false;
+	    }
+	    
+	    // Get door state
+	    DoorState doorState = getRoom().myDoors.get(theDirection);
+	    
+	    // If door is open, just move
+	    if (doorState == DoorState.OPEN) {
+	        setRoom(theDirection);
+	        return true;
+	    } 
+	    // If door is locked, try to unlock with a question
+	    else if (doorState == DoorState.LOCKED && attempt(theDirection)) {
+	        // attempt() will handle unlocking the door if answered correctly
+	        setRoom(theDirection);
+	        return true;
+	    } 
+	    // If door is blocked, show message
+	    else if (doorState == DoorState.BLOCKED) {
+	        JOptionPane.showMessageDialog(null, 
+	            "This door is permanently blocked! You answered incorrectly before.", 
+	            "Blocked Path", 
+	            JOptionPane.WARNING_MESSAGE);
+	    }
+	    
+	    return false;
 	}
 
 	private static boolean attempt(final Direction theDirection) {
