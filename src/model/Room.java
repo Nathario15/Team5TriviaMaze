@@ -3,6 +3,8 @@ package model;
 import java.io.Serializable;
 import java.util.EnumMap;
 
+import controller.SystemControl;
+
 /**
  *A room, contains a question you have to answer, and a door that will open.
  * @author Ibrahim Elnikety
@@ -76,6 +78,9 @@ public class Room implements Serializable {
 	 */
 	public void unlock(final Direction theDir) {
 		myDoors.put(theDir, DoorState.OPEN);
+		if(Maze.getRoom(theDir)==null) {
+			SystemControl.getInstance().endGame();
+		}
 		Maze.getRoom(theDir).unlocked(theDir);
 	}
 	

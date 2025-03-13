@@ -296,6 +296,7 @@ public final class SystemControl {
     public void endGame() {
         myGameActive = false;
         // Additional cleanup as needed
+    
     }
     
     /**
