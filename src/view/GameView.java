@@ -210,7 +210,7 @@ public final class GameView extends JFrame {
             myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
             addMenuBar();
-            DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
+            DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
         }
     }
 
