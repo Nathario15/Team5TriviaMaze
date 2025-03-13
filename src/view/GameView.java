@@ -289,7 +289,7 @@ public final class GameView extends JFrame {
 
         if (success) {
             int newX = Maze.getDisplayX() + 1;
-            int newY = Maze.getDisplayY() + 1;
+            int newY = Maze.getDisplayY() + 1; //test
             myGameState.setCurrentPosition(newX, newY);
             mazePanel.repaint();
             updateTracker();
