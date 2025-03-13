@@ -17,10 +17,10 @@ public class Room implements Serializable {
 	 * Shows which doors are open.
 	 */
 	protected final EnumMap<Direction, DoorState> myDoors = new EnumMap<>(Direction.class);
-    /**
-     * Questions associated with each door.
-     */
-    protected final EnumMap<Direction, AbstractQuestion> myQuestions = new EnumMap<>(Direction.class);
+//    /**
+//     * Questions associated with each door.
+//     */
+//    protected final EnumMap<Direction, AbstractQuestion> myQuestions = new EnumMap<>(Direction.class);
     /**
      * Room identifier.
      */
@@ -97,35 +97,35 @@ public class Room implements Serializable {
 		Maze.getRoom(theDir).blocked(theDir);
 	}
 	
-    /**
-     * Sets a question for a specific door direction.
-     * 
-     * @param theDirection The direction of the door
-     * @param theQuestion The question to associate with the door
-     */
-    public void setQuestion(final Direction theDirection, final AbstractQuestion theQuestion) {
-        myQuestions.put(theDirection, theQuestion);
-    }
+//    /**
+//     * Sets a question for a specific door direction.
+//     * 
+//     * @param theDirection The direction of the door
+//     * @param theQuestion The question to associate with the door
+//     */
+//    public void setQuestion(final Direction theDirection, final AbstractQuestion theQuestion) {
+//        myQuestions.put(theDirection, theQuestion);
+//    }
     
-    /**
-     * Gets the question for a specific door direction.
-     * 
-     * @param theDirection The direction of the door
-     * @return The question associated with the door, or null if none
-     */
-    public AbstractQuestion getQuestion(final Direction theDirection) {
-        return myQuestions.get(theDirection);
-    }
+//    /**
+//     * Gets the question for a specific door direction.
+//     * 
+//     * @param theDirection The direction of the door
+//     * @return The question associated with the door, or null if none
+//     */
+//    public AbstractQuestion getQuestion(final Direction theDirection) {
+//        return myQuestions.get(theDirection);
+//    }
     
-    /**
-     * Checks if a door has an associated question.
-     * 
-     * @param theDirection The direction of the door
-     * @return true if the door has a question, false otherwise
-     */
-    public boolean hasQuestion(final Direction theDirection) {
-        return myQuestions.containsKey(theDirection);
-    }
+//    /**
+//     * Checks if a door has an associated question.
+//     * 
+//     * @param theDirection The direction of the door
+//     * @return true if the door has a question, false otherwise
+//     */
+//    public boolean hasQuestion(final Direction theDirection) {
+//        return myQuestions.containsKey(theDirection);
+//    }
     
     /**
      * Sets the visited status of the room.
@@ -145,41 +145,41 @@ public class Room implements Serializable {
         return myIsVisited;
     }
     
-    /**
-     * Sets whether this room is the exit.
-     * 
-     * @param theIsExit Whether this room is the exit
-     */
-    public void setExit(final boolean theIsExit) {
-        myIsExit = theIsExit;
-    }
-    
-    /**
-     * Checks if this room is the exit.
-     * 
-     * @return true if this room is the exit, false otherwise
-     */
-    public boolean isExit() {
-        return myIsExit;
-    }
-    
-    /**
-     * Sets whether this room is the entrance.
-     * 
-     * @param theIsEntrance Whether this room is the entrance
-     */
-    public void setEntrance(final boolean theIsEntrance) {
-        myIsEntrance = theIsEntrance;
-    }
-    
-    /**
-     * Checks if this room is the entrance.
-     * 
-     * @return true if this room is the entrance, false otherwise
-     */
-    public boolean isEntrance() {
-        return myIsEntrance;
-    }
+//    /**
+//     * Sets whether this room is the exit.
+//     * 
+//     * @param theIsExit Whether this room is the exit
+//     */
+//    public void setExit(final boolean theIsExit) {
+//        myIsExit = theIsExit;
+//    }
+//    
+//    /**
+//     * Checks if this room is the exit.
+//     * 
+//     * @return true if this room is the exit, false otherwise
+//     */
+//    public boolean isExit() {
+//        return myIsExit;
+//    }
+//    
+//    /**
+//     * Sets whether this room is the entrance.
+//     * 
+//     * @param theIsEntrance Whether this room is the entrance
+//     */
+//    public void setEntrance(final boolean theIsEntrance) {
+//        myIsEntrance = theIsEntrance;
+//    }
+//    
+//    /**
+//     * Checks if this room is the entrance.
+//     * 
+//     * @return true if this room is the entrance, false otherwise
+//     */
+//    public boolean isEntrance() {
+//        return myIsEntrance;
+//    }
     
     /**
      * Gets the room identifier.
