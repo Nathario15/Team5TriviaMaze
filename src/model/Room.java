@@ -76,13 +76,16 @@ public class Room implements Serializable {
 	 * 
 	 * @param theDir the direction you are going when you leave the room.
 	 */
-	public void unlock(final Direction theDir) {
-	    // Set the current room's door to OPEN
-	    myDoors.put(theDir, DoorState.OPEN);
-	    
-	    // Set the adjacent room's door to OPEN
-	    Maze.getRoom(theDir).unlocked(theDir);
-	}
+    public void unlock(final Direction theDir) {
+        // Set the current room's door to OPEN
+        myDoors.put(theDir, DoorState.OPEN);
+        
+        // Get the adjacent room and set its corresponding door to OPEN
+        Room adjacentRoom = Maze.getRoom(theDir);
+        if (adjacentRoom != null) {
+            adjacentRoom.myDoors.put(theDir.getOpposite(), DoorState.OPEN);
+        }
+    }
 	
 	/**
 	 * When player fails to enter a room.
