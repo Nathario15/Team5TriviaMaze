@@ -157,10 +157,10 @@ public final class Maze /* implements Serializable */ {
 	        return MAP[x][y + 1];
 	    }
 	    if (theDirection == Direction.EAST && x + 1 < MAP.length) {
-	        return MAP[x - 1][y];
+	        return MAP[x + 1][y];
 	    }
 	    if (theDirection == Direction.WEST && x - 1 >= 0) {
-	        return MAP[x + 1][y];
+	        return MAP[x - 1][y];
 	    }
 	    return null; // Return null for invalid moves
 	}
@@ -187,9 +187,9 @@ public final class Maze /* implements Serializable */ {
 	    } else if (theDirection == Direction.SOUTH) {
 	        y++;  // SOUTH increases y (moves down)
 	    } else if (theDirection == Direction.EAST) {
-	        x--;  // EAST decreases x (moves right)
+	        x++;  // EAST decreases x (moves right)
 	    } else if (theDirection == Direction.WEST) {
-	        x++;  // WEST increases x (moves left)
+	        x--;  // WEST increases x (moves left)
 	    }
 	}
 
