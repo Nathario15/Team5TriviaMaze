@@ -253,7 +253,7 @@ public final class GameView extends JFrame {
     }
 
     private void movePlayer(Direction direction, MazePanel mazePanel) {
-        boolean success = Maze.move(direction.getOpposite());
+        boolean success = Maze.move(direction);
 
         if (success) {
             mazePanel.repaint();
