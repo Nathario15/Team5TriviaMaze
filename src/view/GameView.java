@@ -10,6 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import controller.SystemControl;
+
 import java.util.Random;
 
 /**
@@ -199,12 +202,16 @@ public final class GameView extends JFrame {
      * Starts a new game, prompting the user to select a difficulty level.
      */
     public void newGame() {
-        String[] difficulties = {"Easy", "Medium", "Hard"};
+        String[] difficulties = {"EASY", "MEDIUM", "HARD"};
         String selectedDifficulty = (String) JOptionPane.showInputDialog(this, 
                 "Select Difficulty:", "New Game",
                 JOptionPane.QUESTION_MESSAGE, null, difficulties, difficulties[0]);
 
         if (selectedDifficulty != null) {
+            // Convert string to Difficulty enum
+            Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
+            
+            // Create new game state
             myGameState = new GameState();
             JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
             myInGame = true;
@@ -251,7 +258,8 @@ public final class GameView extends JFrame {
         if (success) {
             mazePanel.repaint();
         } else {
-            JOptionPane.showMessageDialog(this, "Cannot move in that direction!");
+            // Don't show message - controller will handle question or blocking
+            mazePanel.repaint(); // Still repaint to show updated door states
         }
     }
 }

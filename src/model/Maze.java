@@ -147,20 +147,20 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	public static Room getRoom(final Direction theDirection) {
-		Room temp = null;
-		if (theDirection == Direction.NORTH) {
-			temp = MAP[x][y + 1];
-		}
-		if (theDirection == Direction.SOUTH) {
-			temp = MAP[x][y - 1];
-		}
-		if (theDirection == Direction.EAST) {
-			temp = MAP[x + 1][y];
-		}
-		if (theDirection == Direction.WEST) {
-			temp = MAP[x - 1][y];
-		}
-		return temp;
+	    // Add boundary checks to prevent array index errors
+	    if (theDirection == Direction.NORTH && y + 1 < MAP.length) {
+	        return MAP[x][y + 1];
+	    }
+	    if (theDirection == Direction.SOUTH && y - 1 >= 0) {
+	        return MAP[x][y - 1];
+	    }
+	    if (theDirection == Direction.EAST && x + 1 < MAP.length) {
+	        return MAP[x + 1][y];
+	    }
+	    if (theDirection == Direction.WEST && x - 1 >= 0) {
+	        return MAP[x - 1][y];
+	    }
+	    return null; // Return null for invalid moves
 	}
 
 	/**
@@ -181,13 +181,13 @@ public final class Maze /* implements Serializable */ {
 	 */
 	protected static void setRoom(final Direction theDirection) {
 		if (theDirection == Direction.NORTH) {
-			y++;
-		} else if (theDirection == Direction.SOUTH) {
 			y--;
+		} else if (theDirection == Direction.SOUTH) {
+			y++;
 		} else if (theDirection == Direction.EAST) {
-			x++;
-		} else {
 			x--;
+		} else {
+			x++;
 		}
 	}
 
