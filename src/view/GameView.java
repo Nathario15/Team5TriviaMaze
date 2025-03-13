@@ -1,6 +1,8 @@
 package view;
 
 import model.GameState;
+import model.DatabaseManager;
+import model.Difficulty;
 import model.Direction;
 import model.Maze;
 
@@ -208,6 +210,7 @@ public final class GameView extends JFrame {
             myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
             addMenuBar();
+            DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
         }
     }
 
@@ -243,7 +246,7 @@ public final class GameView extends JFrame {
     }
 
     private void movePlayer(Direction direction, MazePanel mazePanel) {
-        boolean success = Maze.move(direction);
+        boolean success = Maze.move(direction.getOpposite());
 
         if (success) {
             mazePanel.repaint();

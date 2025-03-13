@@ -414,7 +414,7 @@ public final class SystemControl {
      */
     public AbstractQuestion getQuestionForDoor() {
         // Try to get an existing question from the room
-        AbstractQuestion question1 = this.myDatabaseManager.getRandomQuestion();
+        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
         
 //        // If no question exists, get a random one
 //        if (question1 == null) {

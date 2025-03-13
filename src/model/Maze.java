@@ -200,14 +200,18 @@ public final class Maze /* implements Serializable */ {
 	public static boolean move(final Direction theDirection) {
 		// checks the room isn't null, checks that it is open
 		// if it is not open, checks that it is locked, then attempts to unlock it
-		return getRoom(theDirection) != null && getRoom().myDoors.get(theDirection) == DoorState.OPEN
-				|| getRoom().myDoors.get(theDirection) == DoorState.LOCKED && attempt(theDirection);
+		if( getRoom(theDirection) != null && getRoom().myDoors.get(theDirection) == DoorState.OPEN
+				|| getRoom().myDoors.get(theDirection) == DoorState.LOCKED && attempt(theDirection)) {
+			setRoom(theDirection);
+			return true;
+		}
+		return false;
+			
 	}
 
 	private static boolean attempt(final Direction theDirection) {
 		if (SystemControl.triggerQuestion()) {
 			getRoom().unlock(theDirection);
-			setRoom(theDirection);
 			return true;
 		} else {
 			getRoom().block(theDirection);
