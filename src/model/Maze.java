@@ -185,9 +185,9 @@ public final class Maze /* implements Serializable */ {
 		} else if (theDirection == Direction.SOUTH) {
 			y++;
 		} else if (theDirection == Direction.EAST) {
-			x--;
-		} else {
 			x++;
+		} else {
+			x--;
 		}
 	}
 
