@@ -1,6 +1,7 @@
 package view;
 
 import model.GameState;
+import model.DatabaseManager;
 import model.Difficulty;
 import model.Direction;
 import model.Maze;
@@ -212,17 +213,11 @@ public final class GameView extends JFrame {
             
             // Create new game state
             myGameState = new GameState();
-            myGameState.setDifficulty(difficulty);
-            
-            // Initialize game through controller
-            if (SystemControl.getInstance().initializeGame(difficulty)) {
-                myInGame = true;
-                myCardLayout.show(myMainPanel, "Game");
-                addMenuBar();
-                repaint(); // Refresh display
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to start game. Check database connection.");
-            }
+            JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
+            myInGame = true;
+            myCardLayout.show(myMainPanel, "Game");
+            addMenuBar();
+            DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
         }
     }
 
@@ -258,11 +253,7 @@ public final class GameView extends JFrame {
     }
 
     private void movePlayer(Direction direction, MazePanel mazePanel) {
-        // Set direction in controller first
-        SystemControl.getInstance().setLastAttemptedDirection(direction);
-        
-        // Then attempt move through controller
-        boolean success = SystemControl.getInstance().attemptMove(direction);
+        boolean success = Maze.move(direction.getOpposite());
 
         if (success) {
             mazePanel.repaint();

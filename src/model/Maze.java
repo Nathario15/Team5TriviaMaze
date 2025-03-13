@@ -198,31 +198,26 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	public static boolean move(final Direction theDirection) {
-	    // Check if next room exists
-	    if (getRoom(theDirection) == null) {
-	        return false;
-	    }
-	    
-	    // Check if door is open
-	    if (getRoom().myDoors.get(theDirection) == DoorState.OPEN) {
-	        setRoom(theDirection);
-	        return true;
-	    }
-	    
-	    // Door is locked or blocked
-	    return false;
+		// checks the room isn't null, checks that it is open
+		// if it is not open, checks that it is locked, then attempts to unlock it
+		if( getRoom(theDirection) != null && getRoom().myDoors.get(theDirection) == DoorState.OPEN
+				|| getRoom().myDoors.get(theDirection) == DoorState.LOCKED && attempt(theDirection)) {
+			setRoom(theDirection);
+			return true;
+		}
+		return false;
+			
 	}
 
-//	private static boolean attempt(final Direction theDirection) {
-//		if (SystemControl.triggerQuestion()) {
-//			getRoom().unlock(theDirection);
-//			setRoom(theDirection);
-//			return true;
-//		} else {
-//			getRoom().block(theDirection);
-//			return false;
-//		}
-//	}
+	private static boolean attempt(final Direction theDirection) {
+		if (SystemControl.triggerQuestion()) {
+			getRoom().unlock(theDirection);
+			return true;
+		} else {
+			getRoom().block(theDirection);
+			return false;
+		}
+	}
 
 	/**
 	 * Reconnect to any services after deserialization. This is called from
