@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import javax.swing.JPanel;
+
+import controller.SystemControl;
 import model.Maze;
 import model.Direction;
 import model.DoorState;
