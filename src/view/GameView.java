@@ -44,6 +44,11 @@ public final class GameView extends JFrame {
 	 * The file name for the save file.
 	 */
 	private String myFilename = ""; //TODO fix filename
+	
+	 private JPanel trackerPanel;
+	 private JLabel positionLabel;
+	 private JLabel questionsAnsweredLabel;
+	 private JLabel lockedDoorsLabel;
 
 	/**
 	 * Constructor.
@@ -79,20 +84,20 @@ public final class GameView extends JFrame {
         final JButton newGameButton = new JButton("New Game");
         final JButton loadGameButton = new JButton("Load Game");
         final JButton instructionsButton = new JButton("Instructions");
-        final JButton aboutBtn = new JButton("About");
-        final JButton exitBtn = new JButton("Exit");
+        final JButton aboutButton = new JButton("About");
+        final JButton exitButton = new JButton("Exit");
 
         newGameButton.addActionListener(_ -> newGame());
         loadGameButton.addActionListener(_ -> loadGame());
         instructionsButton.addActionListener(_ -> displayInstructions());
-        aboutBtn.addActionListener(_ -> displayAbout());
-        exitBtn.addActionListener(_ -> System.exit(0));
+        aboutButton.addActionListener(_ -> displayAbout());
+        exitButton.addActionListener(_ -> System.exit(0));
 
         menuPanel.add(newGameButton);
         menuPanel.add(loadGameButton);
         menuPanel.add(instructionsButton);
-        menuPanel.add(aboutBtn);
-        menuPanel.add(exitBtn);
+        menuPanel.add(aboutButton);
+        menuPanel.add(exitButton);
 
         myMainPanel.add(menuPanel, "MainMenu");
     }
@@ -120,8 +125,35 @@ public final class GameView extends JFrame {
         controlPanel.add(westButton);
 
         gamePanel.add(controlPanel, BorderLayout.SOUTH);
+        addTrackerPanel(gamePanel);
 
         myMainPanel.add(gamePanel, "Game");
+    }
+    
+    private void addTrackerPanel(JPanel gamePanel) {
+        trackerPanel = new JPanel(new GridLayout(3, 1));
+
+        positionLabel = new JLabel("Position: (4,4)");
+        questionsAnsweredLabel = new JLabel("Questions Answered: 0");
+        lockedDoorsLabel = new JLabel("Locked Doors: 0");
+
+        positionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        questionsAnsweredLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        lockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+
+        trackerPanel.add(positionLabel);
+        trackerPanel.add(questionsAnsweredLabel);
+        trackerPanel.add(lockedDoorsLabel);
+
+        gamePanel.add(trackerPanel, BorderLayout.EAST);
+    }
+
+    private void updateTracker() {
+        if (myGameState != null) {
+        	positionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
+            questionsAnsweredLabel.setText("Questions Answered: " + myGameState.getQuestionsAnswered());
+            lockedDoorsLabel.setText("Locked Doors: " + myGameState.getLockedDoors());
+        }
     }
 
     private void addInstructionsPanel() {
@@ -253,13 +285,16 @@ public final class GameView extends JFrame {
     }
 
     private void movePlayer(Direction direction, MazePanel mazePanel) {
-        boolean success = Maze.move(direction.getOpposite());
+        boolean success = Maze.move(direction);
 
         if (success) {
+            int newX = Maze.getDisplayX() + 1;
+            int newY = Maze.getDisplayY() + 1; //test
+            myGameState.setCurrentPosition(newX, newY);
             mazePanel.repaint();
+            updateTracker();
         } else {
-            // Don't show message - controller will handle question or blocking
-            mazePanel.repaint(); // Still repaint to show updated door states
+            mazePanel.repaint();
         }
     }
 }

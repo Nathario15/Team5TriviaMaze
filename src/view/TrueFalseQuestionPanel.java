@@ -19,6 +19,9 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
      * False Button.
      */
     private JButton myFalseButton;
+    
+    private String mySelectedAnswer;
+
 
     /**
      * Constructor.
@@ -34,42 +37,50 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
     protected void createAnswerInput() {
         // Set up the layout for True/False buttons
         final JPanel answerPanel = new JPanel();
-        answerPanel.setLayout(new GridLayout(1, 2));
+        answerPanel.setLayout(new GridLayout(1, 2, 10, 0));
 
         myTrueButton = new JButton("True");
         myFalseButton = new JButton("False");
 
+        // Auto-submit when True is clicked
         myTrueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent theE) {
-                checkAnswer();
+                // Set the answer and submit automatically
+                mySelectedAnswer = "True";
+                mySubmitButton.doClick();  // Trigger the submit button
             }
         });
 
+        // Auto-submit when False is clicked
         myFalseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent theE) {
-                checkAnswer();
+                // Set the answer and submit automatically
+                mySelectedAnswer = "False";
+                mySubmitButton.doClick();  // Trigger the submit button
             }
         });
 
         answerPanel.add(myTrueButton);
         answerPanel.add(myFalseButton);
         add(answerPanel);
+        
+        // Hide the submit button so it's not visible but can still be triggered
+        mySubmitButton.setVisible(false);
     }
 
     @Override
     public boolean checkAnswer() {
         // Check if the selected answer is correct
-        final String answer = myTrueButton.getModel().isPressed() ? "True" : "False";
-        final boolean isCorrect = myQuestion.isCorrect(answer);
+        final boolean isCorrect = myQuestion.isCorrect(mySelectedAnswer);
 
         // Provide feedback to the user
         if (isCorrect) {
             myFeedbackLabel.setText("Correct! You can proceed.");
             myFeedbackLabel.setForeground(Color.GREEN);
         } else {
-            myFeedbackLabel.setText("Incorrect! Try again.");
+            myFeedbackLabel.setText("Incorrect! Door is now permanently blocked.");
             myFeedbackLabel.setForeground(Color.RED);
         }
 

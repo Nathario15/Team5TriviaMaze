@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.Component;
+import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -145,25 +147,34 @@ public final class SystemControl {
             return false;  // Can't move out of bounds
         }
         
-        // Check if the next room has been visited
-        if (!nextRoom.isVisited()) {
-            // Unvisited room - show a question regardless of door state
-            boolean answered = triggerQuestion();
+        // Check door state first
+        DoorState doorState = currentRoom.getDoorState(theDirection);
+        
+        if (doorState == DoorState.OPEN) {
+            // Door is already open - move freely
+            Maze.move(theDirection);
+            return true;
+        } else if (doorState == DoorState.LOCKED) {
+            // Door is locked - show question
+            boolean answeredCorrectly = triggerQuestion();
             
-            if (answered) {
+            if (answeredCorrectly) {
                 // Correct answer - unlock door and move
                 currentRoom.unlock(theDirection);
                 Maze.move(theDirection);
-                nextRoom.setVisited(true);
                 return true;
             } else {
-                // Wrong answer - block door
+                // Wrong answer - permanently block door
                 currentRoom.block(theDirection);
                 return false;
             }
         } else {
-            // Already visited room - just check door state
-            return checkDoorStateForMovement(currentRoom, theDirection);
+            // Door is already blocked - can't move
+            JOptionPane.showMessageDialog(null, 
+                    "This door is permanently blocked!", 
+                    "Blocked Path", 
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
         }
     }
     
@@ -350,13 +361,28 @@ public final class SystemControl {
     private static boolean displayQuestionDialog(final JPanel thePanel, final JDialog theDialog) {
         final boolean[] result = new boolean[1];
         
-        final JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            result[0] = ((QuestionPanel) thePanel).checkAnswer();
-            handleQuestionResult(result[0], theDialog);
-        });
+        JButton existingSubmit = null;
+        for (Component c : thePanel.getComponents()) {
+            if (c instanceof JButton && ((JButton)c).getText().contains("Submit")) {
+                existingSubmit = (JButton)c;
+                break;
+            }
+        }
         
-        thePanel.add(submitButton);
+        if (existingSubmit != null) {
+            // Remove existing listeners
+            for (ActionListener al : existingSubmit.getActionListeners()) {
+                existingSubmit.removeActionListener(al);
+            }
+            
+            // Add our listener
+            existingSubmit.addActionListener(e -> {
+                result[0] = ((QuestionPanel) thePanel).checkAnswer();
+                handleQuestionResult(result[0], theDialog);
+                theDialog.dispose();
+            });
+        }
+        
         theDialog.add(thePanel);
         theDialog.setVisible(true);
         
