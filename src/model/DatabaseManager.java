@@ -102,7 +102,7 @@ public final class DatabaseManager {
 	 * @return Question object or null if no questions available
 	 */
 	public AbstractQuestion getRandomQuestion() {
-		final String sql = "SELECT * FROM trivia_questions WHERE difficulty = ? ORDER BY RANDOM() LIMIT 1";
+		final String sql = "SELECT * FROM trivia_questions WHERE difficulty = ?" + " ORDER BY RANDOM()" + " LIMIT 1";
 
 		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
 			pstmt.setString(1, myDifficulty.toString());
@@ -111,6 +111,31 @@ public final class DatabaseManager {
 			if (rs.next()) {
 				return createQuestionFromResultSet(rs);
 			}
+		} catch (final SQLException e) {
+			System.err.println("Error getting random question: " + e.getMessage());
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get a random question of the current difficulty.
+	 * 
+	 * @return Question object or null if no questions available
+	 */
+	public ArrayList<AbstractQuestion> getArrayList() {
+		final String sql = "SELECT * FROM trivia_questions WHERE difficulty = ?" + " ORDER BY question" + " LIMIT 48";
+
+		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
+			pstmt.setString(1, myDifficulty.toString());
+			final ResultSet rs = pstmt.executeQuery();
+			ArrayList<AbstractQuestion> arr = new ArrayList<AbstractQuestion>();
+			for (int i = 0; i < 48; i++) {
+				if (rs.next()) {
+					arr.add(createQuestionFromResultSet(rs));
+				}
+			}
+			return arr;
 		} catch (final SQLException e) {
 			System.err.println("Error getting random question: " + e.getMessage());
 		}
@@ -237,10 +262,10 @@ public final class DatabaseManager {
 	}
 
 	/**
-	 * Properly close database resources when application shuts down.
-	 * Should be called during application shutdown.
+	 * Properly close database resources when application shuts down. Should be
+	 * called during application shutdown.
 	 */
 	public void shutdown() {
-	    closeConnection();
+		closeConnection();
 	}
 }

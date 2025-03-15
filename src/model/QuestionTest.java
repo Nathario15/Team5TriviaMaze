@@ -1,12 +1,19 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
+
 /**
- * This is a test class for Abstract Question and it's child classes and Question Factory.
+ * This is a test class for Abstract Question and it's child classes and
+ * Question Factory.
+ * 
  * @author Team 5
  * @version 1.0
  */
@@ -32,7 +39,23 @@ class QuestionTest {
 
 	@Test
 	void testQuestionManager() {
-		final QuestionFactory f = new QuestionFactory();
+		DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
+		QuestionFactory.IntializeQuestionFactory();
+		final AbstractQuestion[] arr = new AbstractQuestion[48];
+		for (int i = 0; i < 48; i++) {
+			arr[i] = QuestionFactory.getQuestion();
+		}
+		for (int i = 0; i < 48; i++) {
+			for (int j = i+1; j < 48; j++) {
+//				System.out.println(Objects.equals(arr[i], arr[j]));
+//				if(arr[i].equals(arr[j])) {
+//					System.out.println(arr[i]+" "+i);
+//					System.out.println(arr[j]+" "+j);
+//					System.out.println(Objects.equals(arr[i], arr[j]));
+//				}
+				assertFalse(arr[i].equals(arr[j]));
+			}
+		}
 	}
 
 }
