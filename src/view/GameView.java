@@ -263,9 +263,7 @@ public final class GameView extends JFrame {
     }
     
     public void endGame() {
-    	final GameView next = new GameView();
-    	next.setVisible(true);
-    	this.dispose();
+    	this.newGame();
     }
 
     /**
