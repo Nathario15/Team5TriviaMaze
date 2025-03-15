@@ -1,3 +1,4 @@
+
 package controller;
 
 import java.awt.Component;
@@ -8,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import model.AbstractQuestion;
 import model.DatabaseManager;
 import model.Difficulty;
@@ -50,17 +53,30 @@ public final class SystemControl {
     /** Whether a game is currently active. */
     private boolean myGameActive;
     
+    private boolean myGameEnded = false;
+    
     /** The last direction the player attempted to move in. */
     private Direction myLastAttemptedDirection;
+    
+    /** Factory for creating questions. */
+    private final QuestionFactory myQuestionFactory;
+    
+    private view.GameView myGameView;
     
     /**
      * Private constructor for singleton pattern.
      */
     private SystemControl() {
         myDatabaseManager = DatabaseManager.getInstance();
+        myQuestionFactory = new QuestionFactory();
         myGameActive = false;
     }
     
+    public void setGameView(view.GameView theGameView) {
+        myGameView = theGameView;
+        System.out.println("GameView reference set in SystemControl");
+    }
+
     /**
      * Get the singleton instance of SystemControl.
      * @return SystemControl instance
@@ -320,10 +336,33 @@ public final class SystemControl {
      */
     public void endGame() {
         myGameActive = false;
-        // Additional cleanup as needed
-        System.out.println("end game");
+        
+        System.out.println("Game won - player escaped the maze");
+        
+        // Show victory message directly
+        JOptionPane.showMessageDialog(null, 
+            "Congratulations! You've successfully escaped the Minecraft Trivia Maze!", 
+            "Victory", JOptionPane.INFORMATION_MESSAGE);
+        
+        // Use the direct reference to return to main menu
+        if (myGameView != null) {
+            System.out.println("Calling returnToMainMenu() on GameView");
+            myGameView.returnToMainMenu();
+        } else {
+            System.err.println("ERROR: No GameView reference in SystemControl!");
+        }
     }
     
+    private void returnToMainMenu() {
+        SwingUtilities.invokeLater(() -> {
+            for (java.awt.Window window : java.awt.Window.getWindows()) {
+                if (window instanceof view.GameView) {
+                    ((view.GameView) window).returnToMainMenu();
+                    break;
+                }
+            }
+        });
+    }
     /**
      * Creates the appropriate question panel based on question type.
      * 
@@ -448,22 +487,7 @@ public final class SystemControl {
         return displayQuestionDialog(questionPanel, questionDialog);
     }
     
-//    /**
-//     * Gets a random question for a specific door.
-//     * 
-//     * @return A question object or null if none available
-//     */
-//    public AbstractQuestion getQuestionForDoor() {
-//        // Try to get an existing question from the room
-//        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
-//        
-////        // If no question exists, get a random one
-////        if (question1 == null) {
-////            question1 = getNewQuestionForDoor(theDirection);
-////        }
-//        
-//        return question1;
-//    }
+//        if (question1 == null) {
     
 //    /**
 //     * Gets a new question from the database and assigns it to the door.
@@ -478,4 +502,4 @@ public final class SystemControl {
 //        }
 //        return question1;
 //    }
-}
+}}
