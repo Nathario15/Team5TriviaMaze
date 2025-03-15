@@ -5,6 +5,7 @@ import model.DatabaseManager;
 import model.Difficulty;
 import model.Direction;
 import model.Maze;
+import model.QuestionFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -212,6 +213,13 @@ public final class GameView extends JFrame {
             addMenuBar();
             DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
         }
+        QuestionFactory.IntializeQuestionFactory();
+    }
+    
+    public void endGame() {
+    	final GameView next = new GameView();
+    	next.setVisible(true);
+    	this.dispose();
     }
 
     /**

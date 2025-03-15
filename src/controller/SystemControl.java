@@ -296,7 +296,7 @@ public final class SystemControl {
     public void endGame() {
         myGameActive = false;
         // Additional cleanup as needed
-    
+        System.out.println("end game");
     }
     
     /**
@@ -378,7 +378,7 @@ public final class SystemControl {
 //        }
         
         // Get question for the door
-        final AbstractQuestion question = SystemControl.getInstance().getQuestionForDoor();
+        final AbstractQuestion question = QuestionFactory.getQuestion();
         if (question == null) {
             return false;
         }
