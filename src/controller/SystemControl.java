@@ -51,15 +51,11 @@ public final class SystemControl {
     /** The last direction the player attempted to move in. */
     private Direction myLastAttemptedDirection;
     
-    /** Factory for creating questions. */
-    private final QuestionFactory myQuestionFactory;
-    
     /**
      * Private constructor for singleton pattern.
      */
     private SystemControl() {
         myDatabaseManager = DatabaseManager.getInstance();
-        myQuestionFactory = new QuestionFactory();
         myGameActive = false;
     }
     
@@ -408,22 +404,22 @@ public final class SystemControl {
         return displayQuestionDialog(questionPanel, questionDialog);
     }
     
-    /**
-     * Gets a random question for a specific door.
-     * 
-     * @return A question object or null if none available
-     */
-    public AbstractQuestion getQuestionForDoor() {
-        // Try to get an existing question from the room
-        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
-        
-//        // If no question exists, get a random one
-//        if (question1 == null) {
-//            question1 = getNewQuestionForDoor(theDirection);
-//        }
-        
-        return question1;
-    }
+//    /**
+//     * Gets a random question for a specific door.
+//     * 
+//     * @return A question object or null if none available
+//     */
+//    public AbstractQuestion getQuestionForDoor() {
+//        // Try to get an existing question from the room
+//        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
+//        
+////        // If no question exists, get a random one
+////        if (question1 == null) {
+////            question1 = getNewQuestionForDoor(theDirection);
+////        }
+//        
+//        return question1;
+//    }
     
 //    /**
 //     * Gets a new question from the database and assigns it to the door.

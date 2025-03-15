@@ -1,11 +1,14 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
- * an abstract question class. Has some default methods, that all question classes should use.
+ * an abstract question class. Has some default methods, that all question
+ * classes should use.
+ * 
  * @author Ibrahim Elnikety
- * @version 0.7 
+ * @version 0.7
  */
 public abstract class AbstractQuestion implements Serializable {
 	/**
@@ -30,7 +33,7 @@ public abstract class AbstractQuestion implements Serializable {
 	public AbstractQuestion(final String theQuestion, final String theAnswer) {
 		this.myQuestion = theQuestion;
 		this.myAnswer = theAnswer;
-		//TODO check data
+		// TODO check data
 	}
 
 	/**
@@ -42,17 +45,31 @@ public abstract class AbstractQuestion implements Serializable {
 	public boolean isCorrect(final String theAnswer) {
 		return myAnswer.equalsIgnoreCase(theAnswer.trim());
 	}
-	
+
 	/**
 	 * The Question that will be asked.
 	 */
-    public String getQuestion() {
-        return myQuestion;
-    }
-    /**
+	public String getQuestion() {
+		return myQuestion;
+	}
+
+	@Override
+	public final boolean equals(final Object other) {
+		if (other.getClass() != this.getClass()) {
+			return false;
+		}
+		AbstractQuestion otherQ = (this.getClass().cast(other));
+		return Objects.equals(this.myQuestion, otherQ.myQuestion)&&Objects.equals(this.myAnswer, otherQ.myAnswer);
+	}
+	@Override
+	public final String toString() {
+		return myQuestion + ": " + myAnswer + ".";
+	}
+
+	/**
 	 * The correct answer.
 	 */
-    public String getAnswer() {
-        return myAnswer;
-    }
+	public String getAnswer() {
+		return myAnswer;
+	}
 }
