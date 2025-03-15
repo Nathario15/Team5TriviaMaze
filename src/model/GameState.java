@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,8 @@ public final class GameState implements Serializable {
 	 * The difficulty.
 	 */
 	private Difficulty myDifficulty;
+	
+	private ArrayList<AbstractQuestion> arr;
 
 	/**
 	 * the map.
@@ -146,6 +149,7 @@ public final class GameState implements Serializable {
 		myMap = Maze.returnMap();
 		this.myCurrentX = Maze.getX();
 		this.myCurrentY = Maze.getY();
+		this.arr = QuestionFactory.returnQuestions();
 
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(theFilename))) {
 			out.writeObject(this);
@@ -168,6 +172,7 @@ public final class GameState implements Serializable {
 			other = new GameState(); // Return a new instance if loading fails
 		}
 		other.loadToMaze();
+		
 		return other;
 	}
 
@@ -176,6 +181,7 @@ public final class GameState implements Serializable {
 	 */
 	public void loadToMaze() {
 		Maze.loadMap(myMap, myCurrentX, myCurrentY);
+		QuestionFactory.loadQuestions(arr);
 	}
 
 	/**

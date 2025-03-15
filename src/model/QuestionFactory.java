@@ -16,44 +16,48 @@ public class QuestionFactory implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * The database manager reference.
-	 */
-	private transient DatabaseManager myDatabaseManager;
-	/**
-	 * A list of question Ids that have been used.
-	 */
-	private final List<Integer> myUsedQuestionIds;
+		/**
+		 * A list of questions.
+		 */
+		private static ArrayList<AbstractQuestion> myQuestions;
 
-	/**
-	 * creates a question manager.
-	 * 
-	 * @param theQuestions the questions that will be asked.
-	 */
-	public QuestionFactory() {
-//		myQuestions=DatabaseManager.getInstance().getRandomQuestion();
-		myDatabaseManager = DatabaseManager.getInstance();
-		myUsedQuestionIds = new ArrayList<>();
+		/**
+		 * creates a question manager.
+		 * 
+		 * @param theQuestions the questions that will be asked.
+		 */
+		public static void IntializeQuestionFactory() {
+			myQuestions = new ArrayList<AbstractQuestion>();
+			for (int i = 0; i<48; i++) {
+				AbstractQuestion a = DatabaseManager.getInstance().getRandomQuestion();
+				if(myQuestions.contains(a)) {
+					i--;
+				}else {
+					myQuestions.add(a);
+				}
+			}
+		}
+		/**
+		 * The map will stay the same size, but it's contents will change.
+		 */
+		protected static void loadQuestions(ArrayList<AbstractQuestion> arr) {
+			myQuestions = arr;
+		}
+
+		/**
+		 * The map will stay the same size, but it's contents will change.
+		 */
+		protected static ArrayList<AbstractQuestion> returnQuestions() {
+			return myQuestions;
+		}
+
+		/**
+		 * Chooses a random question, makes sure it won't be asked again.
+		 * 
+		 * @return
+		 */
+		public static AbstractQuestion getQuestion() {
+			final int index = (int) Math.round(Math.random() * (myQuestions.size() - 1));
+			return myQuestions.remove(index);
+		}
 	}
-
-	/**
-	 * Chooses a random question, makes sure it won't be asked again.
-	 * 
-	 * @param difficulty The difficulty level for the question
-	 * @return A random question of the specified difficulty
-	 */
-	public AbstractQuestion getQuestion(Difficulty difficulty) {
-		myDatabaseManager.setDifficulty(difficulty);
-        AbstractQuestion question = myDatabaseManager.getRandomQuestion();
-        if (question != null) {
-            myUsedQuestionIds.add(question.hashCode());
-        }
-        return question;
-    }
-	
-    private void readObject(ObjectInputStream in) 
-    		throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        myDatabaseManager = DatabaseManager.getInstance();
-    }
-}
