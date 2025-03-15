@@ -46,6 +46,8 @@ public final class MazePanel extends JPanel {
     @Override
     protected void paintComponent(final Graphics theG) {
         super.paintComponent(theG);
+        System.out.println("MazePanel repainting. Player position: (" + 
+            Maze.getDisplayX() + "," + Maze.getDisplayY() + ")");
         drawMaze(theG);
     }
 

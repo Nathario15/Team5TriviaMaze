@@ -54,23 +54,27 @@ public final class GameView extends JFrame {
 	/**
 	 * Constructor.
 	 */
-    public GameView() {
-        setTitle("Trivia Maze Game");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+	 public GameView() {
+		    setTitle("Trivia Maze Game");
+		    setSize(800, 600);
+		    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    setLocationRelativeTo(null);
 
-        myCardLayout = new CardLayout();
-        myMainPanel = new JPanel(myCardLayout);
-        myInGame = false;
+		    myCardLayout = new CardLayout();
+		    myMainPanel = new JPanel(myCardLayout);
+		    myInGame = false;
 
-        addMainMenu();
-        addGamePanel();
-        addInstructionsPanel();
-        addAboutPanel();
+		    // Register this view with SystemControl
+		    SystemControl.getInstance().setGameView(this);
+		    System.out.println("GameView registered with SystemControl");
 
-        add(myMainPanel);
-    }
+		    addMainMenu();
+		    addGamePanel();
+		    addInstructionsPanel();
+		    addAboutPanel();
+
+		    add(myMainPanel);
+		}
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -235,16 +239,19 @@ public final class GameView extends JFrame {
      * Starts a new game, prompting the user to select a difficulty level.
      */
     public void newGame() {
+        System.out.println("\n\n==================================================");
+        System.out.println("================= STARTING NEW GAME ===============");
+        System.out.println("==================================================\n\n");
         String[] difficulties = {"EASY", "MEDIUM", "HARD"};
         String selectedDifficulty = (String) JOptionPane.showInputDialog(this, 
                 "Select Difficulty:", "New Game",
                 JOptionPane.QUESTION_MESSAGE, null, difficulties, difficulties[0]);
 
         if (selectedDifficulty != null) {
-            // Convert string to Difficulty enum
-            Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
+            // Reset player position to center of maze
+            Maze.reset();
             
-            // Create new game state
+            Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
             myGameState = new GameState();
             JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
             myInGame = true;
@@ -293,16 +300,55 @@ public final class GameView extends JFrame {
     }
 
     private void movePlayer(Direction direction, MazePanel mazePanel) {
+        // Check if we're in a valid game state
+        if (myGameState == null) {
+            return; // Don't try to move if game state is null
+        }
+        
         boolean success = Maze.move(direction);
 
         if (success) {
-            int newX = Maze.getDisplayX() + 1;
-            int newY = Maze.getDisplayY() + 1; //test
-            myGameState.setCurrentPosition(newX, newY);
-            mazePanel.repaint();
-            updateTracker();
+            // Only update position if we're still in a valid game state
+            if (myGameState != null) {
+                int newX = Maze.getDisplayX() + 1;
+                int newY = Maze.getDisplayY() + 1;
+                myGameState.setCurrentPosition(newX, newY);
+                mazePanel.repaint();
+                updateTracker();
+            }
         } else {
             mazePanel.repaint();
         }
+    }
+    
+    public void returnToMainMenu() {
+        System.out.println("\n\n==================================================");
+        System.out.println("================ RETURNING TO MENU ================");
+        System.out.println("==================================================\n\n");
+        
+        // Switch to main menu first for immediate visual feedback
+        myCardLayout.show(myMainPanel, "MainMenu");
+        
+        // Reset game state
+        myInGame = false;
+        myGameState = null;
+        
+        // Remove existing menu bar
+        setJMenuBar(null);
+        
+        // Force repaint immediately
+        repaint();
+        validate();
+        
+        // Add any needed main menu components
+        addMainMenu();
+        
+        System.out.println("Now in main menu");
+        
+        // Final UI refresh to ensure changes are visible
+        SwingUtilities.invokeLater(() -> {
+            repaint();
+            validate();
+        });
     }
 }
