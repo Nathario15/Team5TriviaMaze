@@ -84,7 +84,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		// Get the current room and its coordinates
 		final Room currentRoom = Maze.getRoom();
 		final int playerX = Maze.getDisplayX();
-		final int playerY = Maze.getDisplayY();
+		final int playerY = 6 - Maze.getDisplayY();
 
 		// Draw doors with proper colors (thicker lines)
 		if (currentRoom != null) {
