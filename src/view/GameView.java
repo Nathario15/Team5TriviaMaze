@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -216,10 +217,10 @@ public final class GameView extends JFrame implements KeyListener{
         JMenuItem newGameItem = new JMenuItem("New Game");
         JMenuItem exitGameItem = new JMenuItem("Exit");
 
-        saveGameItem.addActionListener(_ -> saveGame());
-        loadGameItem.addActionListener(_ -> loadGame());
-        newGameItem.addActionListener(_ -> newGame());
-        exitGameItem.addActionListener(_ -> System.exit(0));
+        saveGameItem.addActionListener(e -> saveGame());
+        loadGameItem.addActionListener(e -> loadGame());
+        newGameItem.addActionListener(e -> newGame());
+        exitGameItem.addActionListener(e -> returnToMainMenu());
 
         fileMenu.add(saveGameItem);
         fileMenu.add(loadGameItem);
@@ -249,6 +250,13 @@ public final class GameView extends JFrame implements KeyListener{
         System.out.println("\n\n==================================================");
         System.out.println("================= STARTING NEW GAME ===============");
         System.out.println("==================================================\n\n");
+        
+        // First clean up existing game state if we're in a game
+        if (myInGame) {
+            // Clear existing game data
+            myGameState = null;
+        }
+        
         String[] difficulties = {"EASY", "MEDIUM", "HARD"};
         String selectedDifficulty = (String) JOptionPane.showInputDialog(this, 
                 "Select Difficulty:", "New Game",
@@ -258,36 +266,111 @@ public final class GameView extends JFrame implements KeyListener{
             // Reset player position to center of maze
             Maze.reset();
             
-            Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
+            // Initialize a new game state
             myGameState = new GameState();
-            JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
+            myGameState.setDifficulty(Difficulty.valueOf(selectedDifficulty));
+            
+            // Set up the database for questions
+            DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
+            
+            // Initialize question factory
+            QuestionFactory.IntializeQuestionFactory();
+            
+            // Update UI state
             myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
             addMenuBar();
-            DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
+            
+            // Make sure maze display is refreshed
+            myMazePanel.repaint();
+            
+            // Update tracker panel
+            updateTracker();
+            
+            JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
         }
-        QuestionFactory.IntializeQuestionFactory();
     }
     
     public void endGame() {
     	this.newGame();
+    }
+    
+    /**
+     * Checks for win/loss conditions after a move.
+     */
+    private void checkGameState() {
+        // Check if path to exit is blocked
+        if (SystemControl.getInstance().checkLoseCondition()) {
+            JOptionPane.showMessageDialog(this, 
+                "All paths to the exit are blocked! Game over.", 
+                "Game Over", 
+                JOptionPane.ERROR_MESSAGE);
+            
+            // Ask if player wants to start a new game
+            int response = JOptionPane.showConfirmDialog(this,
+                "Would you like to start a new game?",
+                "Game Over",
+                JOptionPane.YES_NO_OPTION);
+                
+            if (response == JOptionPane.YES_OPTION) {
+                newGame();
+            } else {
+                returnToMainMenu();
+            }
+        }
     }
 
     /**
 	 * begins serialization.
 	 */
     public void saveGame() {
-        myGameState.saveToFile(myFilename);
-        JOptionPane.showMessageDialog(this, "Game saved successfully!");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Game");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", "sav"));
+        
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            // Ensure file has .sav extension
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".sav")) {
+                filePath += ".sav";
+            }
+            
+            myFilename = filePath;
+            myGameState.saveToFile(myFilename);
+            JOptionPane.showMessageDialog(this, "Game saved successfully to " + fileToSave.getName() + "!");
+        }
     }
 
     /**
 	 * begins deserialization.
 	 */
     public void loadGame() {
-        myGameState = GameState.loadFromFile(myFilename);
-        JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-        myCardLayout.show(myMainPanel, "Game");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Load Game");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", "sav"));
+        
+        int userSelection = fileChooser.showOpenDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToLoad = fileChooser.getSelectedFile();
+            myFilename = fileToLoad.getAbsolutePath();
+            
+            try {
+                myGameState = GameState.loadFromFile(myFilename);
+                myInGame = true;
+                addMenuBar();
+                myCardLayout.show(myMainPanel, "Game");
+                myMazePanel.repaint();
+                updateTracker();
+                JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Error loading game: " + e.getMessage(), 
+                    "Load Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     /**
@@ -324,6 +407,7 @@ public final class GameView extends JFrame implements KeyListener{
         } else {
             mazePanel.repaint();
         }
+        checkGameState();
     }
     
     public void returnToMainMenu() {
