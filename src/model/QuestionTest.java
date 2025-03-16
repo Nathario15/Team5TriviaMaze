@@ -41,6 +41,7 @@ class QuestionTest {
 	void testQuestionManager() {
 		DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
 		QuestionFactory.IntializeQuestionFactory();
+		assertTrue(Maze.canSolve());
 		final AbstractQuestion[] arr = new AbstractQuestion[48];
 		for (int i = 0; i < 48; i++) {
 			arr[i] = QuestionFactory.getQuestion();
@@ -56,6 +57,7 @@ class QuestionTest {
 				assertFalse(arr[i].equals(arr[j]));
 			}
 		}
+		assertFalse(Maze.canSolve());
 	}
 
 }

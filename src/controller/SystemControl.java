@@ -140,95 +140,95 @@ public final class SystemControl {
 //        }
 //    }
     
-    /**
-     * Handles player movement attempt in a direction.
-     * 
-     * @param theDirection The direction to move
-     * @return true if movement successful without needing a question
-     */
-    public boolean attemptMove(final Direction theDirection) {
-        if (!myGameActive) {
-            return false;
-        }
-        
-        myLastAttemptedDirection = theDirection;
-        
-        final Room currentRoom = Maze.getRoom();
-        final Room nextRoom = Maze.getRoom(theDirection);
-        
-        if (nextRoom == null) {
-            return false;  // Can't move out of bounds
-        }
-        
-        // Check door state first
-        DoorState doorState = currentRoom.getDoorState(theDirection);
-        
-        if (doorState == DoorState.OPEN) {
-            // Door is already open - move freely
-            Maze.move(theDirection);
-            return true;
-        } else if (doorState == DoorState.LOCKED) {
-            // Door is locked - show question
-            boolean answeredCorrectly = triggerQuestion();
-            
-            if (answeredCorrectly) {
-                // Correct answer - unlock door and move
-                currentRoom.unlock(theDirection);
-                Maze.move(theDirection);
-                return true;
-            } else {
-                // Wrong answer - permanently block door
-                currentRoom.block(theDirection);
-                return false;
-            }
-        } else {
-            // Door is already blocked - can't move
-            JOptionPane.showMessageDialog(null, 
-                    "This door is permanently blocked!", 
-                    "Blocked Path", 
-                    JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-    }
+//    /**
+//     * Handles player movement attempt in a direction.
+//     * 
+//     * @param theDirection The direction to move
+//     * @return true if movement successful without needing a question
+//     */
+//    public boolean attemptMove(final Direction theDirection) {
+//        if (!myGameActive) {
+//            return false;
+//        }
+//        
+//        myLastAttemptedDirection = theDirection;
+//        
+//        final Room currentRoom = Maze.getRoom();
+//        final Room nextRoom = Maze.getRoom(theDirection);
+//        
+//        if (nextRoom == null) {
+//            return false;  // Can't move out of bounds
+//        }
+//        
+//        // Check door state first
+//        DoorState doorState = currentRoom.getDoorState(theDirection);
+//        
+//        if (doorState == DoorState.OPEN) {
+//            // Door is already open - move freely
+//            Maze.move(theDirection);
+//            return true;
+//        } else if (doorState == DoorState.LOCKED) {
+//            // Door is locked - show question
+//            boolean answeredCorrectly = triggerQuestion();
+//            
+//            if (answeredCorrectly) {
+//                // Correct answer - unlock door and move
+//                currentRoom.unlock(theDirection);
+//                Maze.move(theDirection);
+//                return true;
+//            } else {
+//                // Wrong answer - permanently block door
+//                currentRoom.block(theDirection);
+//                return false;
+//            }
+//        } else {
+//            // Door is already blocked - can't move
+//            JOptionPane.showMessageDialog(null, 
+//                    "This door is permanently blocked!", 
+//                    "Blocked Path", 
+//                    JOptionPane.WARNING_MESSAGE);
+//            return false;
+//        }
+//    }
     
-    /**
-     * Checks the door state to determine if movement is possible.
-     * 
-     * @param theRoom The current room
-     * @param theDirection The direction to move
-     * @return true if movement is possible, false otherwise
-     */
-    private boolean checkDoorStateForMovement(final Room theRoom, final Direction theDirection) {
-        final DoorState doorState = theRoom.getDoorState(theDirection);
-        
-        if (doorState == DoorState.OPEN) {
-            return Maze.move(theDirection);  // Door is open, move
-        }
-        
-        if (doorState == DoorState.LOCKED) {
-            return false;  // Door is locked, need question in view
-        }
-        
-        return false;  // Door is blocked
-    }
-    
-    /**
-     * Gets the last direction the player attempted to move.
-     * 
-     * @return The last attempted direction
-     */
-    public Direction getLastAttemptedDirection() {
-        return myLastAttemptedDirection;
-    }
-    
-    /**
-     * Sets the last attempted direction.
-     * 
-     * @param theDirection The direction to set
-     */
-    public void setLastAttemptedDirection(final Direction theDirection) {
-        myLastAttemptedDirection = theDirection;
-    }
+//    /**
+//     * Checks the door state to determine if movement is possible.
+//     * 
+//     * @param theRoom The current room
+//     * @param theDirection The direction to move
+//     * @return true if movement is possible, false otherwise
+//     */
+//    private boolean checkDoorStateForMovement(final Room theRoom, final Direction theDirection) {
+//        final DoorState doorState = theRoom.getDoorState(theDirection);
+//        
+//        if (doorState == DoorState.OPEN) {
+//            return Maze.move(theDirection);  // Door is open, move
+//        }
+//        
+//        if (doorState == DoorState.LOCKED) {
+//            return false;  // Door is locked, need question in view
+//        }
+//        
+//        return false;  // Door is blocked
+//    }
+//    
+//    /**
+//     * Gets the last direction the player attempted to move.
+//     * 
+//     * @return The last attempted direction
+//     */
+//    public Direction getLastAttemptedDirection() {
+//        return myLastAttemptedDirection;
+//    }
+//    
+//    /**
+//     * Sets the last attempted direction.
+//     * 
+//     * @param theDirection The direction to set
+//     */
+//    public void setLastAttemptedDirection(final Direction theDirection) {
+//        myLastAttemptedDirection = theDirection;
+//    }
     
 //    /**
 //     * Processes the answer to a question.
@@ -299,19 +299,19 @@ public final class SystemControl {
         if (!myGameActive) {
             return false;
         }
-        
-        // Check if all doors from current room are blocked
-        boolean allBlocked = true;
-        for (final Direction dir : Direction.values()) {
-            final Room nextRoom = Maze.getRoom(dir);
-            if (nextRoom != null && Maze.getRoom().getDoorState(dir) != DoorState.BLOCKED) {
-                allBlocked = false;
-                break;
-            }
-        }
-        
-        // Simplified loss detection - if all doors blocked, game is lost
-        return allBlocked;
+        return !Maze.canSolve();
+//        // Check if all doors from current room are blocked
+//        boolean allBlocked = true;
+//        for (final Direction dir : Direction.values()) {
+//            final Room nextRoom = Maze.getRoom(dir);
+//            if (nextRoom != null && Maze.getRoom().getDoorState(dir) != DoorState.BLOCKED) {
+//                allBlocked = false;
+//                break;
+//            }
+//        }
+//        
+//        // Simplified loss detection - if all doors blocked, game is lost
+//        return allBlocked;
     }
     
     /**
@@ -491,22 +491,22 @@ public final class SystemControl {
         return displayQuestionDialog(questionPanel, questionDialog);
     }
     
-    /**
-     * Gets a random question for a specific door.
-     * 
-     * @return A question object or null if none available
-     */
-    public AbstractQuestion getQuestionForDoor() {
-        // Try to get an existing question from the room
-        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
-        
-//        // If no question exists, get a random one
-//        if (question1 == null) {
-//            question1 = getNewQuestionForDoor(theDirection);
-//        }
-        
-        return question1;
-    }
+//    /**
+//     * Gets a random question for a specific door.
+//     * 
+//     * @return A question object or null if none available
+//     */
+//    public AbstractQuestion getQuestionForDoor() {
+//        // Try to get an existing question from the room
+//        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
+//        
+////        // If no question exists, get a random one
+////        if (question1 == null) {
+////            question1 = getNewQuestionForDoor(theDirection);
+////        }
+//        
+//        return question1;
+//    }
     
 //    /**
 //     * Gets a new question from the database and assigns it to the door.
