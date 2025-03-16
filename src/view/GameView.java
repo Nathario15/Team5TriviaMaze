@@ -9,6 +9,9 @@ import model.QuestionFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -19,7 +22,7 @@ import java.util.Random;
 /**
  * The main view for the Trivia Maze Game.
  */
-public final class GameView extends JFrame {
+public final class GameView extends JFrame implements KeyListener{
 	/**
 	 * 
 	 */
@@ -50,6 +53,9 @@ public final class GameView extends JFrame {
 	 private JLabel positionLabel;
 	 private JLabel questionsAnsweredLabel;
 	 private JLabel lockedDoorsLabel;
+	public static GameView instance;
+	
+	static MazePanel myMazePanel;
 
 	/**
 	 * Constructor.
@@ -74,7 +80,9 @@ public final class GameView extends JFrame {
 		    addAboutPanel();
 
 		    add(myMainPanel);
-		}
+        add(myMainPanel);
+        this.instance = this;
+    }
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -110,8 +118,8 @@ public final class GameView extends JFrame {
     private void addGamePanel() {
         final JPanel gamePanel = new JPanel(new BorderLayout());
 
-        MazePanel mazePanel = new MazePanel();
-        gamePanel.add(mazePanel, BorderLayout.CENTER);
+        myMazePanel = new MazePanel();
+        gamePanel.add(myMazePanel, BorderLayout.CENTER);
 
         JPanel controlPanel = new JPanel(new GridLayout(1, 4));
         JButton northButton = new JButton("North");
@@ -119,11 +127,10 @@ public final class GameView extends JFrame {
         JButton eastButton = new JButton("East");
         JButton westButton = new JButton("West");
 
-        northButton.addActionListener(_ -> movePlayer(Direction.NORTH, mazePanel));
-        southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, mazePanel));
-        eastButton.addActionListener(_ -> movePlayer(Direction.EAST, mazePanel));
-        westButton.addActionListener(_ -> movePlayer(Direction.WEST, mazePanel));
-
+        northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
+        southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
+        eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
+        westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
         controlPanel.add(northButton);
         controlPanel.add(southButton);
         controlPanel.add(eastButton);
@@ -349,4 +356,40 @@ public final class GameView extends JFrame {
             validate();
         });
     }
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		int keyCode = e.getKeyCode();
+        switch (keyCode) {
+        case KeyEvent.VK_UP:
+        case KeyEvent.VK_W:
+            movePlayer(Direction.NORTH, myMazePanel);
+            break;
+        case KeyEvent.VK_DOWN:
+        case KeyEvent.VK_S:
+        	movePlayer(Direction.SOUTH, myMazePanel);
+            break;
+        case KeyEvent.VK_LEFT:
+        case KeyEvent.VK_A:
+        	movePlayer(Direction.WEST, myMazePanel);
+            break;
+        case KeyEvent.VK_RIGHT:
+        case KeyEvent.VK_D:
+        	movePlayer(Direction.EAST, myMazePanel);
+            break;
+    }
+        
+	}
 }

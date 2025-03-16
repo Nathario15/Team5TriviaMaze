@@ -5,9 +5,13 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JPanel;
 
 import controller.SystemControl;
+import model.Direction;
 import model.Maze;
 import model.Direction;
 import model.DoorState;
@@ -15,10 +19,11 @@ import model.Room;
 
 /**
  * MazePanel is responsible for rendering the maze visually.
+ * 
  * @author Team5
  * @version 1.1
  */
-public final class MazePanel extends JPanel {
+public final class MazePanel extends JPanel implements KeyListener {
     /**
      * 
      */
@@ -141,4 +146,39 @@ public final class MazePanel extends JPanel {
             theG.drawLine(x, y, x, y + CELL_SIZE);
         }
     }
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		int keyCode = e.getKeyCode();
+		switch (keyCode) {
+		case KeyEvent.VK_UP:
+		case KeyEvent.VK_W:
+			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			break;
+		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_S:
+			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			break;
+		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_A:
+			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			break;
+		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_D:
+			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			break;
+
+		}
+	}
 }
