@@ -158,7 +158,9 @@ public final class GameState implements Serializable {
 		myLockedDoors--;
 	}
 	
-	public void resetLockCount() {
+	public void resetState() {
+		myCorrectQuestions = 0;
+		myIncorrectQuestions = 0;
 		myLockedDoors = 49;
 	}
 

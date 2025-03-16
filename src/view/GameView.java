@@ -9,6 +9,9 @@ import model.QuestionFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -19,12 +22,11 @@ import java.util.Random;
 /**
  * The main view for the Trivia Maze Game.
  */
-public final class GameView extends JFrame {
+public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private Player player;
 	/**
 	 * games save data.
 	 */
@@ -45,12 +47,29 @@ public final class GameView extends JFrame {
 	 * The file name for the save file.
 	 */
 	private String myFilename = ""; //TODO fix filename
+	/**
+	 * The panel for tracking the state of the game.
+	 */
+	private JPanel myTrackerPanel;
+	/**
+	 * The label for tracking the player's position.
+	 */
+	private JLabel myPositionLabel;
+	/**
+	 * The label for tracking the correct question count.
+	 */
+	private JLabel myCorrectQuestionsLabel;
+	/**
+	 * The label for tracking the incorrect question count.
+	 */
+	private JLabel myIncorrectQuestionsLabel;
+	/**
+	 * The label for tracking the locked door count.
+	 */
+	private JLabel myLockedDoorsLabel;
 	
-	 private JPanel myTrackerPanel;
-	 private JLabel myPositionLabel;
-	 private JLabel myCorrectQuestionsLabel;
-	 private JLabel myIncorrectQuestionsLabel;
-	 private JLabel myLockedDoorsLabel;
+	public static GameView instance;
+	static MazePanel myMazePanel;
 
 	/**
 	 * Constructor.
@@ -255,7 +274,7 @@ public final class GameView extends JFrame {
         if (selectedDifficulty != null) {
             // Reset player position to center of maze
             Maze.reset();
-            GameState.getInstance().resetLockCount();
+            GameState.getInstance().resetState();
             Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
             myGameState = new GameState();
             JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
@@ -302,7 +321,7 @@ public final class GameView extends JFrame {
         myCardLayout.show(myMainPanel, "About");
     }
 
-    private void movePlayer(Direction direction, MazePanel mazePanel) {
+    void movePlayer(Direction direction, MazePanel mazePanel) {
         // Check if we're in a valid game state
         if (myGameState == null) {
             return; // Don't try to move if game state is null
@@ -355,4 +374,40 @@ public final class GameView extends JFrame {
             validate();
         });
     }
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		int keyCode = e.getKeyCode();
+        switch (keyCode) {
+        case KeyEvent.VK_UP:
+        case KeyEvent.VK_W:
+            movePlayer(Direction.NORTH, myMazePanel);
+            break;
+        case KeyEvent.VK_DOWN:
+        case KeyEvent.VK_S:
+        	movePlayer(Direction.SOUTH, myMazePanel);
+            break;
+        case KeyEvent.VK_LEFT:
+        case KeyEvent.VK_A:
+        	movePlayer(Direction.WEST, myMazePanel);
+            break;
+        case KeyEvent.VK_RIGHT:
+        case KeyEvent.VK_D:
+        	movePlayer(Direction.EAST, myMazePanel);
+            break;
+    }
+        
+	}
 }
