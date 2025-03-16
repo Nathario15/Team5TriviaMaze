@@ -1,20 +1,18 @@
 package view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.BasicStroke;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-
-import controller.SystemControl;
-import model.Direction;
-import model.Maze;
 import model.Direction;
 import model.DoorState;
+import model.Maze;
 import model.Room;
 
 /**
@@ -40,9 +38,14 @@ public final class MazePanel extends JPanel implements KeyListener {
 	 * Width of door lines.
 	 */
 	private static final int DOOR_WIDTH = 3;
-
-	private static final Color Dirt = new Color(146, 108, 77);
-	private static final Color Grass = new Color(159, 172, 143);
+	/**
+	 * MineCraft Dirt.
+	 */
+	private static final Color DIRT = new Color(146, 108, 77);
+	/**
+	 * MineCraft Grass.
+	 */
+	private static final Color GRASS = new Color(159, 172, 143);
 
 	/**
 	 * Constructor.
@@ -60,8 +63,8 @@ public final class MazePanel extends JPanel implements KeyListener {
 	}
 
 	private void drawMaze(final Graphics theG) {
-		Graphics2D g2d = (Graphics2D) theG;
-		Image m;
+		final Graphics2D g2d = (Graphics2D) theG;
+		final Image m;
 		m = new ImageIcon("/Team5TriviaMaze/14376136-pack_xl.jpg").getImage();
 		g2d.drawImage(m, 0, 0, getWidth(), getHeight(), this);
 		super.paintComponent(g2d);
@@ -69,7 +72,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		for (int row = 0; row < MAP_SIZE; row++) {
 			for (int col = 0; col < MAP_SIZE; col++) {
 				// Fill each room with light gray
-				theG.setColor(Dirt);
+				theG.setColor(DIRT);
 				theG.fillRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
 				// Draw standard black grid lines
@@ -79,7 +82,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		}
 
 		// Get the current room and its coordinates
-		Room currentRoom = Maze.getRoom();
+		final Room currentRoom = Maze.getRoom();
 		final int playerX = Maze.getDisplayX();
 		final int playerY = Maze.getDisplayY();
 
