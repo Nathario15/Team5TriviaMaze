@@ -376,18 +376,22 @@ public final class GameView extends JFrame implements KeyListener{
         case KeyEvent.VK_UP:
         case KeyEvent.VK_W:
             movePlayer(Direction.NORTH, myMazePanel);
+            System.out.println("fire");
             break;
         case KeyEvent.VK_DOWN:
         case KeyEvent.VK_S:
         	movePlayer(Direction.SOUTH, myMazePanel);
+        	System.out.println("fire");
             break;
         case KeyEvent.VK_LEFT:
         case KeyEvent.VK_A:
         	movePlayer(Direction.WEST, myMazePanel);
+        	System.out.println("fire");
             break;
         case KeyEvent.VK_RIGHT:
         case KeyEvent.VK_D:
         	movePlayer(Direction.EAST, myMazePanel);
+        	System.out.println("fire");
             break;
     }
         
