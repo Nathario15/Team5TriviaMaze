@@ -54,13 +54,19 @@ public abstract class AbstractQuestion implements Serializable {
 	}
 
 	@Override
-	public final boolean equals(final Object other) {
-		if (other.getClass() != this.getClass()) {
+	public final boolean equals(final Object theOther) {
+		if (theOther.getClass() != this.getClass()) {
 			return false;
 		}
-		AbstractQuestion otherQ = (this.getClass().cast(other));
-		return Objects.equals(this.myQuestion, otherQ.myQuestion)&&Objects.equals(this.myAnswer, otherQ.myAnswer);
+		final AbstractQuestion otherQ = this.getClass().cast(theOther);
+		return Objects.equals(this.myQuestion, otherQ.myQuestion) && Objects.equals(this.myAnswer, otherQ.myAnswer);
 	}
+	
+	@Override
+	public final int hashCode() {
+	    return Objects.hash(myQuestion, myAnswer);
+	}
+	
 	@Override
 	public final String toString() {
 		return myQuestion + ": " + myAnswer + ".";
