@@ -27,6 +27,22 @@ public final class DatabaseManager {
 	 * A code used to access questions.
 	 */
 	private static final String QUESTION_ACCESS = "SELECT COUNT(*) FROM trivia_questions WHERE difficulty = ?";
+	
+	/**
+	 * Maximum number of questions to retrieve per difficulty.
+	 */
+	private static final int MAX_QUESTIONS_PER_DIFFICULTY = 48;
+	
+	/**
+	 * Error message for random question retrieval failure.
+	 */
+	private static final String ERROR_GETTING_QUESTION = "Error getting random question: ";
+	
+	/**
+	 * Base SQL query for retrieving questions by difficulty.
+	 */
+	private static final String BASE_QUESTION_QUERY = "SELECT * FROM trivia_questions WHERE difficulty = ?";
+	
 	/**
 	 * an instance of the singleton.
 	 */
@@ -102,7 +118,7 @@ public final class DatabaseManager {
 	 * @return Question object or null if no questions available
 	 */
 	public AbstractQuestion getRandomQuestion() {
-		final String sql = "SELECT * FROM trivia_questions WHERE difficulty = ?" + " ORDER BY RANDOM()" + " LIMIT 1";
+		final String sql = BASE_QUESTION_QUERY + " ORDER BY RANDOM() LIMIT 1";
 
 		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
 			pstmt.setString(1, myDifficulty.toString());
@@ -112,7 +128,7 @@ public final class DatabaseManager {
 				return createQuestionFromResultSet(rs);
 			}
 		} catch (final SQLException e) {
-			System.err.println("Error getting random question: " + e.getMessage());
+		    System.err.println(ERROR_GETTING_QUESTION + e.getMessage());
 		}
 
 		return null;
@@ -124,20 +140,20 @@ public final class DatabaseManager {
 	 * @return Question object or null if no questions available
 	 */
 	public ArrayList<AbstractQuestion> getArrayList() {
-		final String sql = "SELECT * FROM trivia_questions WHERE difficulty = ?" + " ORDER BY question" + " LIMIT 48";
+		final String sql = BASE_QUESTION_QUERY + " ORDER BY question LIMIT " + MAX_QUESTIONS_PER_DIFFICULTY;
 
 		try (PreparedStatement pstmt = myConnection.prepareStatement(sql)) {
 			pstmt.setString(1, myDifficulty.toString());
 			final ResultSet rs = pstmt.executeQuery();
-			ArrayList<AbstractQuestion> arr = new ArrayList<AbstractQuestion>();
-			for (int i = 0; i < 48; i++) {
-				if (rs.next()) {
-					arr.add(createQuestionFromResultSet(rs));
-				}
+			final ArrayList<AbstractQuestion> arr = new ArrayList<AbstractQuestion>();
+			for (int i = 0; i < MAX_QUESTIONS_PER_DIFFICULTY; i++) {
+			    if (rs.next()) {
+			        arr.add(createQuestionFromResultSet(rs));
+			    }
 			}
 			return arr;
 		} catch (final SQLException e) {
-			System.err.println("Error getting random question: " + e.getMessage());
+		    System.err.println(ERROR_GETTING_QUESTION + e.getMessage());
 		}
 
 		return null;
@@ -200,7 +216,7 @@ public final class DatabaseManager {
 				return rs.getInt(1) > 0;
 			}
 		} catch (final SQLException e) {
-			System.err.println("Error checking questions: " + e.getMessage());
+		    System.err.println(ERROR_GETTING_QUESTION + e.getMessage());
 		}
 
 		return false;
