@@ -10,20 +10,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import controller.SystemControl;
-
 public final class GameState implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * The current X.
-	 */
-	private int myCurrentX;
 
-	/**
-	 * The current Y.
-	 */
-	private int myCurrentY;
 
 	/**
 	 * The Locked Doors.
@@ -44,6 +34,17 @@ public final class GameState implements Serializable {
  	 * Singleton instance of GameState.
  	 */
  	private static GameState myInstance;
+ 	
+	/**
+	 * The current X.
+	 */
+	private int myCurrentX;
+
+	/**
+	 * The current Y.
+	 */
+	private int myCurrentY;
+	
 	/**
 	 * The questions used.
 	 */
@@ -141,7 +142,7 @@ public final class GameState implements Serializable {
 	 * 
 	 * @param difficulty
 	 */
-    public void setDifficulty(Difficulty difficulty) {
+    public void setDifficulty(final Difficulty difficulty) {
         this.myDifficulty = difficulty;
     }
     
