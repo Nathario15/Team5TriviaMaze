@@ -61,7 +61,7 @@ public final class MazePanel extends JPanel implements KeyListener {
         Image m;
         m = new ImageIcon("/Team5TriviaMaze/14376136-pack_xl.jpg").getImage();
         g2d.drawImage(m,0,0,getWidth(),getHeight(),this);
-        
+        super.paintComponent(g2d);
         // First draw all cells with their standard grid
         for (int row = 0; row < MAP_SIZE; row++) {
             for (int col = 0; col < MAP_SIZE; col++) {
