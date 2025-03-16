@@ -10,16 +10,40 @@ import model.GameState;
 import model.TrueFalseQuestion;
 
 public final class TrueFalseQuestionPanel extends QuestionPanel {
+	
+    /**
+     * Serialization ID.
+     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * Spacing between buttons.
+     */
+    private static final int BUTTON_SPACING = 10;
+    
+    /**
+     * String constant for "True" label and value.
+     */
+    private static final String TRUE_VALUE = "True";
+    
+    /**
+     * String constant for "False" label and value.
+     */
+    private static final String FALSE_VALUE = "False";
+    
     /**
      * True Button.
      */
     private JButton myTrueButton;
+    
     /**
      * False Button.
      */
     private JButton myFalseButton;
     
+    /**
+     * The selected answer.
+     */
     private String mySelectedAnswer;
 
 
@@ -37,17 +61,17 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
     protected void createAnswerInput() {
         // Set up the layout for True/False buttons
         final JPanel answerPanel = new JPanel();
-        answerPanel.setLayout(new GridLayout(1, 2, 10, 0));
+        answerPanel.setLayout(new GridLayout(1, 2, BUTTON_SPACING, 0));
 
-        myTrueButton = new JButton("True");
-        myFalseButton = new JButton("False");
+        myTrueButton = new JButton(TRUE_VALUE);
+        myFalseButton = new JButton(FALSE_VALUE);
 
         // Auto-submit when True is clicked
         myTrueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent theE) {
                 // Set the answer and submit automatically
-                mySelectedAnswer = "True";
+                mySelectedAnswer = TRUE_VALUE;
                 mySubmitButton.doClick();  // Trigger the submit button
             }
         });
@@ -57,7 +81,7 @@ public final class TrueFalseQuestionPanel extends QuestionPanel {
             @Override
             public void actionPerformed(final ActionEvent theE) {
                 // Set the answer and submit automatically
-                mySelectedAnswer = "False";
+                mySelectedAnswer = FALSE_VALUE;
                 mySubmitButton.doClick();  // Trigger the submit button
             }
         });
