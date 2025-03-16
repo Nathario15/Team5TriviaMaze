@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -23,12 +22,11 @@ import java.util.Random;
 /**
  * The main view for the Trivia Maze Game.
  */
-public final class GameView extends JFrame implements KeyListener{
+public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private Player player;
 	/**
 	 * games save data.
 	 */
@@ -49,13 +47,28 @@ public final class GameView extends JFrame implements KeyListener{
 	 * The file name for the save file.
 	 */
 	private String myFilename = ""; //TODO fix filename
+	/**
+	 * The panel for tracking the state of the game.
+	 */
+	private JPanel myTrackerPanel;
+	/**
+	 * The label for tracking the player's position.
+	 */
+	private JLabel myPositionLabel;
+	/**
+	 * The label for tracking the correct question count.
+	 */
+	private JLabel myCorrectQuestionsLabel;
+	/**
+	 * The label for tracking the incorrect question count.
+	 */
+	private JLabel myIncorrectQuestionsLabel;
+	/**
+	 * The label for tracking the locked door count.
+	 */
+	private JLabel myLockedDoorsLabel;
 	
-	 private JPanel trackerPanel;
-	 private JLabel positionLabel;
-	 private JLabel questionsAnsweredLabel;
-	 private JLabel lockedDoorsLabel;
 	public static GameView instance;
-	
 	static MazePanel myMazePanel;
 
 	/**
@@ -81,9 +94,7 @@ public final class GameView extends JFrame implements KeyListener{
 		    addAboutPanel();
 
 		    add(myMainPanel);
-        add(myMainPanel);
-        this.instance = this;
-    }
+		}
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -119,8 +130,8 @@ public final class GameView extends JFrame implements KeyListener{
     private void addGamePanel() {
         final JPanel gamePanel = new JPanel(new BorderLayout());
 
-        myMazePanel = new MazePanel();
-        gamePanel.add(myMazePanel, BorderLayout.CENTER);
+        MazePanel mazePanel = new MazePanel();
+        gamePanel.add(mazePanel, BorderLayout.CENTER);
 
         JPanel controlPanel = new JPanel(new GridLayout(1, 4));
         JButton northButton = new JButton("North");
@@ -128,10 +139,11 @@ public final class GameView extends JFrame implements KeyListener{
         JButton eastButton = new JButton("East");
         JButton westButton = new JButton("West");
 
-        northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
-        southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
-        eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
-        westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
+        northButton.addActionListener(_ -> movePlayer(Direction.NORTH, mazePanel));
+        southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, mazePanel));
+        eastButton.addActionListener(_ -> movePlayer(Direction.EAST, mazePanel));
+        westButton.addActionListener(_ -> movePlayer(Direction.WEST, mazePanel));
+
         controlPanel.add(northButton);
         controlPanel.add(southButton);
         controlPanel.add(eastButton);
@@ -144,28 +156,32 @@ public final class GameView extends JFrame implements KeyListener{
     }
     
     private void addTrackerPanel(JPanel gamePanel) {
-        trackerPanel = new JPanel(new GridLayout(3, 1));
+        myTrackerPanel = new JPanel(new GridLayout(4, 1));
 
-        positionLabel = new JLabel("Position: (4,4)");
-        questionsAnsweredLabel = new JLabel("Questions Answered: 0");
-        lockedDoorsLabel = new JLabel("Locked Doors: 0");
+        myPositionLabel = new JLabel("Position: (4,4)");
+        myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
+        myIncorrectQuestionsLabel = new JLabel("Incorrect Questions: 0");
+        myLockedDoorsLabel = new JLabel("Locked Doors: 49");
 
-        positionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        questionsAnsweredLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        lockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myPositionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myCorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myIncorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myLockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
-        trackerPanel.add(positionLabel);
-        trackerPanel.add(questionsAnsweredLabel);
-        trackerPanel.add(lockedDoorsLabel);
+        myTrackerPanel.add(myPositionLabel);
+        myTrackerPanel.add(myCorrectQuestionsLabel);
+        myTrackerPanel.add(myIncorrectQuestionsLabel);
+        myTrackerPanel.add(myLockedDoorsLabel);
 
-        gamePanel.add(trackerPanel, BorderLayout.EAST);
+        gamePanel.add(myTrackerPanel, BorderLayout.EAST);
     }
 
     private void updateTracker() {
         if (myGameState != null) {
-        	positionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
-            questionsAnsweredLabel.setText("Questions Answered: " + myGameState.getQuestionsAnswered());
-            lockedDoorsLabel.setText("Locked Doors: " + myGameState.getLockedDoors());
+        	myPositionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
+            myCorrectQuestionsLabel.setText("Correct Questions: " + GameState.getInstance().getCorrectQuestions());
+            myIncorrectQuestionsLabel.setText("Incorrect Questions : " + GameState.getInstance().getIncorrectQuestions());
+            myLockedDoorsLabel.setText("Locked Doors: " + GameState.getInstance().getLockedDoors());
         }
     }
 
@@ -217,10 +233,10 @@ public final class GameView extends JFrame implements KeyListener{
         JMenuItem newGameItem = new JMenuItem("New Game");
         JMenuItem exitGameItem = new JMenuItem("Exit");
 
-        saveGameItem.addActionListener(e -> saveGame());
-        loadGameItem.addActionListener(e -> loadGame());
-        newGameItem.addActionListener(e -> newGame());
-        exitGameItem.addActionListener(e -> returnToMainMenu());
+        saveGameItem.addActionListener(_ -> saveGame());
+        loadGameItem.addActionListener(_ -> loadGame());
+        newGameItem.addActionListener(_ -> newGame());
+        exitGameItem.addActionListener(_ -> System.exit(0));
 
         fileMenu.add(saveGameItem);
         fileMenu.add(loadGameItem);
@@ -250,13 +266,6 @@ public final class GameView extends JFrame implements KeyListener{
         System.out.println("\n\n==================================================");
         System.out.println("================= STARTING NEW GAME ===============");
         System.out.println("==================================================\n\n");
-        
-        // First clean up existing game state if we're in a game
-        if (myInGame) {
-            // Clear existing game data
-            myGameState = null;
-        }
-        
         String[] difficulties = {"EASY", "MEDIUM", "HARD"};
         String selectedDifficulty = (String) JOptionPane.showInputDialog(this, 
                 "Select Difficulty:", "New Game",
@@ -265,112 +274,37 @@ public final class GameView extends JFrame implements KeyListener{
         if (selectedDifficulty != null) {
             // Reset player position to center of maze
             Maze.reset();
-            
-            // Initialize a new game state
+            GameState.getInstance().resetState();
+            Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
             myGameState = new GameState();
-            myGameState.setDifficulty(Difficulty.valueOf(selectedDifficulty));
-            
-            // Set up the database for questions
-            DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
-            
-            // Initialize question factory
-            QuestionFactory.IntializeQuestionFactory();
-            
-            // Update UI state
+            JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
             myInGame = true;
             myCardLayout.show(myMainPanel, "Game");
             addMenuBar();
-            
-            // Make sure maze display is refreshed
-            myMazePanel.repaint();
-            
-            // Update tracker panel
-            updateTracker();
-            
-            JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
+            DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
         }
+        QuestionFactory.IntializeQuestionFactory();
     }
     
     public void endGame() {
     	this.newGame();
-    }
-    
-    /**
-     * Checks for win/loss conditions after a move.
-     */
-    private void checkGameState() {
-        // Check if path to exit is blocked
-        if (SystemControl.getInstance().checkLoseCondition()) {
-            JOptionPane.showMessageDialog(this, 
-                "All paths to the exit are blocked! Game over.", 
-                "Game Over", 
-                JOptionPane.ERROR_MESSAGE);
-            
-            // Ask if player wants to start a new game
-            int response = JOptionPane.showConfirmDialog(this,
-                "Would you like to start a new game?",
-                "Game Over",
-                JOptionPane.YES_NO_OPTION);
-                
-            if (response == JOptionPane.YES_OPTION) {
-                newGame();
-            } else {
-                returnToMainMenu();
-            }
-        }
     }
 
     /**
 	 * begins serialization.
 	 */
     public void saveGame() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save Game");
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", "sav"));
-        
-        int userSelection = fileChooser.showSaveDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            // Ensure file has .sav extension
-            String filePath = fileToSave.getAbsolutePath();
-            if (!filePath.toLowerCase().endsWith(".sav")) {
-                filePath += ".sav";
-            }
-            
-            myFilename = filePath;
-            myGameState.saveToFile(myFilename);
-            JOptionPane.showMessageDialog(this, "Game saved successfully to " + fileToSave.getName() + "!");
-        }
+        myGameState.saveToFile(myFilename);
+        JOptionPane.showMessageDialog(this, "Game saved successfully!");
     }
 
     /**
 	 * begins deserialization.
 	 */
     public void loadGame() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Load Game");
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", "sav"));
-        
-        int userSelection = fileChooser.showOpenDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToLoad = fileChooser.getSelectedFile();
-            myFilename = fileToLoad.getAbsolutePath();
-            
-            try {
-                myGameState = GameState.loadFromFile(myFilename);
-                myInGame = true;
-                addMenuBar();
-                myCardLayout.show(myMainPanel, "Game");
-                myMazePanel.repaint();
-                updateTracker();
-                JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, 
-                    "Error loading game: " + e.getMessage(), 
-                    "Load Error", 
-                    JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        myGameState = GameState.loadFromFile(myFilename);
+        JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+        myCardLayout.show(myMainPanel, "Game");
     }
 
     /**
@@ -406,8 +340,8 @@ public final class GameView extends JFrame implements KeyListener{
             }
         } else {
             mazePanel.repaint();
+            updateTracker();
         }
-        checkGameState();
     }
     
     public void returnToMainMenu() {
@@ -460,18 +394,22 @@ public final class GameView extends JFrame implements KeyListener{
         case KeyEvent.VK_UP:
         case KeyEvent.VK_W:
             movePlayer(Direction.NORTH, myMazePanel);
+            System.out.println("fire");
             break;
         case KeyEvent.VK_DOWN:
         case KeyEvent.VK_S:
         	movePlayer(Direction.SOUTH, myMazePanel);
+        	System.out.println("fire");
             break;
         case KeyEvent.VK_LEFT:
         case KeyEvent.VK_A:
         	movePlayer(Direction.WEST, myMazePanel);
+        	System.out.println("fire");
             break;
         case KeyEvent.VK_RIGHT:
         case KeyEvent.VK_D:
         	movePlayer(Direction.EAST, myMazePanel);
+        	System.out.println("fire");
             break;
     }
         

@@ -16,6 +16,7 @@ import model.DatabaseManager;
 import model.Difficulty;
 import model.Direction;
 import model.DoorState;
+import model.GameState;
 import model.Maze;
 import model.MultipleChoiceQuestion;
 import model.QuestionFactory;
@@ -435,11 +436,14 @@ public final class SystemControl {
             JOptionPane.showMessageDialog(theDialog, 
                     "Correct! The door is now open.", "Success", 
                     JOptionPane.INFORMATION_MESSAGE);
+            GameState.getInstance().addCorrect();
+            GameState.getInstance().removeLockedDoor();
         } else {
             JOptionPane.showMessageDialog(theDialog, 
                     "Incorrect! The door is now permanently blocked.", "Failed", 
                     JOptionPane.ERROR_MESSAGE);
-        }
+            GameState.getInstance().addIncorrect();
+        }	
         theDialog.dispose();
     }
     
