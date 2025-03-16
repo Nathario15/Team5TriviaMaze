@@ -304,7 +304,7 @@ public final class GameView extends JFrame implements KeyListener{
         myCardLayout.show(myMainPanel, "About");
     }
 
-    private void movePlayer(Direction direction, MazePanel mazePanel) {
+    void movePlayer(Direction direction, MazePanel mazePanel) {
         // Check if we're in a valid game state
         if (myGameState == null) {
             return; // Don't try to move if game state is null
