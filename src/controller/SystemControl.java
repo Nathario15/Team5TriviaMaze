@@ -9,8 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import model.AbstractQuestion;
 import model.DatabaseManager;
 import model.Difficulty;
@@ -54,14 +52,10 @@ public final class SystemControl {
     /** Whether a game is currently active. */
     private boolean myGameActive;
     
-    private boolean myGameEnded = false;
-    
     /** The last direction the player attempted to move in. */
     private Direction myLastAttemptedDirection;
     
-    /** Factory for creating questions. */
-    private final QuestionFactory myQuestionFactory;
-    
+    /** Reference to the game view. */
     private view.GameView myGameView;
     
     /**
@@ -69,11 +63,15 @@ public final class SystemControl {
      */
     private SystemControl() {
         myDatabaseManager = DatabaseManager.getInstance();
-        myQuestionFactory = new QuestionFactory();
         myGameActive = false;
     }
     
-    public void setGameView(view.GameView theGameView) {
+    /**
+     * Sets the reference to the game view.
+     * 
+     * @param theGameView the game view to set
+     */
+    public void setGameView(final view.GameView theGameView) {
         myGameView = theGameView;
         System.out.println("GameView reference set in SystemControl");
     }
@@ -161,55 +159,59 @@ public final class SystemControl {
         }
         
         // Check door state first
-        DoorState doorState = currentRoom.getDoorState(theDirection);
-        
-        if (doorState == DoorState.OPEN) {
-            // Door is already open - move freely
-            Maze.move(theDirection);
-            return true;
-        } else if (doorState == DoorState.LOCKED) {
-            // Door is locked - show question
-            boolean answeredCorrectly = triggerQuestion();
-            
-            if (answeredCorrectly) {
-                // Correct answer - unlock door and move
-                currentRoom.unlock(theDirection);
-                Maze.move(theDirection);
-                return true;
-            } else {
-                // Wrong answer - permanently block door
-                currentRoom.block(theDirection);
-                return false;
-            }
-        } else {
-            // Door is already blocked - can't move
-            JOptionPane.showMessageDialog(null, 
-                    "This door is permanently blocked!", 
-                    "Blocked Path", 
-                    JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
+        final DoorState doorState = currentRoom.getDoorState(theDirection);
+        return handleDoorState(doorState, currentRoom, theDirection);
     }
     
     /**
-     * Checks the door state to determine if movement is possible.
+     * Handles the movement attempt based on the door state.
      * 
-     * @param theRoom The current room
-     * @param theDirection The direction to move
-     * @return true if movement is possible, false otherwise
+     * @param theDoorState the state of the door
+     * @param theCurrentRoom the current room
+     * @param theDirection the direction to move
+     * @return true if movement was successful
      */
-    private boolean checkDoorStateForMovement(final Room theRoom, final Direction theDirection) {
-        final DoorState doorState = theRoom.getDoorState(theDirection);
+    private boolean handleDoorState(final DoorState theDoorState, final Room theCurrentRoom, 
+                                   final Direction theDirection) {
+        if (theDoorState == DoorState.OPEN) {
+            // Door is already open - move freely
+            Maze.move(theDirection);
+            return true;
+        } 
         
-        if (doorState == DoorState.OPEN) {
-            return Maze.move(theDirection);  // Door is open, move
+        if (theDoorState == DoorState.LOCKED) {
+            return handleLockedDoor(theCurrentRoom, theDirection);
         }
         
-        if (doorState == DoorState.LOCKED) {
-            return false;  // Door is locked, need question in view
+        // Door is already blocked - can't move
+        JOptionPane.showMessageDialog(null, 
+                "This door is permanently blocked!", 
+                "Blocked Path", 
+                JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+    
+    /**
+     * Handles the case of a locked door.
+     * 
+     * @param theCurrentRoom the current room
+     * @param theDirection the direction to move
+     * @return true if door was unlocked and movement successful
+     */
+    private boolean handleLockedDoor(final Room theCurrentRoom, final Direction theDirection) {
+        // Door is locked - show question
+        final boolean answeredCorrectly = triggerQuestion();
+        
+        if (answeredCorrectly) {
+            // Correct answer - unlock door and move
+            theCurrentRoom.unlock(theDirection);
+            Maze.move(theDirection);
+            return true;
         }
         
-        return false;  // Door is blocked
+        // Wrong answer - permanently block door
+        theCurrentRoom.block(theDirection);
+        return false;
     }
     
     /**
@@ -267,19 +269,6 @@ public final class SystemControl {
 //            LOGGER.info("Game won! Player reached the exit room.");
 //        }
 //    }
-    
-    /**
-     * Handles incorrect answer processing.
-     */
-    private void handleIncorrectAnswer() {
-        Maze.getRoom().block(myLastAttemptedDirection);
-        
-        // Check if player can still reach the exit
-        if (checkLoseCondition()) {
-            myGameActive = false;
-            LOGGER.info("Game lost! No valid path to exit remains.");
-        }
-    }
     
     /**
      * Checks if the game has been won.
@@ -354,16 +343,6 @@ public final class SystemControl {
         }
     }
     
-    private void returnToMainMenu() {
-        SwingUtilities.invokeLater(() -> {
-            for (java.awt.Window window : java.awt.Window.getWindows()) {
-                if (window instanceof view.GameView) {
-                    ((view.GameView) window).returnToMainMenu();
-                    break;
-                }
-            }
-        });
-    }
     /**
      * Creates the appropriate question panel based on question type.
      * 
@@ -399,8 +378,8 @@ public final class SystemControl {
         
         JButton existingSubmit = null;
         for (Component c : thePanel.getComponents()) {
-            if (c instanceof JButton && ((JButton)c).getText().contains("Submit")) {
-                existingSubmit = (JButton)c;
+            if (c instanceof JButton && ((JButton) c).getText().contains("Submit")) {
+                existingSubmit = (JButton) c;
                 break;
             }
         }
@@ -498,7 +477,7 @@ public final class SystemControl {
      */
     public AbstractQuestion getQuestionForDoor() {
         // Try to get an existing question from the room
-        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
+        final AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
         
 //        // If no question exists, get a random one
 //        if (question1 == null) {
