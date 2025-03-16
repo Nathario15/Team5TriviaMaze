@@ -87,7 +87,7 @@ public final class MultipleChoiceQuestionPanel extends QuestionPanel {
             myFeedbackLabel.setText("Correct! You can proceed.");
             myFeedbackLabel.setForeground(Color.GREEN);
         } else {
-            myFeedbackLabel.setText("Incorrect! Try again.");
+            myFeedbackLabel.setText("Incorrect! Door is now permanently blocked.");
             myFeedbackLabel.setForeground(Color.RED);
         }
 

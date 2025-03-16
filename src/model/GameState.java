@@ -54,20 +54,20 @@ public final class GameState implements Serializable {
 	}
 
 	/**
-	 * returns current position.
-	 * 
+	 * returns the player's position.
 	 * @return
 	 */
-	public int getCurrentPosition() {
-		return myCurrentX;
+	public String getPlayerPosition() {
+	    return myCurrentX + ", " + myCurrentY;
 	}
 
 	/**
 	 * 
 	 * @param theCurrentPosition
 	 */
-	public void setCurrentPosition(final int theCurrentPosition) {
-		this.myCurrentX = theCurrentPosition;
+	public void setCurrentPosition(int x, int y) {
+	    this.myCurrentX = x;
+	    this.myCurrentY = y;
 	}
 
 	/**
@@ -76,6 +76,13 @@ public final class GameState implements Serializable {
 	 */
 	public Set<Integer> getLockedDoors() {
 		return new HashSet<>(myLockedDoors); // Return a copy to maintain encapsulation
+	}
+	
+	/**
+	 * Returns the number of questions answered.
+	 */
+	public int getQuestionsAnswered() {
+		return myQuestionsUsed.size();
 	}
 
 	/**
@@ -101,6 +108,22 @@ public final class GameState implements Serializable {
 	public void useQuestion(final int theQuestionId) {
 		myQuestionsUsed.add(theQuestionId);
 	}
+	
+	/**
+	 * Get's the player's X coordinate.
+	 * @return
+	 */
+	public int getCurrentX() {
+        return myCurrentX;
+    }
+
+	/**
+	 * Get's the player's Y coordinate.
+	 * @return
+	 */
+    public int getCurrentY() {
+        return myCurrentY;
+    }
 	
 	/**
 	 * Returns current difficulty.

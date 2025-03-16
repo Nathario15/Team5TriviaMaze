@@ -22,7 +22,7 @@ public class QuestionFactory implements Serializable {
 	 */
 	private static ArrayList<AbstractQuestion> myQuestions;
 	
-	private QuestionFactory() {
+	public QuestionFactory() {
 		
 	};
 

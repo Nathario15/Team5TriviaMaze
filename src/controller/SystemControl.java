@@ -1,11 +1,16 @@
+
 package controller;
 
+import java.awt.Component;
+import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import model.AbstractQuestion;
 import model.DatabaseManager;
 import model.Difficulty;
@@ -34,10 +39,10 @@ public final class SystemControl {
     private static final Logger LOGGER = Logger.getLogger(SystemControl.class.getName());
     
     /** Standard dialog width. */
-    private static final int DIALOG_WIDTH = 400;
+    private static final int DIALOG_WIDTH = 500;
     
     /** Standard dialog height. */
-    private static final int DIALOG_HEIGHT = 300;
+    private static final int DIALOG_HEIGHT = 500;
     
     /** Singleton instance. */
     private static SystemControl myInstance;
@@ -48,17 +53,30 @@ public final class SystemControl {
     /** Whether a game is currently active. */
     private boolean myGameActive;
     
+    private boolean myGameEnded = false;
+    
     /** The last direction the player attempted to move in. */
     private Direction myLastAttemptedDirection;
+    
+    /** Factory for creating questions. */
+    private final QuestionFactory myQuestionFactory;
+    
+    private view.GameView myGameView;
     
     /**
      * Private constructor for singleton pattern.
      */
     private SystemControl() {
         myDatabaseManager = DatabaseManager.getInstance();
+        myQuestionFactory = new QuestionFactory();
         myGameActive = false;
     }
     
+    public void setGameView(view.GameView theGameView) {
+        myGameView = theGameView;
+        System.out.println("GameView reference set in SystemControl");
+    }
+
     /**
      * Get the singleton instance of SystemControl.
      * @return SystemControl instance
@@ -101,7 +119,7 @@ public final class SystemControl {
         } catch (final NullPointerException ex2) {
             LOGGER.log(Level.SEVERE, "Failed to initialize game due to null pointer", ex2);
         }
-        
+
         return success;
     }
     
@@ -141,8 +159,35 @@ public final class SystemControl {
             return false;  // Can't move out of bounds
         }
         
-        // Check door state and return appropriate result
-        return checkDoorStateForMovement(currentRoom, theDirection);
+        // Check door state first
+        DoorState doorState = currentRoom.getDoorState(theDirection);
+        
+        if (doorState == DoorState.OPEN) {
+            // Door is already open - move freely
+            Maze.move(theDirection);
+            return true;
+        } else if (doorState == DoorState.LOCKED) {
+            // Door is locked - show question
+            boolean answeredCorrectly = triggerQuestion();
+            
+            if (answeredCorrectly) {
+                // Correct answer - unlock door and move
+                currentRoom.unlock(theDirection);
+                Maze.move(theDirection);
+                return true;
+            } else {
+                // Wrong answer - permanently block door
+                currentRoom.block(theDirection);
+                return false;
+            }
+        } else {
+            // Door is already blocked - can't move
+            JOptionPane.showMessageDialog(null, 
+                    "This door is permanently blocked!", 
+                    "Blocked Path", 
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
     }
     
     /**
@@ -291,10 +336,33 @@ public final class SystemControl {
      */
     public void endGame() {
         myGameActive = false;
-        // Additional cleanup as needed
-        System.out.println("end game");
+        
+        System.out.println("Game won - player escaped the maze");
+        
+        // Show victory message directly
+        JOptionPane.showMessageDialog(null, 
+            "Congratulations! You've successfully escaped the Minecraft Trivia Maze!", 
+            "Victory", JOptionPane.INFORMATION_MESSAGE);
+        
+        // Use the direct reference to return to main menu
+        if (myGameView != null) {
+            System.out.println("Calling returnToMainMenu() on GameView");
+            myGameView.returnToMainMenu();
+        } else {
+            System.err.println("ERROR: No GameView reference in SystemControl!");
+        }
     }
     
+    private void returnToMainMenu() {
+        SwingUtilities.invokeLater(() -> {
+            for (java.awt.Window window : java.awt.Window.getWindows()) {
+                if (window instanceof view.GameView) {
+                    ((view.GameView) window).returnToMainMenu();
+                    break;
+                }
+            }
+        });
+    }
     /**
      * Creates the appropriate question panel based on question type.
      * 
@@ -328,13 +396,28 @@ public final class SystemControl {
     private static boolean displayQuestionDialog(final JPanel thePanel, final JDialog theDialog) {
         final boolean[] result = new boolean[1];
         
-        final JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            result[0] = ((QuestionPanel) thePanel).checkAnswer();
-            handleQuestionResult(result[0], theDialog);
-        });
+        JButton existingSubmit = null;
+        for (Component c : thePanel.getComponents()) {
+            if (c instanceof JButton && ((JButton)c).getText().contains("Submit")) {
+                existingSubmit = (JButton)c;
+                break;
+            }
+        }
         
-        thePanel.add(submitButton);
+        if (existingSubmit != null) {
+            // Remove existing listeners
+            for (ActionListener al : existingSubmit.getActionListeners()) {
+                existingSubmit.removeActionListener(al);
+            }
+            
+            // Add our listener
+            existingSubmit.addActionListener(e -> {
+                result[0] = ((QuestionPanel) thePanel).checkAnswer();
+                handleQuestionResult(result[0], theDialog);
+                theDialog.dispose();
+            });
+        }
+        
         theDialog.add(thePanel);
         theDialog.setVisible(true);
         
@@ -404,22 +487,22 @@ public final class SystemControl {
         return displayQuestionDialog(questionPanel, questionDialog);
     }
     
-//    /**
-//     * Gets a random question for a specific door.
-//     * 
-//     * @return A question object or null if none available
-//     */
-//    public AbstractQuestion getQuestionForDoor() {
-//        // Try to get an existing question from the room
-//        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
-//        
-////        // If no question exists, get a random one
-////        if (question1 == null) {
-////            question1 = getNewQuestionForDoor(theDirection);
-////        }
-//        
-//        return question1;
-//    }
+    /**
+     * Gets a random question for a specific door.
+     * 
+     * @return A question object or null if none available
+     */
+    public AbstractQuestion getQuestionForDoor() {
+        // Try to get an existing question from the room
+        AbstractQuestion question1 = DatabaseManager.getInstance().getRandomQuestion();
+        
+//        // If no question exists, get a random one
+//        if (question1 == null) {
+//            question1 = getNewQuestionForDoor(theDirection);
+//        }
+        
+        return question1;
+    }
     
 //    /**
 //     * Gets a new question from the database and assigns it to the door.
