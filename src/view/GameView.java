@@ -23,66 +23,84 @@ import java.util.Random;
 /**
  * The main view for the Trivia Maze Game.
  */
-public final class GameView extends JFrame implements KeyListener{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	//private Player player;
-	/**
-	 * games save data.
-	 */
-	private GameState myGameState;
-	/**
-	 * The card layout.
-	 */
-	private CardLayout myCardLayout;
-	/**
-	 * The main panel.
-	 */
-	private JPanel myMainPanel;
-	/**
-	 * Whether or not the player is currently in game.
-	 */
+public final class GameView extends JFrame implements KeyListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * games save data.
+     */
+    private GameState myGameState;
+    /**
+     * The card layout.
+     */
+    private CardLayout myCardLayout;
+    /**
+     * The main panel.
+     */
+    private JPanel myMainPanel;
+    /**
+     * Whether or not the player is currently in game.
+     */
     private boolean myInGame;
     /**
-	 * The file name for the save file.
-	 */
-	private String myFilename = ""; //TODO fix filename
-	
-	 private JPanel trackerPanel;
-	 private JLabel positionLabel;
-	 private JLabel questionsAnsweredLabel;
-	 private JLabel lockedDoorsLabel;
-	public static GameView instance;
-	
-	static MazePanel myMazePanel;
+     * The file name for the save file.
+     */
+    private String myFilename = ""; //TODO fix filename
+    
+    /**
+     * The panel for tracking the state of the game.
+     */
+    private JPanel myTrackerPanel;
+    /**
+     * The label for tracking the player's position.
+     */
+    private JLabel myPositionLabel;
+    /**
+     * The label for tracking the correct question count.
+     */
+    private JLabel myCorrectQuestionsLabel;
+    /**
+     * The label for tracking the incorrect question count.
+     */
+    private JLabel myIncorrectQuestionsLabel;
+    /**
+     * The label for tracking the locked door count.
+     */
+    private JLabel myLockedDoorsLabel;
+    
+    public static GameView instance;
+    static MazePanel myMazePanel;
 
-	/**
-	 * Constructor.
-	 */
-	 public GameView() {
-		    setTitle("Trivia Maze Game");
-		    setSize(800, 600);
-		    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    setLocationRelativeTo(null);
+    /**
+     * Constructor.
+     */
+    public GameView() {
+        setTitle("Trivia Maze Game");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-		    myCardLayout = new CardLayout();
-		    myMainPanel = new JPanel(myCardLayout);
-		    myInGame = false;
+        myCardLayout = new CardLayout();
+        myMainPanel = new JPanel(myCardLayout);
+        myInGame = false;
 
-		    // Register this view with SystemControl
-		    SystemControl.getInstance().setGameView(this);
-		    System.out.println("GameView registered with SystemControl");
+        // Register this view with SystemControl
+        SystemControl.getInstance().setGameView(this);
+        System.out.println("GameView registered with SystemControl");
 
-		    addMainMenu();
-		    addGamePanel();
-		    addInstructionsPanel();
-		    addAboutPanel();
+        addMainMenu();
+        addGamePanel();
+        addInstructionsPanel();
+        addAboutPanel();
 
-		    add(myMainPanel);
         add(myMainPanel);
         this.instance = this;
+        
+        // Add key listener for keyboard navigation
+        setFocusable(true);
+        addKeyListener(this);
     }
 
     public static void main(final String[] args) {
@@ -132,6 +150,7 @@ public final class GameView extends JFrame implements KeyListener{
         southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
         eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
         westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
+
         controlPanel.add(northButton);
         controlPanel.add(southButton);
         controlPanel.add(eastButton);
@@ -144,28 +163,32 @@ public final class GameView extends JFrame implements KeyListener{
     }
     
     private void addTrackerPanel(JPanel gamePanel) {
-        trackerPanel = new JPanel(new GridLayout(3, 1));
+        myTrackerPanel = new JPanel(new GridLayout(4, 1));
 
-        positionLabel = new JLabel("Position: (4,4)");
-        questionsAnsweredLabel = new JLabel("Questions Answered: 0");
-        lockedDoorsLabel = new JLabel("Locked Doors: 0");
+        myPositionLabel = new JLabel("Position: (4,4)");
+        myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
+        myIncorrectQuestionsLabel = new JLabel("Incorrect Questions: 0");
+        myLockedDoorsLabel = new JLabel("Locked Doors: 49");
 
-        positionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        questionsAnsweredLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        lockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myPositionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myCorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myIncorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myLockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
-        trackerPanel.add(positionLabel);
-        trackerPanel.add(questionsAnsweredLabel);
-        trackerPanel.add(lockedDoorsLabel);
+        myTrackerPanel.add(myPositionLabel);
+        myTrackerPanel.add(myCorrectQuestionsLabel);
+        myTrackerPanel.add(myIncorrectQuestionsLabel);
+        myTrackerPanel.add(myLockedDoorsLabel);
 
-        gamePanel.add(trackerPanel, BorderLayout.EAST);
+        gamePanel.add(myTrackerPanel, BorderLayout.EAST);
     }
 
     private void updateTracker() {
         if (myGameState != null) {
-        	positionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
-            questionsAnsweredLabel.setText("Questions Answered: " + myGameState.getQuestionsAnswered());
-            lockedDoorsLabel.setText("Locked Doors: " + myGameState.getLockedDoors());
+            myPositionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
+            myCorrectQuestionsLabel.setText("Correct Questions: " + GameState.getInstance().getCorrectQuestions());
+            myIncorrectQuestionsLabel.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
+            myLockedDoorsLabel.setText("Locked Doors: " + GameState.getInstance().getLockedDoors());
         }
     }
 
@@ -231,8 +254,8 @@ public final class GameView extends JFrame implements KeyListener{
         JMenuItem instructionsGameItem = new JMenuItem("Instructions");
         JMenuItem aboutGameItem = new JMenuItem("About");
 
-        instructionsGameItem.addActionListener(_ -> displayInstructions());
-        aboutGameItem.addActionListener(_ -> displayAbout());
+        instructionsGameItem.addActionListener(e -> displayInstructions());
+        aboutGameItem.addActionListener(e -> displayAbout());
 
         helpMenu.add(instructionsGameItem);
         helpMenu.add(aboutGameItem);
@@ -266,6 +289,9 @@ public final class GameView extends JFrame implements KeyListener{
             // Reset player position to center of maze
             Maze.reset();
             
+            // Reset game state
+            GameState.getInstance().resetState();
+            
             // Initialize a new game state
             myGameState = new GameState();
             myGameState.setDifficulty(Difficulty.valueOf(selectedDifficulty));
@@ -292,7 +318,7 @@ public final class GameView extends JFrame implements KeyListener{
     }
     
     public void endGame() {
-    	this.newGame();
+        this.newGame();
     }
     
     /**
@@ -321,8 +347,8 @@ public final class GameView extends JFrame implements KeyListener{
     }
 
     /**
-	 * begins serialization.
-	 */
+     * begins serialization.
+     */
     public void saveGame() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Save Game");
@@ -344,8 +370,8 @@ public final class GameView extends JFrame implements KeyListener{
     }
 
     /**
-	 * begins deserialization.
-	 */
+     * begins deserialization.
+     */
     public void loadGame() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Load Game");
@@ -406,7 +432,10 @@ public final class GameView extends JFrame implements KeyListener{
             }
         } else {
             mazePanel.repaint();
+            updateTracker();
         }
+        
+        // Check for win/loss condition
         checkGameState();
     }
     
@@ -441,21 +470,19 @@ public final class GameView extends JFrame implements KeyListener{
         });
     }
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // Not used
+    }
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // Not used
+    }
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		int keyCode = e.getKeyCode();
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
         switch (keyCode) {
         case KeyEvent.VK_UP:
         case KeyEvent.VK_W:
@@ -463,17 +490,16 @@ public final class GameView extends JFrame implements KeyListener{
             break;
         case KeyEvent.VK_DOWN:
         case KeyEvent.VK_S:
-        	movePlayer(Direction.SOUTH, myMazePanel);
+            movePlayer(Direction.SOUTH, myMazePanel);
             break;
         case KeyEvent.VK_LEFT:
         case KeyEvent.VK_A:
-        	movePlayer(Direction.WEST, myMazePanel);
+            movePlayer(Direction.WEST, myMazePanel);
             break;
         case KeyEvent.VK_RIGHT:
         case KeyEvent.VK_D:
-        	movePlayer(Direction.EAST, myMazePanel);
+            movePlayer(Direction.EAST, myMazePanel);
             break;
+        }
     }
-        
-	}
 }
