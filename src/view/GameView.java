@@ -46,10 +46,11 @@ public final class GameView extends JFrame {
 	 */
 	private String myFilename = ""; //TODO fix filename
 	
-	 private JPanel trackerPanel;
-	 private JLabel positionLabel;
-	 private JLabel questionsAnsweredLabel;
-	 private JLabel lockedDoorsLabel;
+	 private JPanel myTrackerPanel;
+	 private JLabel myPositionLabel;
+	 private JLabel myCorrectQuestionsLabel;
+	 private JLabel myIncorrectQuestionsLabel;
+	 private JLabel myLockedDoorsLabel;
 
 	/**
 	 * Constructor.
@@ -136,28 +137,32 @@ public final class GameView extends JFrame {
     }
     
     private void addTrackerPanel(JPanel gamePanel) {
-        trackerPanel = new JPanel(new GridLayout(3, 1));
+        myTrackerPanel = new JPanel(new GridLayout(4, 1));
 
-        positionLabel = new JLabel("Position: (4,4)");
-        questionsAnsweredLabel = new JLabel("Questions Answered: 0");
-        lockedDoorsLabel = new JLabel("Locked Doors: 0");
+        myPositionLabel = new JLabel("Position: (4,4)");
+        myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
+        myIncorrectQuestionsLabel = new JLabel("Incorrect Questions: 0");
+        myLockedDoorsLabel = new JLabel("Locked Doors: 0");
 
-        positionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        questionsAnsweredLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        lockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myPositionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myCorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myIncorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        myLockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
-        trackerPanel.add(positionLabel);
-        trackerPanel.add(questionsAnsweredLabel);
-        trackerPanel.add(lockedDoorsLabel);
+        myTrackerPanel.add(myPositionLabel);
+        myTrackerPanel.add(myCorrectQuestionsLabel);
+        myTrackerPanel.add(myIncorrectQuestionsLabel);
+        myTrackerPanel.add(myLockedDoorsLabel);
 
-        gamePanel.add(trackerPanel, BorderLayout.EAST);
+        gamePanel.add(myTrackerPanel, BorderLayout.EAST);
     }
 
     private void updateTracker() {
         if (myGameState != null) {
-        	positionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
-            questionsAnsweredLabel.setText("Questions Answered: " + myGameState.getQuestionsAnswered());
-            lockedDoorsLabel.setText("Locked Doors: " + myGameState.getLockedDoors());
+        	myPositionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
+            myCorrectQuestionsLabel.setText("Correct Questions: " + GameState.getInstance().getCorrectQuestions());
+            myIncorrectQuestionsLabel.setText("Incorrect Questions : " + GameState.getInstance().getIncorrectQuestions());
+            myLockedDoorsLabel.setText("Locked Doors: " + GameState.getInstance().getLockedDoors());
         }
     }
 
@@ -250,7 +255,7 @@ public final class GameView extends JFrame {
         if (selectedDifficulty != null) {
             // Reset player position to center of maze
             Maze.reset();
-            
+            GameState.getInstance().resetLockCount();
             Difficulty difficulty = Difficulty.valueOf(selectedDifficulty);
             myGameState = new GameState();
             JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
@@ -316,6 +321,7 @@ public final class GameView extends JFrame {
             }
         } else {
             mazePanel.repaint();
+            updateTracker();
         }
     }
     

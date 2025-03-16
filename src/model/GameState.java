@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import controller.SystemControl;
+
 public final class GameState implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -22,11 +24,27 @@ public final class GameState implements Serializable {
 	 * The current Y.
 	 */
 	private int myCurrentY;
-
+	
 	/**
 	 * The Locked Doors.
 	 */
-	private Set<Integer> myLockedDoors;
+	private static int myLockedDoors = 49;
+	
+	/**
+	 * The correct question count.
+	 */
+	private static int myCorrectQuestions;
+	
+	/**
+	 * The incorrect question count.
+	 */
+	private static int myIncorrectQuestions;
+	
+	/**
+	 * Singleton instance of GameState.
+	 */
+	private static GameState myInstance;
+
 	/**
 	 * The questions used.
 	 */
@@ -38,7 +56,7 @@ public final class GameState implements Serializable {
 	private Difficulty myDifficulty;
 	
 	private ArrayList<AbstractQuestion> arr;
-
+	
 	/**
 	 * the map.
 	 */
@@ -49,9 +67,20 @@ public final class GameState implements Serializable {
 	 */
 	public GameState() {
 		this.myCurrentX = 0;
-		this.myLockedDoors = new HashSet<>();
+		this.myCurrentY = 0;
 		this.myQuestionsUsed = new HashSet<>();
 	}
+	
+	/**
+     * Get the singleton instance of SystemControl.
+     * @return SystemControl instance
+     */
+    public static synchronized GameState getInstance() {
+        if (myInstance == null) {
+            myInstance = new GameState();
+        }
+        return myInstance;
+    }
 
 	/**
 	 * returns the player's position.
@@ -69,44 +98,20 @@ public final class GameState implements Serializable {
 	    this.myCurrentX = x;
 	    this.myCurrentY = y;
 	}
-
-	/**
-	 * return locked doors.
-	 * @return
-	 */
-	public Set<Integer> getLockedDoors() {
-		return new HashSet<>(myLockedDoors); // Return a copy to maintain encapsulation
-	}
 	
 	/**
 	 * Returns the number of questions answered.
 	 */
-	public int getQuestionsAnswered() {
-		return myQuestionsUsed.size();
+	public int getCorrectQuestions() {
+		return myCorrectQuestions;
 	}
-
-	/**
-	 * locks a door.
-	 * @param theDoor
-	 */
-	public void lockDoor(final int theDoor) {
-		myLockedDoors.add(theDoor);
+	
+	public int getIncorrectQuestions() {
+		return myIncorrectQuestions;
 	}
-
-	/**
-	 * Returns questions used.
-	 * @return
-	 */
-	public Set<Integer> getQuestionsUsed() {
-		return new HashSet<>(myQuestionsUsed);
-	}
-
-	/**
-	 * use a question.
-	 * @param theQuestionId
-	 */
-	public void useQuestion(final int theQuestionId) {
-		myQuestionsUsed.add(theQuestionId);
+	
+	public int getLockedDoors() {
+		return myLockedDoors;
 	}
 	
 	/**
@@ -140,6 +145,22 @@ public final class GameState implements Serializable {
     public void setDifficulty(Difficulty difficulty) {
         this.myDifficulty = difficulty;
     }
+    
+    public void addCorrect() {
+		myCorrectQuestions++;
+	}
+	
+	public void addIncorrect() {
+		myIncorrectQuestions++;
+	}
+	
+	public void removeLockedDoor() {
+		myLockedDoors--;
+	}
+	
+	public void resetLockCount() {
+		myLockedDoors = 49;
+	}
 
 	/**
 	 * saves.
@@ -182,15 +203,6 @@ public final class GameState implements Serializable {
 	public void loadToMaze() {
 		Maze.loadMap(myMap, myCurrentX, myCurrentY);
 		QuestionFactory.loadQuestions(arr);
-	}
-
-	/**
-	 * checks if locked.
-	 * @param theDoor
-	 * @return
-	 */
-	public boolean isDoorLocked(final int theDoor) {
-		return myLockedDoors.contains(theDoor);
 	}
 
 	/**
