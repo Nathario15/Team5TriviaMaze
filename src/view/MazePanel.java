@@ -1,20 +1,20 @@
 package view;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.BasicStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import controller.SystemControl;
+import model.Direction;
+import model.Maze;
 import model.Direction;
 import model.DoorState;
-import model.Maze;
 import model.Room;
 
 /**
@@ -58,9 +58,6 @@ public final class MazePanel extends JPanel implements KeyListener {
 
     private void drawMaze(final Graphics theG) {
         Graphics2D g2d = (Graphics2D) theG;
-        Image m;
-        m = new ImageIcon("/Team5TriviaMaze/14376136-pack_xl.jpg").getImage();
-        g2d.drawImage(m,0,0,getWidth(),getHeight(),this);
         
         // First draw all cells with their standard grid
         for (int row = 0; row < MAP_SIZE; row++) {
@@ -168,22 +165,18 @@ public final class MazePanel extends JPanel implements KeyListener {
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_W:
 			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
-			System.out.println("fire");
 			break;
 		case KeyEvent.VK_DOWN:
 		case KeyEvent.VK_S:
 			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
-			System.out.println("fire");
 			break;
 		case KeyEvent.VK_LEFT:
 		case KeyEvent.VK_A:
 			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
-			System.out.println("fire");
 			break;
 		case KeyEvent.VK_RIGHT:
 		case KeyEvent.VK_D:
 			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
-			System.out.println("fire");
 			break;
 
 		}
