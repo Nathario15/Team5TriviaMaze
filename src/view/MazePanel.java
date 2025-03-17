@@ -84,7 +84,7 @@ public final class MazePanel extends JPanel implements KeyListener {
     /**
      * MineCraft Grass (used for cell borders).
      */
-    private static final Color GRASS = new Color(159, 172, 143);
+    private static final Color GRASS = new Color(172, 224, 119);
 
     
 	/**

@@ -329,7 +329,7 @@ public final class GameView extends JFrame implements KeyListener {
 		myMainPanel.add(aboutPanel, ABOUT);
 	}
 
-	@SuppressWarnings("unused")
+//	@SuppressWarnings("unused")
 	private void addMenuBar() {
 		final JMenuBar menuBar = new JMenuBar();
 
