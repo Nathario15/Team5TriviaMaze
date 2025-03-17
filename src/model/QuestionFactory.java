@@ -1,10 +1,7 @@
 package model;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implements the factory design pattern and the Singleton Design Pattern.
@@ -12,7 +9,7 @@ import java.util.List;
  * @author Team 5
  * @version 0.5
  */
-public class QuestionFactory implements Serializable {
+public final class QuestionFactory implements Serializable {
 	/**
 	 * 
 	 */
@@ -21,9 +18,9 @@ public class QuestionFactory implements Serializable {
 	 * A list of questions.
 	 */
 	private static ArrayList<AbstractQuestion> myQuestions;
-	
-	public QuestionFactory() {
-		
+
+	private QuestionFactory() {
+
 	};
 
 	/**
@@ -31,7 +28,7 @@ public class QuestionFactory implements Serializable {
 	 * 
 	 * @param theQuestions the questions that will be asked.
 	 */
-	public static void IntializeQuestionFactory() {
+	public static void intializeQuestionFactory() {
 		myQuestions = new ArrayList<AbstractQuestion>();
 //		DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
 //		for (int i = 0; i < 48; i++) {
@@ -48,14 +45,14 @@ public class QuestionFactory implements Serializable {
 //				i--;
 //			}
 //		}
-		myQuestions=DatabaseManager.getInstance().getArrayList();
+		myQuestions = DatabaseManager.getInstance().getArrayList();
 	}
 
 	/**
 	 * The map will stay the same size, but it's contents will change.
 	 */
-	protected static void loadQuestions(ArrayList<AbstractQuestion> arr) {
-		myQuestions = arr;
+	protected static void loadQuestions(final ArrayList<AbstractQuestion> theArr) {
+		myQuestions = theArr;
 	}
 
 	/**

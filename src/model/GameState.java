@@ -13,32 +13,31 @@ import java.util.Set;
 public final class GameState implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	
 	/**
 	 * Total number of questions in the maze initially.
 	 */
 	private static final int TOTAL_QUESTIONS = 48;
-	
+
 	/**
 	 * The amount of questions remaining.
 	 */
 	private static int myQuestionsRemaining = TOTAL_QUESTIONS;
- 	
- 	/**
- 	 * The correct question count.
- 	 */
- 	private static int myCorrectQuestions;
- 	
- 	/**
- 	 * The incorrect question count.
- 	 */
- 	private static int myIncorrectQuestions;
- 	
- 	/**
- 	 * Singleton instance of GameState.
- 	 */
- 	private static GameState myInstance;
- 	
+
+	/**
+	 * The correct question count.
+	 */
+	private static int myCorrectQuestions;
+
+	/**
+	 * The incorrect question count.
+	 */
+	private static int myIncorrectQuestions;
+
+	/**
+	 * Singleton instance of GameState.
+	 */
+	private static GameState myInstance;
+
 	/**
 	 * The current X.
 	 */
@@ -48,7 +47,7 @@ public final class GameState implements Serializable {
 	 * The current Y.
 	 */
 	private int myCurrentY;
-	
+
 	/**
 	 * The questions used.
 	 */
@@ -58,7 +57,7 @@ public final class GameState implements Serializable {
 	 * The difficulty.
 	 */
 	private Difficulty myDifficulty;
-	
+
 	/**
 	 * The array of questions.
 	 */
@@ -77,24 +76,26 @@ public final class GameState implements Serializable {
 		this.myCurrentY = 0;
 		this.myQuestionsUsed = new HashSet<>();
 	}
-	
+
 	/**
-     * Get the singleton instance of SystemControl.
-     * @return SystemControl instance
-     */
-    public static synchronized GameState getInstance() {
-        if (myInstance == null) {
-            myInstance = new GameState();
-        }
-        return myInstance;
-    }
+	 * Get the singleton instance of SystemControl.
+	 * 
+	 * @return SystemControl instance
+	 */
+	public static synchronized GameState getInstance() {
+		if (myInstance == null) {
+			myInstance = new GameState();
+		}
+		return myInstance;
+	}
 
 	/**
 	 * returns the player's position.
+	 * 
 	 * @return
 	 */
 	public String getPlayerPosition() {
-	    return myCurrentX + ", " + myCurrentY;
+		return myCurrentX + ", " + myCurrentY;
 	}
 
 	/**
@@ -102,15 +103,15 @@ public final class GameState implements Serializable {
 	 * @param theCurrentPosition
 	 */
 	public void setCurrentPosition(final int theX, final int theY) {
-	    this.myCurrentX = theX;
-	    this.myCurrentY = theY;
+		this.myCurrentX = theX;
+		this.myCurrentY = theY;
 	}
-	
+
 	/**
 	 * Returns the number of questions answered.
 	 */
 	public int getCorrectQuestions() {
- 		return myCorrectQuestions;
+		return myCorrectQuestions;
 	}
 
 	/**
@@ -118,83 +119,87 @@ public final class GameState implements Serializable {
 	 * 
 	 * @return the count of incorrectly answered questions
 	 */
- 	public int getIncorrectQuestions() {
- 	 	return myIncorrectQuestions;
- 	}
+	public int getIncorrectQuestions() {
+		return myIncorrectQuestions;
+	}
 
- 	/**
- 	 * Returns the number of questions remaining in the maze.
- 	 * 
- 	 * @return the count of questions remaining
- 	 */
+	/**
+	 * Returns the number of questions remaining in the maze.
+	 * 
+	 * @return the count of questions remaining
+	 */
 	public int getQuestionsRemaining() {
- 		return myQuestionsRemaining;
- 	}
-	
+		return myQuestionsRemaining;
+	}
+
 	/**
 	 * Get's the player's X coordinate.
+	 * 
 	 * @return
 	 */
 	public int getCurrentX() {
-        return myCurrentX;
-    }
+		return myCurrentX;
+	}
 
 	/**
 	 * Get's the player's Y coordinate.
+	 * 
 	 * @return
 	 */
-    public int getCurrentY() {
-        return myCurrentY;
-    }
-	
+	public int getCurrentY() {
+		return myCurrentY;
+	}
+
 	/**
 	 * Returns current difficulty.
+	 * 
 	 * @return
 	 */
 	public Difficulty getDifficulty() {
-        return myDifficulty;
-    }
+		return myDifficulty;
+	}
 
 	/**
 	 * 
 	 * @param theDifficulty the difficulty to set
 	 */
-    public void setDifficulty(final Difficulty theDifficulty) {
-        this.myDifficulty = theDifficulty;
-    }
-    
-    /**
-     * Increments the correct questions counter.
-     */
-    public void addCorrect() {
- 		myCorrectQuestions++;
- 	}
- 	
-    /**
-     * Increments the incorrect questions counter.
-     */
- 	public void addIncorrect() {
- 		myIncorrectQuestions++;
- 	}
- 	
- 	/**
- 	 * Decrements the questions remaining counter.
- 	 */
- 	public void removeQuestion() {
- 		myQuestionsRemaining--;
- 	}
- 	
- 	/**
- 	 * Resets the game state counters to initial values.
- 	 */
+	public void setDifficulty(final Difficulty theDifficulty) {
+		this.myDifficulty = theDifficulty;
+	}
+
+	/**
+	 * Increments the correct questions counter.
+	 */
+	public void addCorrect() {
+		myCorrectQuestions++;
+	}
+
+	/**
+	 * Increments the incorrect questions counter.
+	 */
+	public void addIncorrect() {
+		myIncorrectQuestions++;
+	}
+
+	/**
+	 * Decrements the questions remaining counter.
+	 */
+	public void removeQuestion() {
+		myQuestionsRemaining--;
+	}
+
+	/**
+	 * Resets the game state counters to initial values.
+	 */
 	public void resetState() {
- 		myCorrectQuestions = 0;
- 		myIncorrectQuestions = 0;
- 		myQuestionsRemaining = TOTAL_QUESTIONS;
- 	}
+		myCorrectQuestions = 0;
+		myIncorrectQuestions = 0;
+		myQuestionsRemaining = TOTAL_QUESTIONS;
+	}
 
 	/**
 	 * saves.
+	 * 
 	 * @param theFilename
 	 */
 	public void saveToFile(final String theFilename) {
@@ -212,10 +217,11 @@ public final class GameState implements Serializable {
 
 	/**
 	 * loads a file into a game sate.
+	 * 
 	 * @param theFilename
 	 * @return
 	 */
-	public static GameState loadFromFile(final String theFilename) {
+	public static GameState loadFromFile(final String theFilename) throws IOException, ClassNotFoundException {
 		GameState other;
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(theFilename))) {
 			other = (GameState) in.readObject();
@@ -226,7 +232,7 @@ public final class GameState implements Serializable {
 			other = new GameState(); // Return a new instance if loading fails
 		}
 		other.loadToMaze();
-		
+
 		return other;
 	}
 
@@ -240,6 +246,7 @@ public final class GameState implements Serializable {
 
 	/**
 	 * checks if question used.
+	 * 
 	 * @param theQuestionId
 	 * @return
 	 */
