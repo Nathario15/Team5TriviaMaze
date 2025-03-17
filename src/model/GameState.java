@@ -15,14 +15,14 @@ public final class GameState implements Serializable {
 
 	
 	/**
-	 * Total number of locked doors in the maze initially.
+	 * Total number of questions in the maze initially.
 	 */
-	private static final int TOTAL_DOORS = 49;
+	private static final int TOTAL_QUESTIONS = 48;
 	
 	/**
-	 * The Locked Doors.
+	 * The amount of questions remaining.
 	 */
-	private static int myLockedDoors = TOTAL_DOORS;
+	private static int myQuestionsRemaining = TOTAL_QUESTIONS;
  	
  	/**
  	 * The correct question count.
@@ -123,12 +123,12 @@ public final class GameState implements Serializable {
  	}
 
  	/**
- 	 * Returns the number of locked doors remaining in the maze.
+ 	 * Returns the number of questions remaining in the maze.
  	 * 
- 	 * @return the count of locked doors
+ 	 * @return the count of questions remaining
  	 */
-	public int getLockedDoors() {
- 		return myLockedDoors;
+	public int getQuestionsRemaining() {
+ 		return myQuestionsRemaining;
  	}
 	
 	/**
@@ -178,10 +178,10 @@ public final class GameState implements Serializable {
  	}
  	
  	/**
- 	 * Decrements the locked doors counter.
+ 	 * Decrements the questions remaining counter.
  	 */
- 	public void removeLockedDoor() {
- 		myLockedDoors--;
+ 	public void removeQuestion() {
+ 		myQuestionsRemaining--;
  	}
  	
  	/**
@@ -190,7 +190,7 @@ public final class GameState implements Serializable {
 	public void resetState() {
  		myCorrectQuestions = 0;
  		myIncorrectQuestions = 0;
- 		myLockedDoors = TOTAL_DOORS;
+ 		myQuestionsRemaining = TOTAL_QUESTIONS;
  	}
 
 	/**
