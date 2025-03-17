@@ -90,10 +90,10 @@ public final class GameView extends JFrame implements KeyListener {
 	public static final String FILE_EXTENSION = "sav";
 	
 
-	/**
-	 * Instance.
-	 */
-	protected static GameView instance;
+//	/**
+//	 * Instance.
+//	 */
+//	protected static GameView instance;
 
 	/**
 	 * Instance.
@@ -175,7 +175,6 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * sets up.
 	 */
-	@SuppressWarnings("static-access")
 	private void setUp() {
 		addMainMenu();
 		addGamePanel();
@@ -183,7 +182,7 @@ public final class GameView extends JFrame implements KeyListener {
 		addAboutPanel();
 
 		add(myMainPanel);
-		this.instance = this;
+//		this.instance = this;
 
 		// Add key listener for keyboard navigation
 		setFocusable(true);
@@ -227,16 +226,20 @@ public final class GameView extends JFrame implements KeyListener {
 		myMazePanel = new MazePanel();
 		gamePanel.add(myMazePanel, BorderLayout.CENTER);
 
-		JPanel controlPanel = new JPanel(new GridLayout(1, 4));
-		JButton northButton = new JButton("North");
-		JButton southButton = new JButton("South");
-		JButton westButton = new JButton("West");
-		JButton eastButton = new JButton("East");
+		final JPanel controlPanel = new JPanel(new GridLayout(1, 4));
+		final JButton northButton = new JButton("North");
+		final JButton southButton = new JButton("South");
+		final JButton westButton = new JButton("West");
+		final JButton eastButton = new JButton("East");
 		
 		northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
+		northButton.addKeyListener(myMazePanel);
 		southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
+		southButton.addKeyListener(myMazePanel);
 		westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
+		westButton.addKeyListener(myMazePanel);
 		eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
+		eastButton.addKeyListener(myMazePanel);
 
 		controlPanel.add(northButton);
 		controlPanel.add(southButton);

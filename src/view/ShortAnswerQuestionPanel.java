@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import model.GameState;
 import model.ShortAnswerQuestion;
 
-public final class ShortAnswerQuestionPanel extends QuestionPanel {
+public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
     private static final long serialVersionUID = 1L;
     /**
      * answer field.

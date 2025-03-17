@@ -21,8 +21,8 @@ import model.QuestionFactory;
 import model.Room;
 import model.ShortAnswerQuestion;
 import model.TrueFalseQuestion;
+import view.AbstractQuestionPanel;
 import view.MultipleChoiceQuestionPanel;
-import view.QuestionPanel;
 import view.ShortAnswerQuestionPanel;
 import view.TrueFalseQuestionPanel;
 
@@ -74,6 +74,15 @@ public final class SystemControl {
     public void setGameView(final view.GameView theGameView) {
         myGameView = theGameView;
         System.out.println("GameView reference set in SystemControl");
+    }
+    
+    /**
+     * Gets the reference to the game view.
+     * 
+     * @param theGameView the game view to set
+     */
+    public view.GameView getGameView() {
+        return myGameView;
     }
 
     /**
@@ -394,7 +403,7 @@ public final class SystemControl {
             
             // Add our listener
             existingSubmit.addActionListener(e -> {
-                result[0] = ((QuestionPanel) thePanel).checkAnswer();
+                result[0] = ((AbstractQuestionPanel) thePanel).checkAnswer();
                 handleQuestionResult(result[0], theDialog);
                 theDialog.dispose();
             });
