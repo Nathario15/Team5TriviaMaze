@@ -11,25 +11,19 @@ public final class Main {
 	/**
 	 * Starts game.
 	 * 
-	 * @param args
+	 * @param theArgs command line arguments
 	 */
 	public static void main(final String[] theArgs) {
-		try {
-			// Initialize database
-			final DatabaseManager dbManager = DatabaseManager.getInstance();
+		// Initialize database (required for application)
+		DatabaseManager.getInstance();
 
-			// Create SystemControl (controller)
-			final SystemControl controller = SystemControl.getInstance();
+		// Create SystemControl (required for application)
+		SystemControl.getInstance();
 
-			// Create and display the view
-			SwingUtilities.invokeLater(() -> {
-				final GameView view = new GameView();
-				view.setVisible(true);
-			});
-
-		} catch (final Exception TheE) {
-			System.err.println("Error starting application: " + TheE.getMessage());
-			TheE.printStackTrace();
-		}
+		// Create and display the view
+		SwingUtilities.invokeLater(() -> {
+			final GameView view = new GameView();
+			view.setVisible(true);
+		});
 	}
 }
