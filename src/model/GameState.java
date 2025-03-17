@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -210,10 +211,20 @@ public final class GameState implements Serializable {
 		this.myCurrentX = Maze.getX();
 		this.myCurrentY = Maze.getY();
 		this.myQuestionArray = QuestionFactory.returnQuestions();
-
-		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(theFilename))) {
-			out.writeObject(this);
+		
+		try {
+	        // Check if file exists and delete it first to ensure we can overwrite
+	        final File saveFile = new File(theFilename);
+	        if (saveFile.exists()) {
+	            saveFile.delete();
+	        }
+	        
+	        // Now create new file and save
+	        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(theFilename))) {
+	        	out.writeObject(this);
+	        }
 		} catch (final IOException e) {
+	        System.err.println("Error saving game: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
