@@ -143,18 +143,18 @@ public final class GameView extends JFrame implements KeyListener {
 		JPanel controlPanel = new JPanel(new GridLayout(1, 4));
 		JButton northButton = new JButton("North");
 		JButton southButton = new JButton("South");
-		JButton eastButton = new JButton("East");
 		JButton westButton = new JButton("West");
-
+		JButton eastButton = new JButton("East");
+		
 		northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
 		southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
-		eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
 		westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
+		eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
 
 		controlPanel.add(northButton);
 		controlPanel.add(southButton);
-		controlPanel.add(eastButton);
 		controlPanel.add(westButton);
+		controlPanel.add(eastButton);
 
 		gamePanel.add(controlPanel, BorderLayout.SOUTH);
 		addTrackerPanel(gamePanel);
@@ -196,7 +196,12 @@ public final class GameView extends JFrame implements KeyListener {
 	private void addInstructionsPanel() {
 		final JPanel instructionsPanel = new JPanel(new BorderLayout());
 		JLabel instructionsLabel = new JLabel(
-				"<html><b>Instructions:</b> Navigate the maze by answering trivia questions correctly.</html>",
+				"<html><b>Instructions:</b> Navigate the maze by answering Minecraft trivia questions correctly."
+				+ " Moving in a direction that is currently outlined with a red line will prompt the user"
+				+ " to answer a trivia question. If they get it wrong, that door is locked permanently and"
+				+ " outlined with a gray line. If they get it right, the line becomes green and they can now"
+				+ " freely navigate in that direction as desired. The player can navigate the maze using either"
+				+ " WASD keys or via the navigation buttons provided to them once they start the game.</html>",
 				SwingConstants.CENTER);
 		instructionsPanel.add(instructionsLabel, BorderLayout.CENTER);
 
@@ -216,7 +221,8 @@ public final class GameView extends JFrame implements KeyListener {
 	private void addAboutPanel() {
 		final JPanel aboutPanel = new JPanel(new BorderLayout());
 		JLabel aboutLabel = new JLabel(
-				"<html><b>Trivia Maze Game</b><br>Created by Nathaniel, Ibrahim, and Jayden.</html>",
+				"<html><b>Trivia Maze Game</b><br>Created by Team 5 for the class of TCSS 360 Winter 2025,"
+				+ " consisting of Nathaniel Roy, Ibrahim Elnikety, and Jayden Peneueta.</html>",
 				SwingConstants.CENTER);
 		aboutPanel.add(aboutLabel, BorderLayout.CENTER);
 
