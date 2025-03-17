@@ -147,9 +147,13 @@ public final class GameView extends JFrame implements KeyListener {
 		JButton westButton = new JButton("West");
 
 		northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
+		northButton.addKeyListener(myMazePanel);
 		southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
+		southButton.addKeyListener(myMazePanel);
 		eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
+		eastButton.addKeyListener(myMazePanel);
 		westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
+		westButton.addKeyListener(myMazePanel);
 
 		controlPanel.add(northButton);
 		controlPanel.add(southButton);

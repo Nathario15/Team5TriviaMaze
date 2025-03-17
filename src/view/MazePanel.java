@@ -169,7 +169,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_W:
-			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			GameView.instance.movePlayer(Direction.NORTH, GameView.myMazePanel);
 			break;
 		case KeyEvent.VK_DOWN:
 		case KeyEvent.VK_S:
@@ -177,11 +177,11 @@ public final class MazePanel extends JPanel implements KeyListener {
 			break;
 		case KeyEvent.VK_LEFT:
 		case KeyEvent.VK_A:
-			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			GameView.instance.movePlayer(Direction.WEST, GameView.myMazePanel);
 			break;
 		case KeyEvent.VK_RIGHT:
 		case KeyEvent.VK_D:
-			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+			GameView.instance.movePlayer(Direction.EAST, GameView.myMazePanel);
 			break;
 
 		}
