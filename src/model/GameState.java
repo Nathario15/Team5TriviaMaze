@@ -13,12 +13,16 @@ import java.util.Set;
 public final class GameState implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-
-
+	
+	/**
+	 * Total number of locked doors in the maze initially.
+	 */
+	private static final int TOTAL_DOORS = 49;
+	
 	/**
 	 * The Locked Doors.
 	 */
-	private static int myLockedDoors = 49;
+	private static int myLockedDoors = TOTAL_DOORS;
  	
  	/**
  	 * The correct question count.
@@ -55,7 +59,10 @@ public final class GameState implements Serializable {
 	 */
 	private Difficulty myDifficulty;
 	
-	private ArrayList<AbstractQuestion> arr;
+	/**
+	 * The array of questions.
+	 */
+	private ArrayList<AbstractQuestion> myQuestionArray;
 
 	/**
 	 * the map.
@@ -94,9 +101,9 @@ public final class GameState implements Serializable {
 	 * 
 	 * @param theCurrentPosition
 	 */
-	public void setCurrentPosition(int x, int y) {
-	    this.myCurrentX = x;
-	    this.myCurrentY = y;
+	public void setCurrentPosition(final int theX, final int theY) {
+	    this.myCurrentX = theX;
+	    this.myCurrentY = theY;
 	}
 	
 	/**
@@ -106,10 +113,20 @@ public final class GameState implements Serializable {
  		return myCorrectQuestions;
 	}
 
+	/**
+	 * Returns the number of questions answered incorrectly.
+	 * 
+	 * @return the count of incorrectly answered questions
+	 */
  	public int getIncorrectQuestions() {
  	 	return myIncorrectQuestions;
  	}
 
+ 	/**
+ 	 * Returns the number of locked doors remaining in the maze.
+ 	 * 
+ 	 * @return the count of locked doors
+ 	 */
 	public int getLockedDoors() {
  		return myLockedDoors;
  	}
@@ -140,28 +157,40 @@ public final class GameState implements Serializable {
 
 	/**
 	 * 
-	 * @param difficulty
+	 * @param theDifficulty the difficulty to set
 	 */
-    public void setDifficulty(final Difficulty difficulty) {
-        this.myDifficulty = difficulty;
+    public void setDifficulty(final Difficulty theDifficulty) {
+        this.myDifficulty = theDifficulty;
     }
     
+    /**
+     * Increments the correct questions counter.
+     */
     public void addCorrect() {
  		myCorrectQuestions++;
  	}
  	
+    /**
+     * Increments the incorrect questions counter.
+     */
  	public void addIncorrect() {
  		myIncorrectQuestions++;
  	}
  	
+ 	/**
+ 	 * Decrements the locked doors counter.
+ 	 */
  	public void removeLockedDoor() {
  		myLockedDoors--;
  	}
  	
+ 	/**
+ 	 * Resets the game state counters to initial values.
+ 	 */
 	public void resetState() {
  		myCorrectQuestions = 0;
  		myIncorrectQuestions = 0;
- 		myLockedDoors = 49;
+ 		myLockedDoors = TOTAL_DOORS;
  	}
 
 	/**
@@ -172,7 +201,7 @@ public final class GameState implements Serializable {
 		myMap = Maze.returnMap();
 		this.myCurrentX = Maze.getX();
 		this.myCurrentY = Maze.getY();
-		this.arr = QuestionFactory.returnQuestions();
+		this.myQuestionArray = QuestionFactory.returnQuestions();
 
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(theFilename))) {
 			out.writeObject(this);
@@ -206,7 +235,7 @@ public final class GameState implements Serializable {
 	 */
 	public void loadToMaze() {
 		Maze.loadMap(myMap, myCurrentX, myCurrentY);
-		QuestionFactory.loadQuestions(arr);
+		QuestionFactory.loadQuestions(myQuestionArray);
 	}
 
 	/**
