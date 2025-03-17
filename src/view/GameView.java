@@ -110,10 +110,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * games save data.
-	 */
-	private GameState myGameState;
+//	/**
+//	 * games save data.
+//	 */
+//	private static GameState myGameState;
 	/**
 	 * The card layout.
 	 */
@@ -274,8 +274,8 @@ public final class GameView extends JFrame implements KeyListener {
 	}
 
 	private void updateTracker() {
-		if (myGameState != null) {
-			myPositionLabel.setText("Position: (" + myGameState.getPlayerPosition() + ")");
+		if (GameState.getInstance() != null) {
+			myPositionLabel.setText("Position: (" + GameState.getInstance().getPlayerPosition() + ")");
 			myCorrectQuestionsLabel.setText("Correct Questions: " + GameState.getInstance().getCorrectQuestions());
 			myIncorrectQuestionsLabel
 					.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
@@ -376,7 +376,8 @@ public final class GameView extends JFrame implements KeyListener {
 		// First clean up existing game state if we're in a game
 		if (myInGame) {
 			// Clear existing game data
-			myGameState = null;
+//			myGameState = null;
+			GameState.resetState();
 		}
 
 		final String[] difficulties = { "EASY", "MEDIUM", "HARD" };
@@ -388,11 +389,11 @@ public final class GameView extends JFrame implements KeyListener {
 			Maze.reset();
 
 			// Reset game state
-			GameState.getInstance().resetState();
+			GameState.resetState();
 
 			// Initialize a new game state
-			myGameState = new GameState();
-			myGameState.setDifficulty(Difficulty.valueOf(selectedDifficulty));
+//			myGameState = new GameState();
+			GameState.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty));
 
 			// Set up the database for questions
 			DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
@@ -463,7 +464,7 @@ public final class GameView extends JFrame implements KeyListener {
 			}
 
 			myFilename = filePath;
-			myGameState.saveToFile(myFilename);
+			GameState.getInstance().saveToFile(myFilename);
 			JOptionPane.showMessageDialog(this, "Game saved successfully to " + fileToSave.getName() + "!");
 		}
 	}
@@ -471,29 +472,30 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * begins deserialization.
 	 */
-	public void loadGame() {
+	public static void loadGame() {
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle(LOAD_GAME);
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", FILE_EXTENSION));
 
-		final int userSelection = fileChooser.showOpenDialog(this);
+		final int userSelection = fileChooser.showOpenDialog(SystemControl.getInstance().getGameView());
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			final File fileToLoad = fileChooser.getSelectedFile();
-			myFilename = fileToLoad.getAbsolutePath();
+			SystemControl.getInstance().getGameView().myFilename = fileToLoad.getAbsolutePath();
 
 			try {
-				myGameState = GameState.loadFromFile(myFilename);
-				myInGame = true;
-				addMenuBar();
-				myCardLayout.show(myMainPanel, GAME);
+				GameState.loadFromFile(SystemControl.getInstance().getGameView().myFilename);
+				SystemControl.getInstance().getGameView().myInGame = true;
+				SystemControl.getInstance().getGameView().addMenuBar();
+				SystemControl.getInstance().getGameView().myCardLayout.show(SystemControl.getInstance().getGameView().myMainPanel, GAME);
 				myMazePanel.repaint();
-				updateTracker();
-				JOptionPane.showMessageDialog(this, "Game loaded successfully!");
+				SystemControl.getInstance().getGameView().updateTracker();
+				JOptionPane.showMessageDialog(SystemControl.getInstance().getGameView(), "Game loaded successfully!");
 			} catch (final IOException | ClassNotFoundException e) {
-				JOptionPane.showMessageDialog(this, "Error loading game: " + e.getMessage(), "Load Error",
+				JOptionPane.showMessageDialog(SystemControl.getInstance().getGameView(), "Error loading game: " + e.getMessage(), "Load Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		SystemControl.getInstance().getGameView().updateTracker();
 	}
 
 	/**
@@ -512,7 +514,7 @@ public final class GameView extends JFrame implements KeyListener {
 
 	void movePlayer(final Direction theDirection, final MazePanel theMazePanel) {
 		// Check if we're in a valid game state
-		if (myGameState == null) {
+		if (GameState.getInstance() == null) {
 			return; // Don't try to move if game state is null
 		}
 
@@ -525,10 +527,10 @@ public final class GameView extends JFrame implements KeyListener {
 
 		if (success) {
 			// Only update position if we're still in a valid game state
-			if (myGameState != null) {
+			if (GameState.getInstance() != null) {
 				final int newX = Maze.getDisplayX() + 1;
 				final int newY = Maze.getDisplayY() + 1;
-				myGameState.setCurrentPosition(newX, newY);
+				GameState.getInstance().setCurrentPosition(newX, newY);
 				theMazePanel.repaint();
 				updateTracker();
 			}
@@ -555,7 +557,8 @@ public final class GameView extends JFrame implements KeyListener {
 
 		// Reset game state
 		myInGame = false;
-		myGameState = null;
+//		myGameState = null;
+		GameState.resetState();
 
 		// Remove existing menu bar
 		setJMenuBar(null);
