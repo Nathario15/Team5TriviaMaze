@@ -43,6 +43,9 @@ public abstract class AbstractQuestion implements Serializable {
 	 * @return
 	 */
 	public boolean isCorrect(final String theAnswer) {
+		if (theAnswer == null) {
+			return false;
+		}
 		return myAnswer.equalsIgnoreCase(theAnswer.trim());
 	}
 
@@ -61,12 +64,12 @@ public abstract class AbstractQuestion implements Serializable {
 		final AbstractQuestion otherQ = this.getClass().cast(theOther);
 		return Objects.equals(this.myQuestion, otherQ.myQuestion) && Objects.equals(this.myAnswer, otherQ.myAnswer);
 	}
-	
+
 	@Override
 	public final int hashCode() {
-	    return Objects.hash(myQuestion, myAnswer);
+		return Objects.hash(myQuestion, myAnswer);
 	}
-	
+
 	@Override
 	public final String toString() {
 		return myQuestion + ": " + myAnswer + ".";
