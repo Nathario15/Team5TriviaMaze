@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import model.GameState;
 import model.TrueFalseQuestion;
 
-public final class TrueFalseQuestionPanel extends QuestionPanel {
+public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
 	
     /**
      * Serialization ID.

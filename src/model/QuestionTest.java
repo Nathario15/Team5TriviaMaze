@@ -1,12 +1,7 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Objects;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,14 +35,15 @@ class QuestionTest {
 	@Test
 	void testQuestionManager() {
 		DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
-		QuestionFactory.IntializeQuestionFactory();
+		QuestionFactory.intializeQuestionFactory();
 		assertTrue(Maze.canSolve());
-		final AbstractQuestion[] arr = new AbstractQuestion[48];
-		for (int i = 0; i < 48; i++) {
+		final int max = QuestionFactory.returnQuestions().size();
+		final AbstractQuestion[] arr = new AbstractQuestion[max];
+		for (int i = 0; i < max; i++) {
 			arr[i] = QuestionFactory.getQuestion();
 		}
-		for (int i = 0; i < 48; i++) {
-			for (int j = i+1; j < 48; j++) {
+		for (int i = 0; i < max; i++) {
+			for (int j = i + 1; j < max; j++) {
 //				System.out.println(Objects.equals(arr[i], arr[j]));
 //				if(arr[i].equals(arr[j])) {
 //					System.out.println(arr[i]+" "+i);

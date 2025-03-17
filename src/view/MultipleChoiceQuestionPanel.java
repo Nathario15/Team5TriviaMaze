@@ -14,7 +14,7 @@ import javax.swing.JRadioButton;
 import model.GameState;
 import model.MultipleChoiceQuestion;
 
-public final class MultipleChoiceQuestionPanel extends QuestionPanel {
+public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
     private static final long serialVersionUID = 1L;
     /**
      * Buttons.
