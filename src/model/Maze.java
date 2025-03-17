@@ -1,10 +1,8 @@
 package model;
 
+import controller.SystemControl;
 import javax.swing.JOptionPane;
 
-import controller.SystemControl;
-
-//import java.io.Serializable;
 /**
  * Implements the singleton design pattern. TODO make the fields not static, so
  * it can be serialized.
@@ -18,7 +16,30 @@ public final class Maze /* implements Serializable */ {
 	 */
 	public static final int MAP_SIZE = 8;
 
+    /**
+     * String constant for position logging.
+     */
+    private static final String POSITION_STRING = " from position (";
+    
+    /**
+     * String constant for parenthesis.
+     */
+    private static final String PARENTHESIS_CLOSE = ")";
+    
+    /**
+     * String constant for comma.
+     */
+    private static final String COMMA = ",";
+    
+    /**
+     * Array for checking maze pathfinding.
+     */
 	private static boolean[][] mapCheck;
+	
+    /**
+     * Flag indicating if exit has been reached.
+     */
+    private static boolean myExitAchieved;
 
 	/**
 	 * A map of rooms.
@@ -42,10 +63,7 @@ public final class Maze /* implements Serializable */ {
 			{ null, new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), new Room(), null }, // 7
 
 			{ null, null, null, null, null, null, null, null, null } }; // 8
-//	/**
-//	 * 
-//	 */
-//	private static final long serialVersionUID = 1L;
+
 	/**
 	 * y coordinate.
 	 */
@@ -60,8 +78,6 @@ public final class Maze /* implements Serializable */ {
 	 */
 	@SuppressWarnings("unused")
 	private transient DatabaseManager myDatabaseManager;
-
-	private static boolean myExitAchieved = false;
 
 	private Maze() {
 
@@ -171,8 +187,8 @@ public final class Maze /* implements Serializable */ {
 		// Check if new position is out of the playable area
 		if (newX <= 0 || newX >= MAP.length - 1 || newY <= 0 || newY >= MAP[0].length - 1) {
 			// Out of bounds - this is an exit
-			System.out.println("EXIT DETECTED at direction: " + theDirection + " from position (" + x + "," + y
-					+ ") to (" + newX + "," + newY + ")");
+            System.out.println("EXIT DETECTED at direction: " + theDirection + POSITION_STRING + x + COMMA + y
+                    + PARENTHESIS_CLOSE + " to (" + newX + COMMA + newY + PARENTHESIS_CLOSE);
 			return null;
 		}
 
@@ -215,54 +231,78 @@ public final class Maze /* implements Serializable */ {
 	 * @return
 	 */
 	public static boolean move(final Direction theDirection) {
-		// If game already won, prevent further movement
-		if (myExitAchieved) {
-			return false;
-		}
+		boolean result = false;
+		
+        // If game already won, prevent further movement
+        if (!myExitAchieved) {
+            System.out.println("Move attempt: " + theDirection + POSITION_STRING + x + COMMA + y + PARENTHESIS_CLOSE);
+        
+			// Get the door state for this direction
+			final DoorState doorState = getRoom().myDoors.get(theDirection);
 
-		System.out.println("Move attempt: " + theDirection + " from position (" + x + "," + y + ")");
+			// Check if this would be an exit
+			if (getRoom(theDirection) == null) {
+                result = handleExitMovement(theDirection, doorState);
+            } else {
+                result = handleNonExitMovement(theDirection, doorState);
+            }
+        }
+	
+		return result;
+	}
 
-		// Get the door state for this direction
-		DoorState doorState = getRoom().myDoors.get(theDirection);
-
-		// First check if this would be an exit
-		if (getRoom(theDirection) == null) {
-			System.out.println("Exit detected in direction: " + theDirection);
-
+	/**
+	 * Handles movement to an exit.
+	 * 
+	 * @param theDirection direction to exit
+	 * @param theDoorState current door state
+	 * @return true if exit successful
+	 */
+	private static boolean handleExitMovement(final Direction theDirection, final DoorState theDoorState) {
+        System.out.println("Exit detected in direction: " + theDirection);
+        boolean result = false;
+        
 			// Check if this exit is already blocked
-			if (doorState == DoorState.BLOCKED) {
+			if (theDoorState == DoorState.BLOCKED) {
 				JOptionPane.showMessageDialog(null, "This exit is blocked! You must find another way out.",
 						"Blocked Exit", JOptionPane.WARNING_MESSAGE);
-				return false;
-			}
-
-			// Exit is available - trigger a question
-			if (SystemControl.triggerQuestion()) {
-				// Correct answer - win game!
-				System.out.println("Question answered correctly - VICTORY!");
-				myExitAchieved = true; // Set flag to prevent more movement
-				SystemControl.getInstance().endGame();
-				return true;
+			} else {
+				// Exit is available - trigger a question
+				final boolean answeredCorrectly = SystemControl.triggerQuestion();
+				if (answeredCorrectly) {
+					// Correct answer - win game!
+					System.out.println("Question answered correctly - VICTORY!");
+					myExitAchieved = true; // Set flag to prevent more movement
+					SystemControl.getInstance().endGame();
+					result = true;
 			} else {
 				// Wrong answer - block this exit
 				System.out.println("Question answered incorrectly - exit blocked");
 				getRoom().myDoors.put(theDirection, DoorState.BLOCKED);
-				return false;
 			}
 		}
-
-		// Not an exit - handle normal doors with the doorState we already retrieved
-		if (doorState == DoorState.OPEN) {
+		
+        return result;
+	}
+	
+    /**
+     * Handles movement within the maze (not to an exit).
+     * 
+     * @param theDirection direction to move
+     * @param theDoorState current door state
+     * @return true if movement successful
+     */
+	private static boolean handleNonExitMovement(final Direction theDirection, final DoorState theDoorState) {
+		if (theDoorState == DoorState.OPEN) {
 			setRoom(theDirection);
 			return true;
-		} else if (doorState == DoorState.LOCKED && attempt(theDirection)) {
+		} else if (theDoorState == DoorState.LOCKED && attempt(theDirection)) {
 			setRoom(theDirection);
 			return true;
-		} else if (doorState == DoorState.BLOCKED) {
+		} else if (theDoorState == DoorState.BLOCKED) {
 			JOptionPane.showMessageDialog(null, "This door is permanently blocked!", "Blocked Path",
 					JOptionPane.WARNING_MESSAGE);
 		}
-
 		return false;
 	}
 
@@ -278,7 +318,7 @@ public final class Maze /* implements Serializable */ {
 		// Reset exit flag
 		myExitAchieved = false;
 
-		System.out.println("Maze fully reset - player at position (" + x + "," + y + ")");
+        System.out.println("Maze fully reset - player at position (" + x + COMMA + y + PARENTHESIS_CLOSE);
 
 		// Reset all rooms (recreate the map)
 		MAP = new Room[][] {
@@ -341,23 +381,32 @@ public final class Maze /* implements Serializable */ {
 		return false;
 	}
 
+    /**
+     * Helper method for canSolve that checks if a path exists.
+     * 
+     * @param theDir direction to check
+     * @return true if path exists
+     */
 	private static boolean canSolve(final Direction theDir) {
 		final Room cur = setRoom(theDir);
+		boolean result = false;
+		
+        // If we've reached a null room (exit), we've found a solution
 		if (cur == null) {
 			return true;
+		} else if (!mapCheck[x][y]) {
+			// Mark this room as visited
+			mapCheck[x][y] = true;
+			
+            // Try all directions
+            for (Direction dir : Direction.values()) {
+                if (!result && cur.myDoors.get(dir) != DoorState.BLOCKED) {
+                    result = canSolve(dir);
+                }
+            }
 		}
-		if (mapCheck[x][y]) {
-			return false;
-		}
-		mapCheck[x][y] = true;
-		for (Direction dir : Direction.values()) {
-			if (cur.myDoors.get(dir) != DoorState.BLOCKED) {
-				if (canSolve(dir)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		
+		return result;
 	}
 
 	/**
