@@ -1,5 +1,6 @@
 package view;
 
+import controller.SystemControl;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -213,28 +214,20 @@ public final class MazePanel extends JPanel implements KeyListener {
         final int keyCode = theE.getKeyCode();
         switch (keyCode) {
         case KeyEvent.VK_UP:
-            GameView.instance.movePlayer(Direction.NORTH, GameView.myMazePanel);
-            break;
         case KeyEvent.VK_W:
-            GameView.instance.movePlayer(Direction.NORTH, GameView.myMazePanel);
+        	SystemControl.getInstance().getGameView().movePlayer(Direction.NORTH, GameView.myMazePanel);
             break;
         case KeyEvent.VK_DOWN:
-            GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
-            break;
         case KeyEvent.VK_S:
-            GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+        	SystemControl.getInstance().getGameView().movePlayer(Direction.SOUTH, GameView.myMazePanel);
             break;
         case KeyEvent.VK_LEFT:
-            GameView.instance.movePlayer(Direction.WEST, GameView.myMazePanel);
-            break;
         case KeyEvent.VK_A:
-            GameView.instance.movePlayer(Direction.WEST, GameView.myMazePanel);
+        	SystemControl.getInstance().getGameView().movePlayer(Direction.WEST, GameView.myMazePanel);
             break;
         case KeyEvent.VK_RIGHT:
-            GameView.instance.movePlayer(Direction.EAST, GameView.myMazePanel);
-            break;
         case KeyEvent.VK_D:
-            GameView.instance.movePlayer(Direction.EAST, GameView.myMazePanel);
+        	SystemControl.getInstance().getGameView().movePlayer(Direction.EAST, GameView.myMazePanel);
             break;
         default:
             // No action for other keys
