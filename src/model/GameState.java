@@ -13,6 +13,11 @@ import java.util.Set;
 
 public final class GameState implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Singleton instance of GameState.
+	 */
+	private static GameState myInstance;
 
 	/**
 	 * Total number of questions in the maze initially.
@@ -22,22 +27,19 @@ public final class GameState implements Serializable {
 	/**
 	 * The amount of questions remaining.
 	 */
-	private static int myQuestionsRemaining = TOTAL_QUESTIONS;
+	private int myQuestionsRemaining = TOTAL_QUESTIONS;
 
 	/**
 	 * The correct question count.
 	 */
-	private static int myCorrectQuestions;
+	private int myCorrectQuestions;
 
 	/**
 	 * The incorrect question count.
 	 */
-	private static int myIncorrectQuestions;
+	private int myIncorrectQuestions;
 
-	/**
-	 * Singleton instance of GameState.
-	 */
-	private static GameState myInstance;
+	
 
 	/**
 	 * The current X.
@@ -192,10 +194,11 @@ public final class GameState implements Serializable {
 	/**
 	 * Resets the game state counters to initial values.
 	 */
-	public void resetState() {
-		myCorrectQuestions = 0;
-		myIncorrectQuestions = 0;
-		myQuestionsRemaining = TOTAL_QUESTIONS;
+	public static void resetState() {
+		myInstance = new GameState();
+		myInstance.myCorrectQuestions = 0;
+		myInstance.myIncorrectQuestions = 0;
+		myInstance.myQuestionsRemaining = TOTAL_QUESTIONS;
 	}
 
 	/**
@@ -232,7 +235,7 @@ public final class GameState implements Serializable {
 	 * @param theFilename
 	 * @return
 	 */
-	public static GameState loadFromFile(final String theFilename) throws IOException, ClassNotFoundException {
+	public static void loadFromFile(final String theFilename) throws IOException, ClassNotFoundException {
 		GameState other;
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(theFilename))) {
 			other = (GameState) in.readObject();
@@ -243,8 +246,8 @@ public final class GameState implements Serializable {
 			other = new GameState(); // Return a new instance if loading fails
 		}
 		other.loadToMaze();
-
-		return other;
+		
+		myInstance = other;
 	}
 
 	/**
