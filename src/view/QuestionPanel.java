@@ -1,12 +1,15 @@
 package view;
 
-import model.AbstractQuestion;
-import model.GameState;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import model.AbstractQuestion;
+import model.GameState;
 
 public abstract class QuestionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -79,7 +82,7 @@ public abstract class QuestionPanel extends JPanel {
     private final class SubmitAnswerListener implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent theE) {
-            boolean correct = checkAnswer();
+            final boolean correct = checkAnswer();
             
             if (correct) {
                 myFeedbackLabel.setText("Correct! You can proceed.");

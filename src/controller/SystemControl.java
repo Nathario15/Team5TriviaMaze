@@ -374,7 +374,8 @@ public final class SystemControl {
      * @param theDialog The dialog to display the question in
      * @return true if answered correctly, false otherwise
      */
-    private static boolean displayQuestionDialog(final JPanel thePanel, final JDialog theDialog) {
+    @SuppressWarnings("unused")
+	private static boolean displayQuestionDialog(final JPanel thePanel, final JDialog theDialog) {
         final boolean[] result = new boolean[1];
         
         JButton existingSubmit = null;

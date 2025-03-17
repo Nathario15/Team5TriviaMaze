@@ -1,33 +1,115 @@
 package view;
 
-import model.GameState;
-import model.DatabaseManager;
-import model.Difficulty;
-import model.Direction;
-import model.Maze;
-import model.QuestionFactory;
-
-import javax.swing.*;
-import java.awt.*;
+import controller.SystemControl;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-
+import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import controller.SystemControl;
-
-import java.util.Random;
+import model.DatabaseManager;
+import model.Difficulty;
+import model.Direction;
+import model.GameState;
+import model.Maze;
+import model.QuestionFactory;
 
 /**
  * The main view for the Trivia Maze Game.
+ * 
+ * @author Team 5
+ * @version 1.0
  */
 public final class GameView extends JFrame implements KeyListener {
+	/**
+	 * window width.
+	 */
+	public static final int WIDTH = 800;
+	/**
+	 * window height.
+	 */
+	public static final int HEIGHT = 600;
+	/**
+	 * New Game.
+	 */
+	public static final String NEW_GAME = "New Game";
+	/**
+	 * Load Game.
+	 */
+	public static final String LOAD_GAME = "Load Game";
+	/**
+	 * Game.
+	 */
+	public static final String GAME = "Game";
+	/**
+	 * Instructions.
+	 */
+	public static final String INSTRUCTIONS = "Instructions";
+	/**
+	 * About.
+	 */
+	public static final String ABOUT = "About";
+	/**
+	 * Exit.
+	 */
+	public static final String EXIT = "Exit";
+	/**
+	 * MainMenu.
+	 */
+	public static final String MAIN_MENU = "MainMenu";
+	/**
+	 * Back.
+	 */
+	public static final String BACK = "Back";
+	/**
+	 * Save Game.
+	 */
+	public static final String SAVE_GAME = "Save Game";
+	/**
+	 * Game Over.
+	 */
+	public static final String GAME_OVER = "Game Over";
+	/**
+	 * .sav .
+	 */
+	public static final String FILE_EXTENSION = "sav";
+	
+
+	/**
+	 * Instance.
+	 */
+	protected static GameView instance;
+
+	/**
+	 * Instance.
+	 */
+	protected static MazePanel myMazePanel;
+	
+	/**
+	 * Button.
+	 */
+	private static final int BUTTONS = 4;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * games save data.
 	 */
@@ -70,15 +152,12 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	private JLabel myLockedDoorsLabel;
 
-	public static GameView instance;
-	static MazePanel myMazePanel;
-
 	/**
 	 * Constructor.
 	 */
 	public GameView() {
 		setTitle("Trivia Maze Game");
-		setSize(800, 600);
+		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
@@ -88,8 +167,16 @@ public final class GameView extends JFrame implements KeyListener {
 
 		// Register this view with SystemControl
 		SystemControl.getInstance().setGameView(this);
-		System.out.println("GameView registered with SystemControl");
+//		System.out.println("GameView registered with SystemControl");
+		setUp();
 
+	}
+	
+	/**
+	 * sets up.
+	 */
+	@SuppressWarnings("static-access")
+	private void setUp() {
 		addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
@@ -103,21 +190,21 @@ public final class GameView extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
-	public static void main(final String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			final GameView game = new GameView();
-			game.setVisible(true);
-		});
-	}
+//	public static void main(final String[] args) {
+//		SwingUtilities.invokeLater(() -> {
+//			final GameView game = new GameView();
+//			game.setVisible(true);
+//		});
+//	}
 
 	private void addMainMenu() {
 		final JPanel menuPanel = new JPanel(new GridLayout(5, 1));
 
-		final JButton newGameButton = new JButton("New Game");
-		final JButton loadGameButton = new JButton("Load Game");
-		final JButton instructionsButton = new JButton("Instructions");
-		final JButton aboutButton = new JButton("About");
-		final JButton exitButton = new JButton("Exit");
+		final JButton newGameButton = new JButton(NEW_GAME);
+		final JButton loadGameButton = new JButton(LOAD_GAME);
+		final JButton instructionsButton = new JButton(INSTRUCTIONS);
+		final JButton aboutButton = new JButton(ABOUT);
+		final JButton exitButton = new JButton(EXIT);
 
 		newGameButton.addActionListener(_ -> newGame());
 		loadGameButton.addActionListener(_ -> loadGame());
@@ -131,7 +218,7 @@ public final class GameView extends JFrame implements KeyListener {
 		menuPanel.add(aboutButton);
 		menuPanel.add(exitButton);
 
-		myMainPanel.add(menuPanel, "MainMenu");
+		myMainPanel.add(menuPanel, MAIN_MENU);
 	}
 
 	private void addGamePanel() {
@@ -140,11 +227,11 @@ public final class GameView extends JFrame implements KeyListener {
 		myMazePanel = new MazePanel();
 		gamePanel.add(myMazePanel, BorderLayout.CENTER);
 
-		JPanel controlPanel = new JPanel(new GridLayout(1, 4));
-		JButton northButton = new JButton("North");
-		JButton southButton = new JButton("South");
-		JButton eastButton = new JButton("East");
-		JButton westButton = new JButton("West");
+		final JPanel controlPanel = new JPanel(new GridLayout(1, 4));
+		final JButton northButton = new JButton("North");
+		final JButton southButton = new JButton("South");
+		final JButton eastButton = new JButton("East");
+		final JButton westButton = new JButton("West");
 
 		northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
 		northButton.addKeyListener(myMazePanel);
@@ -163,11 +250,11 @@ public final class GameView extends JFrame implements KeyListener {
 		gamePanel.add(controlPanel, BorderLayout.SOUTH);
 		addTrackerPanel(gamePanel);
 
-		myMainPanel.add(gamePanel, "Game");
+		myMainPanel.add(gamePanel, GAME);
 	}
 
-	private void addTrackerPanel(JPanel gamePanel) {
-		myTrackerPanel = new JPanel(new GridLayout(4, 1));
+	private void addTrackerPanel(final JPanel theGamePanel) {
+		myTrackerPanel = new JPanel(new GridLayout(BUTTONS, 1));
 
 		myPositionLabel = new JLabel("Position: (4,4)");
 		myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
@@ -184,7 +271,7 @@ public final class GameView extends JFrame implements KeyListener {
 		myTrackerPanel.add(myIncorrectQuestionsLabel);
 		myTrackerPanel.add(myLockedDoorsLabel);
 
-		gamePanel.add(myTrackerPanel, BorderLayout.EAST);
+		theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
 	}
 
 	private void updateTracker() {
@@ -199,52 +286,53 @@ public final class GameView extends JFrame implements KeyListener {
 
 	private void addInstructionsPanel() {
 		final JPanel instructionsPanel = new JPanel(new BorderLayout());
-		JLabel instructionsLabel = new JLabel(
+		final JLabel instructionsLabel = new JLabel(
 				"<html><b>Instructions:</b> Navigate the maze by answering trivia questions correctly.</html>",
 				SwingConstants.CENTER);
 		instructionsPanel.add(instructionsLabel, BorderLayout.CENTER);
 
-		final JButton backButton = new JButton("Back");
+		final JButton backButton = new JButton(BACK);
 		backButton.addActionListener(_ -> {
 			if (myInGame) {
-				myCardLayout.show(myMainPanel, "Game");
+				myCardLayout.show(myMainPanel, GAME);
 			} else {
-				myCardLayout.show(myMainPanel, "MainMenu");
+				myCardLayout.show(myMainPanel, MAIN_MENU);
 			}
 		});
 		instructionsPanel.add(backButton, BorderLayout.SOUTH);
 
-		myMainPanel.add(instructionsPanel, "Instructions");
+		myMainPanel.add(instructionsPanel, INSTRUCTIONS);
 	}
 
 	private void addAboutPanel() {
 		final JPanel aboutPanel = new JPanel(new BorderLayout());
-		JLabel aboutLabel = new JLabel(
+		final JLabel aboutLabel = new JLabel(
 				"<html><b>Trivia Maze Game</b><br>Created by Nathaniel, Ibrahim, and Jayden.</html>",
 				SwingConstants.CENTER);
 		aboutPanel.add(aboutLabel, BorderLayout.CENTER);
 
-		final JButton backBtn = new JButton("Back");
+		final JButton backBtn = new JButton(BACK);
 		backBtn.addActionListener(_ -> {
 			if (myInGame) {
-				myCardLayout.show(myMainPanel, "Game");
+				myCardLayout.show(myMainPanel, GAME);
 			} else {
-				myCardLayout.show(myMainPanel, "MainMenu");
+				myCardLayout.show(myMainPanel, MAIN_MENU);
 			}
 		});
 		aboutPanel.add(backBtn, BorderLayout.SOUTH);
 
-		myMainPanel.add(aboutPanel, "About");
+		myMainPanel.add(aboutPanel, ABOUT);
 	}
 
+	@SuppressWarnings("unused")
 	private void addMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
+		final JMenuBar menuBar = new JMenuBar();
 
-		JMenu fileMenu = new JMenu("File");
-		JMenuItem saveGameItem = new JMenuItem("Save Game");
-		JMenuItem loadGameItem = new JMenuItem("Load Game");
-		JMenuItem newGameItem = new JMenuItem("New Game");
-		JMenuItem exitGameItem = new JMenuItem("Exit");
+		final JMenu fileMenu = new JMenu("File");
+		final JMenuItem saveGameItem = new JMenuItem(SAVE_GAME);
+		final JMenuItem loadGameItem = new JMenuItem(LOAD_GAME);
+		final JMenuItem newGameItem = new JMenuItem(NEW_GAME);
+		final JMenuItem exitGameItem = new JMenuItem(EXIT);
 
 		saveGameItem.addActionListener(e -> saveGame());
 		loadGameItem.addActionListener(e -> loadGame());
@@ -256,9 +344,9 @@ public final class GameView extends JFrame implements KeyListener {
 		fileMenu.add(newGameItem);
 		fileMenu.add(exitGameItem);
 
-		JMenu helpMenu = new JMenu("Help");
-		JMenuItem instructionsGameItem = new JMenuItem("Instructions");
-		JMenuItem aboutGameItem = new JMenuItem("About");
+		final JMenu helpMenu = new JMenu("Help");
+		final JMenuItem instructionsGameItem = new JMenuItem(INSTRUCTIONS);
+		final JMenuItem aboutGameItem = new JMenuItem(ABOUT);
 
 		instructionsGameItem.addActionListener(e -> displayInstructions());
 		aboutGameItem.addActionListener(e -> displayAbout());
@@ -276,9 +364,9 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Starts a new game, prompting the user to select a difficulty level.
 	 */
 	public void newGame() {
-		System.out.println("\n\n==================================================");
-		System.out.println("================= STARTING NEW GAME ===============");
-		System.out.println("==================================================\n\n");
+//		System.out.println("\n\n==================================================");
+//		System.out.println("================= STARTING NEW GAME ===============");
+//		System.out.println("==================================================\n\n");
 
 		// First clean up existing game state if we're in a game
 		if (myInGame) {
@@ -286,8 +374,8 @@ public final class GameView extends JFrame implements KeyListener {
 			myGameState = null;
 		}
 
-		String[] difficulties = { "EASY", "MEDIUM", "HARD" };
-		String selectedDifficulty = (String) JOptionPane.showInputDialog(this, "Select Difficulty:", "New Game",
+		final String[] difficulties = { "EASY", "MEDIUM", "HARD" };
+		final String selectedDifficulty = (String) JOptionPane.showInputDialog(this, "Select Difficulty:", NEW_GAME,
 				JOptionPane.QUESTION_MESSAGE, null, difficulties, difficulties[0]);
 
 		if (selectedDifficulty != null) {
@@ -305,11 +393,11 @@ public final class GameView extends JFrame implements KeyListener {
 			DatabaseManager.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty.trim().toUpperCase()));
 
 			// Initialize question factory
-			QuestionFactory.IntializeQuestionFactory();
+			QuestionFactory.intializeQuestionFactory();
 
 			// Update UI state
 			myInGame = true;
-			myCardLayout.show(myMainPanel, "Game");
+			myCardLayout.show(myMainPanel, GAME);
 			addMenuBar();
 
 			// Make sure maze display is refreshed
@@ -322,6 +410,9 @@ public final class GameView extends JFrame implements KeyListener {
 		}
 	}
 
+	/**
+	 * end game.
+	 */
 	public void endGame() {
 		this.newGame();
 	}
@@ -334,11 +425,11 @@ public final class GameView extends JFrame implements KeyListener {
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			System.out.println("GameView.checkGameState: lose cond");
-			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", "Game Over",
+			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", GAME_OVER,
 					JOptionPane.ERROR_MESSAGE);
 
 			// Ask if player wants to start a new game
-			int response = JOptionPane.showConfirmDialog(this, "Would you like to start a new game?", "Game Over",
+			final int response = JOptionPane.showConfirmDialog(this, "Would you like to start a new game?", GAME_OVER,
 					JOptionPane.YES_NO_OPTION);
 
 			if (response == JOptionPane.YES_OPTION) {
@@ -353,16 +444,16 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins serialization.
 	 */
 	public void saveGame() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Save Game");
-		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", "sav"));
+		final JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle(SAVE_GAME);
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*." + "sav)", FILE_EXTENSION));
 
-		int userSelection = fileChooser.showSaveDialog(this);
+		final int userSelection = fileChooser.showSaveDialog(this);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
-			File fileToSave = fileChooser.getSelectedFile();
+			final File fileToSave = fileChooser.getSelectedFile();
 			// Ensure file has .sav extension
 			String filePath = fileToSave.getAbsolutePath();
-			if (!filePath.toLowerCase().endsWith(".sav")) {
+			if (!filePath.toLowerCase().endsWith("." + FILE_EXTENSION)) {
 				filePath += ".sav";
 			}
 
@@ -376,24 +467,24 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins deserialization.
 	 */
 	public void loadGame() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Load Game");
-		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", "sav"));
+		final JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle(LOAD_GAME);
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", FILE_EXTENSION));
 
-		int userSelection = fileChooser.showOpenDialog(this);
+		final int userSelection = fileChooser.showOpenDialog(this);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
-			File fileToLoad = fileChooser.getSelectedFile();
+			final File fileToLoad = fileChooser.getSelectedFile();
 			myFilename = fileToLoad.getAbsolutePath();
 
 			try {
 				myGameState = GameState.loadFromFile(myFilename);
 				myInGame = true;
 				addMenuBar();
-				myCardLayout.show(myMainPanel, "Game");
+				myCardLayout.show(myMainPanel, GAME);
 				myMazePanel.repaint();
 				updateTracker();
 				JOptionPane.showMessageDialog(this, "Game loaded successfully!");
-			} catch (Exception e) {
+			} catch (final IOException | ClassNotFoundException e) {
 				JOptionPane.showMessageDialog(this, "Error loading game: " + e.getMessage(), "Load Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
@@ -404,40 +495,40 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Displays the instructions screen.
 	 */
 	public void displayInstructions() {
-		myCardLayout.show(myMainPanel, "Instructions");
+		myCardLayout.show(myMainPanel, INSTRUCTIONS);
 	}
 
 	/**
 	 * Displays the about screen.
 	 */
 	public void displayAbout() {
-		myCardLayout.show(myMainPanel, "About");
+		myCardLayout.show(myMainPanel, ABOUT);
 	}
 
-	void movePlayer(Direction direction, MazePanel mazePanel) {
+	void movePlayer(final Direction theDirection, final MazePanel theMazePanel) {
 		// Check if we're in a valid game state
 		if (myGameState == null) {
 			return; // Don't try to move if game state is null
 		}
 
-		boolean success;
-		if (direction == Direction.NORTH || direction == Direction.SOUTH) {
-			success = Maze.move(direction);
+		final boolean success;
+		if (theDirection == Direction.NORTH || theDirection == Direction.SOUTH) {
+			success = Maze.move(theDirection);
 		} else {
-			success = Maze.move(direction);
+			success = Maze.move(theDirection);
 		}
 
 		if (success) {
 			// Only update position if we're still in a valid game state
 			if (myGameState != null) {
-				int newX = Maze.getDisplayX() + 1;
-				int newY = Maze.getDisplayY() + 1;
+				final int newX = Maze.getDisplayX() + 1;
+				final int newY = Maze.getDisplayY() + 1;
 				myGameState.setCurrentPosition(newX, newY);
-				mazePanel.repaint();
+				theMazePanel.repaint();
 				updateTracker();
 			}
 		} else {
-			mazePanel.repaint();
+			theMazePanel.repaint();
 			updateTracker();
 		}
 
@@ -446,13 +537,16 @@ public final class GameView extends JFrame implements KeyListener {
 		System.out.println("Can solve?: " + Maze.canSolve());
 	}
 
+	/**
+	 * returns to main menu.
+	 */
 	public void returnToMainMenu() {
-		System.out.println("\n\n==================================================");
-		System.out.println("================ RETURNING TO MENU ================");
-		System.out.println("==================================================\n\n");
+//		System.out.println("\n\n==================================================");
+//		System.out.println("================ RETURNING TO MENU ================");
+//		System.out.println("==================================================\n\n");
 
 		// Switch to main menu first for immediate visual feedback
-		myCardLayout.show(myMainPanel, "MainMenu");
+		myCardLayout.show(myMainPanel, MAIN_MENU);
 
 		// Reset game state
 		myInGame = false;
@@ -478,18 +572,18 @@ public final class GameView extends JFrame implements KeyListener {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
+	public void keyTyped(final KeyEvent theE) {
 		// Not used
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(final KeyEvent theE) {
 		// Not used
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		int keyCode = e.getKeyCode();
+	public void keyReleased(final KeyEvent theE) {
+		final int keyCode = theE.getKeyCode();
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_W:
@@ -506,6 +600,8 @@ public final class GameView extends JFrame implements KeyListener {
 		case KeyEvent.VK_RIGHT:
 		case KeyEvent.VK_D:
 			movePlayer(Direction.EAST, myMazePanel);
+			break;
+		default:
 			break;
 		}
 	}
