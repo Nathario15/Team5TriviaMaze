@@ -34,19 +34,58 @@ public final class MazePanel extends JPanel implements KeyListener {
 	 * The size of the map that is displayed.
 	 */
 	private static final int MAP_SIZE = 7;
+	
 	/**
 	 * Width of door lines.
 	 */
 	private static final int DOOR_WIDTH = 3;
-	/**
-	 * MineCraft Dirt.
-	 */
-	private static final Color DIRT = new Color(146, 108, 77);
-	/**
-	 * MineCraft Grass.
-	 */
-	private static final Color GRASS = new Color(159, 172, 143);
+	
+    /**
+     * Player circle inset from cell edge.
+     */
+    private static final int PLAYER_INSET = 15;
+    
+    /**
+     * Room highlight inset from cell edge.
+     */
+    private static final int ROOM_HIGHLIGHT_INSET = 3;
+    
+    /**
+     * Player size reduction from cell size.
+     */
+    private static final int PLAYER_SIZE_REDUCTION = 30;
+    
+    /**
+     * Room size reduction from cell size.
+     */
+    private static final int ROOM_SIZE_REDUCTION = 6;
+    
+    /**
+     * Blue component value for highlighted rooms.
+     */
+    private static final int HIGHLIGHT_BLUE = 255;
+    
+    /**
+     * Red/Green component value for highlighted rooms.
+     */
+    private static final int HIGHLIGHT_RED_GREEN = 200;
+    
+    /**
+     * Adjusted player position.
+     */
+    private static final int PLAYER_Y_ADJUSTMENT = 6;
+    
+    /**
+     * MineCraft Dirt.
+     */
+    private static final Color DIRT = new Color(146, 108, 77);
+    
+    /**
+     * MineCraft Grass (used for cell borders).
+     */
+    private static final Color GRASS = new Color(159, 172, 143);
 
+    
 	/**
 	 * Constructor.
 	 */
@@ -75,8 +114,8 @@ public final class MazePanel extends JPanel implements KeyListener {
 				theG.setColor(DIRT);
 				theG.fillRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
-				// Draw standard black grid lines
-				theG.setColor(Color.GREEN);
+				// Draw standard green grid lines
+				theG.setColor(GRASS);
 				theG.drawRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 			}
 		}
@@ -84,7 +123,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		// Get the current room and its coordinates
 		final Room currentRoom = Maze.getRoom();
 		final int playerX = Maze.getDisplayX();
-		final int playerY = 6 - Maze.getDisplayY();
+		final int playerY = PLAYER_Y_ADJUSTMENT - Maze.getDisplayY();
 
 		// Draw doors with proper colors (thicker lines)
 		if (currentRoom != null) {
@@ -105,14 +144,20 @@ public final class MazePanel extends JPanel implements KeyListener {
 			// Reset stroke for other drawing
 			g2d.setStroke(new BasicStroke(1.0f));
 
-			// Highlight current room
-			theG.setColor(new Color(200, 200, 255)); // Light blue highlight
-			theG.fillRect(playerX * CELL_SIZE + 3, playerY * CELL_SIZE + 3, CELL_SIZE - 6, CELL_SIZE - 6);
+            // Highlight current room
+            theG.setColor(new Color(HIGHLIGHT_RED_GREEN, HIGHLIGHT_RED_GREEN, HIGHLIGHT_BLUE)); // Light blue highlight
+            theG.fillRect(playerX * CELL_SIZE + ROOM_HIGHLIGHT_INSET, 
+                          playerY * CELL_SIZE + ROOM_HIGHLIGHT_INSET, 
+                          CELL_SIZE - ROOM_SIZE_REDUCTION, 
+                          CELL_SIZE - ROOM_SIZE_REDUCTION);
 		}
 
-		// Draw Player Position
-		theG.setColor(Color.RED);
-		theG.fillOval(playerX * CELL_SIZE + 15, playerY * CELL_SIZE + 15, CELL_SIZE - 30, CELL_SIZE - 30);
+        // Draw Player Position
+        theG.setColor(Color.RED);
+        theG.fillOval(playerX * CELL_SIZE + PLAYER_INSET, 
+                      playerY * CELL_SIZE + PLAYER_INSET, 
+                      CELL_SIZE - PLAYER_SIZE_REDUCTION, 
+                      CELL_SIZE - PLAYER_SIZE_REDUCTION);
 	}
 
 	/**
@@ -136,8 +181,8 @@ public final class MazePanel extends JPanel implements KeyListener {
 			theG.setColor(Color.BLACK);
 		}
 
-		int x = theX * CELL_SIZE;
-		int y = theY * CELL_SIZE;
+		final int x = theX * CELL_SIZE;
+		final int y = theY * CELL_SIZE;
 
 		// Draw the door on the appropriate side
 		if (theDirection == Direction.NORTH) {
@@ -152,38 +197,48 @@ public final class MazePanel extends JPanel implements KeyListener {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
+	public void keyTyped(final KeyEvent theE) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(final KeyEvent theE) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		int keyCode = e.getKeyCode();
-		switch (keyCode) {
-		case KeyEvent.VK_UP:
-		case KeyEvent.VK_W:
-			GameView.instance.movePlayer(Direction.NORTH, GameView.myMazePanel);
-			break;
-		case KeyEvent.VK_DOWN:
-		case KeyEvent.VK_S:
-			GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
-			break;
-		case KeyEvent.VK_LEFT:
-		case KeyEvent.VK_A:
-			GameView.instance.movePlayer(Direction.WEST, GameView.myMazePanel);
-			break;
-		case KeyEvent.VK_RIGHT:
-		case KeyEvent.VK_D:
-			GameView.instance.movePlayer(Direction.EAST, GameView.myMazePanel);
-			break;
-
-		}
-	}
+    @Override
+    public void keyReleased(final KeyEvent theE) {
+        final int keyCode = theE.getKeyCode();
+        switch (keyCode) {
+        case KeyEvent.VK_UP:
+            GameView.instance.movePlayer(Direction.NORTH, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_W:
+            GameView.instance.movePlayer(Direction.NORTH, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_DOWN:
+            GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_S:
+            GameView.instance.movePlayer(Direction.SOUTH, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_LEFT:
+            GameView.instance.movePlayer(Direction.WEST, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_A:
+            GameView.instance.movePlayer(Direction.WEST, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_RIGHT:
+            GameView.instance.movePlayer(Direction.EAST, GameView.myMazePanel);
+            break;
+        case KeyEvent.VK_D:
+            GameView.instance.movePlayer(Direction.EAST, GameView.myMazePanel);
+            break;
+        default:
+            // No action for other keys
+            break;
+        }
+    }
 }
