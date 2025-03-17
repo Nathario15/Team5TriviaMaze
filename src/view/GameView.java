@@ -326,7 +326,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Checks for win/loss conditions after a move.
 	 */
 	private void checkGameState() {
-		System.out.println("GameView.checkGameState");
+		System.out.println("GameView.checkGameState :" + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			System.out.println("GameView.checkGameState: lose cond");
