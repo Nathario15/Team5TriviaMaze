@@ -285,22 +285,23 @@ public final class SystemControl {
      * @return true if player can no longer reach the end
      */
     public boolean checkLoseCondition() {
-        if (!myGameActive) {
-            return false;
-        }
-        
-        // Check if all doors from current room are blocked
-        boolean allBlocked = true;
-        for (final Direction dir : Direction.values()) {
-            final Room nextRoom = Maze.getRoom(dir);
-            if (nextRoom != null && Maze.getRoom().getDoorState(dir) != DoorState.BLOCKED) {
-                allBlocked = false;
-                break;
-            }
-        }
-        
-        // Simplified loss detection - if all doors blocked, game is lost
-        return allBlocked;
+    	return !Maze.canSolve();
+//        if (!myGameActive) {
+//            return false;
+//        }
+//        
+//        // Check if all doors from current room are blocked
+//        boolean allBlocked = true;
+//        for (final Direction dir : Direction.values()) {
+//            final Room nextRoom = Maze.getRoom(dir);
+//            if (nextRoom != null && Maze.getRoom().getDoorState(dir) != DoorState.BLOCKED) {
+//                allBlocked = false;
+//                break;
+//            }
+//        }
+//        
+//        // Simplified loss detection - if all doors blocked, game is lost
+//        return allBlocked;
     }
     
     /**
