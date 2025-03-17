@@ -168,7 +168,7 @@ public final class GameView extends JFrame implements KeyListener {
 		myPositionLabel = new JLabel("Position: (4,4)");
 		myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
 		myIncorrectQuestionsLabel = new JLabel("Incorrect Questions: 0");
-		myLockedDoorsLabel = new JLabel("Locked Doors: 49");
+		myLockedDoorsLabel = new JLabel("Questions Remaining: 48");
 
 		myPositionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		myCorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -189,7 +189,7 @@ public final class GameView extends JFrame implements KeyListener {
 			myCorrectQuestionsLabel.setText("Correct Questions: " + GameState.getInstance().getCorrectQuestions());
 			myIncorrectQuestionsLabel
 					.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
-			myLockedDoorsLabel.setText("Locked Doors: " + GameState.getInstance().getLockedDoors());
+			myLockedDoorsLabel.setText("Questions Remaining: " + GameState.getInstance().getQuestionsRemaining());
 		}
 	}
 

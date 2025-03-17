@@ -417,12 +417,13 @@ public final class SystemControl {
                     "Correct! The door is now open.", "Success", 
                     JOptionPane.INFORMATION_MESSAGE);
             GameState.getInstance().addCorrect();
-            GameState.getInstance().removeLockedDoor();
+            GameState.getInstance().removeQuestion();
         } else {
             JOptionPane.showMessageDialog(theDialog, 
                     "Incorrect! The door is now permanently blocked.", "Failed", 
                     JOptionPane.ERROR_MESSAGE);
             GameState.getInstance().addIncorrect();
+            GameState.getInstance().removeQuestion();
         }	
         theDialog.dispose();
     }
