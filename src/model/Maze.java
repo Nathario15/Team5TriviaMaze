@@ -390,24 +390,25 @@ public final class Maze /* implements Serializable */ {
 	private static boolean canSolve(final Direction theDir) {
 		final Room cur = setRoom(theDir);
 
-		// If we've reached a null room (exit), we've found a solution
-		if (cur == null) {
-			return true;
-		}
+//		// If we've reached a null room (exit), we've found a solution
+//		if (cur == null) {
+//			return true;
+//		}
 		if (mapCheck[x][y]) {
+			setRoom(theDir.getOpposite());
 			return false;
 		}
 		// Mark this room as visited
 		mapCheck[x][y] = true;
 		// Try all directions
 		for (Direction dir : Direction.values()) {
-			if (cur.myDoors.get(dir) != DoorState.BLOCKED) {
-				if (canSolve(dir)) {
+			if (cur == null || cur.myDoors.get(dir) != DoorState.BLOCKED) {
+				if (cur == null || canSolve(dir)) {
 					return true;
 				}
 			}
 		}
-
+		setRoom(theDir.getOpposite());
 		return false;
 	}
 
