@@ -28,6 +28,25 @@ public class DatabaseTest {
     /**
      * sets up.
      */
+    
+    /**
+     * String constant for "Testing ".
+     */
+    private static final String TESTING_PREFIX = "Testing ";
+    
+    /**
+     * String constant for " difficulty".
+     */
+    private static final String DIFFICULTY_SUFFIX = " difficulty";
+    
+    /**
+     * String constant for "No questions found for ".
+     */
+    private static final String NO_QUESTIONS_FOUND = "No questions found for ";
+    
+    /**
+     * sets up.
+     */
     @BeforeAll
     public static void setUp() {
         System.out.println("Testing Database Manager...");
@@ -61,9 +80,9 @@ public class DatabaseTest {
     public void testQuestionsAvailable(final Difficulty theDifficulty) {
         myDatabaseManager.setDifficulty(theDifficulty);
         final int count = myDatabaseManager.getQuestionCount();
-        System.out.println("Testing " + theDifficulty + " difficulty:");
+        System.out.println(TESTING_PREFIX + theDifficulty + DIFFICULTY_SUFFIX + ":");
         System.out.println("Questions available: " + count);
-        assertTrue(count > 0, "There should be questions available for " + theDifficulty + " difficulty");
+        assertTrue(count > 0, "There should be questions available for " + theDifficulty + DIFFICULTY_SUFFIX);
     }
     
     /**
@@ -77,7 +96,7 @@ public class DatabaseTest {
         myDatabaseManager.setDifficulty(theDifficulty);
         final AbstractQuestion question = myDatabaseManager.getRandomQuestion();
         
-        System.out.println("Testing " + theDifficulty + " difficulty question retrieval:");
+        System.out.println(TESTING_PREFIX + theDifficulty + DIFFICULTY_SUFFIX + " question retrieval:");
         
         if (question != null) {
             System.out.println("Sample question: " + question.getQuestion());
@@ -97,7 +116,7 @@ public class DatabaseTest {
             assertNotNull(question.getQuestion(), "Question text should not be null");
             assertNotNull(question.getAnswer(), "Answer should not be null");
         } else {
-        	final String str = "No questions found for " + theDifficulty + " difficulty";
+            final String str = NO_QUESTIONS_FOUND + theDifficulty + DIFFICULTY_SUFFIX;
             System.out.println(str);
             fail(str);
         }
@@ -114,7 +133,7 @@ public class DatabaseTest {
         myDatabaseManager.setDifficulty(theDifficulty);
         final AbstractQuestion question = myDatabaseManager.getRandomQuestion();
         
-        System.out.println("Testing " + theDifficulty + " difficulty answer verification:");
+        System.out.println(TESTING_PREFIX + theDifficulty + DIFFICULTY_SUFFIX + " answer verification:");
         
         if (question != null) {
             final boolean correctResult = question.isCorrect(question.getAnswer());
@@ -127,8 +146,8 @@ public class DatabaseTest {
             assertTrue(correctResult, "Correct answer should be verified as correct");
             assertFalse(incorrectResult, "Incorrect answer should be verified as incorrect");
         } else {
-            System.out.println("No questions found for " + theDifficulty + " difficulty");
-            fail("No question retrieved for " + theDifficulty + " difficulty");
+            System.out.println(NO_QUESTIONS_FOUND + theDifficulty + DIFFICULTY_SUFFIX);
+            fail("No question retrieved for " + theDifficulty + DIFFICULTY_SUFFIX);
         }
     }
     
@@ -147,7 +166,13 @@ public class DatabaseTest {
             System.out.println(difficulty + " questions: " + count);
         }
         
-        System.out.println("Database connection: " + (myDatabaseManager.isConnected() ? "ACTIVE" : "INACTIVE"));
+        final String connectionStatus;
+        if (myDatabaseManager.isConnected()) {
+            connectionStatus = "ACTIVE";
+        } else {
+            connectionStatus = "INACTIVE";
+        }
+        System.out.println("Database connection: " + connectionStatus);
         System.out.println("Database testing complete.");
     }
 }
