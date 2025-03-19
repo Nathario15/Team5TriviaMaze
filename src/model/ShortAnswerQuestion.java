@@ -29,6 +29,11 @@ public class ShortAnswerQuestion extends AbstractQuestion {
 	 */
 	@Override
 	public boolean isCorrect(final String theAnswer) {
+	    // Check if cheats are enabled first
+	    if (AbstractQuestion.cheatsEnabled()) {
+	        return true;
+	    }
+	    
 	    if (theAnswer == null) {
 	        return false;
 	    }
