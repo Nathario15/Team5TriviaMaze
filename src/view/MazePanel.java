@@ -30,7 +30,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 	/**
 	 * Size of each cell in pixels.
 	 */
-	private static final int CELL_SIZE = 50;
+	private static final int CELL_SIZE = 70; //was 50
 	/**
 	 * The size of the map that is displayed.
 	 */
@@ -39,7 +39,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 	/**
 	 * Width of door lines.
 	 */
-	private static final int DOOR_WIDTH = 3;
+	private static final int DOOR_WIDTH = 3; //was 3
 	
     /**
      * Player circle inset from cell edge.
@@ -49,7 +49,7 @@ public final class MazePanel extends JPanel implements KeyListener {
     /**
      * Room highlight inset from cell edge.
      */
-    private static final int ROOM_HIGHLIGHT_INSET = 3;
+    private static final int ROOM_HIGHLIGHT_INSET = 3; //was 3
     
     /**
      * Player size reduction from cell size.
@@ -75,6 +75,11 @@ public final class MazePanel extends JPanel implements KeyListener {
      * Adjusted player position.
      */
     private static final int PLAYER_Y_ADJUSTMENT = 6;
+    
+    /**
+     * Width of cell borders.
+     */
+    private static final int CELL_BORDER_WIDTH = 2; //was 1
     
     /**
      * MineCraft Dirt.
@@ -117,7 +122,9 @@ public final class MazePanel extends JPanel implements KeyListener {
 
 				// Draw standard green grid lines
 				theG.setColor(GRASS);
-				theG.drawRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+				for (int i = 0; i < CELL_BORDER_WIDTH; i++) {
+					theG.drawRect(col * CELL_SIZE + i, row * CELL_SIZE + i, CELL_SIZE - 2 * i, CELL_SIZE - 2 * i);
+				}
 			}
 		}
 
