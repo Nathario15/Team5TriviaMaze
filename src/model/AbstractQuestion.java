@@ -11,14 +11,22 @@ import java.util.Objects;
  * @version 0.7
  */
 public abstract class AbstractQuestion implements Serializable {
+	
+	/**
+	 * If cheats are enabled.
+	 */
+	private static boolean cheatsEnabled;
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * The Question that will be asked.
 	 */
 	protected final String myQuestion;
+	
 	/**
 	 * The correct answer.
 	 */
@@ -35,6 +43,13 @@ public abstract class AbstractQuestion implements Serializable {
 		this.myAnswer = theAnswer;
 		// TODO check data
 	}
+	
+	/**
+	 * Enables cheats.
+	 */
+	public static void enableCheats() {
+		cheatsEnabled = true;
+	}
 
 	/**
 	 * Checks if answer is correct.
@@ -43,6 +58,9 @@ public abstract class AbstractQuestion implements Serializable {
 	 * @return
 	 */
 	public boolean isCorrect(final String theAnswer) {
+		if (cheatsEnabled) {
+			return true;
+		}
 		if (theAnswer == null) {
 			return false;
 		}
