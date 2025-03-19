@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -103,8 +104,7 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * Button.
 	 */
-	private static final int BUTTONS = 4;
-
+	private static final int BUTTONS = 5;
 	/**
 	 * 
 	 */
@@ -126,6 +126,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Whether or not the player is currently in game.
 	 */
 	private boolean myInGame;
+	/**
+	 * Whether or not cheats are enabled.
+	 */
+	private boolean myCheatsEnabled;
 	/**
 	 * The file name for the save file.
 	 */
@@ -151,6 +155,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * The label for tracking the locked door count.
 	 */
 	private JLabel myLockedDoorsLabel;
+	/**
+	 * The label for tracking whether cheats are enabled.
+	 */
+	private JLabel myCheatsLabel;
 
 	/**
 	 * Constructor.
@@ -259,16 +267,19 @@ public final class GameView extends JFrame implements KeyListener {
 		myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
 		myIncorrectQuestionsLabel = new JLabel("Incorrect Questions: 0");
 		myLockedDoorsLabel = new JLabel("Questions Remaining: 48");
+		myCheatsLabel = new JLabel("Cheats: Off");
 
 		myPositionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		myCorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		myIncorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		myLockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		myCheatsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
 		myTrackerPanel.add(myPositionLabel);
 		myTrackerPanel.add(myCorrectQuestionsLabel);
 		myTrackerPanel.add(myIncorrectQuestionsLabel);
 		myTrackerPanel.add(myLockedDoorsLabel);
+		myTrackerPanel.add(myCheatsLabel);
 
 		theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
 	}
@@ -280,6 +291,13 @@ public final class GameView extends JFrame implements KeyListener {
 			myIncorrectQuestionsLabel
 					.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
 			myLockedDoorsLabel.setText("Questions Remaining: " + GameState.getInstance().getQuestionsRemaining());
+			final String cheatsStatus;
+		    if (myCheatsEnabled) {
+		        cheatsStatus = "On";
+		    } else {
+		        cheatsStatus = "Off";
+		    }
+		    myCheatsLabel.setText("Cheats: " + cheatsStatus);
 		}
 	}
 
@@ -291,7 +309,8 @@ public final class GameView extends JFrame implements KeyListener {
 				+ " to answer a trivia question. If they get it wrong, that door is locked permanently and"
 				+ " outlined with a gray line. If they get it right, the line becomes green and they can now"
 				+ " freely navigate in that direction as desired. The player can navigate the maze using either"
-				+ " WASD keys or via the navigation buttons provided to them once they start the game.</html>",
+				+ " WASD keys or via the navigation buttons provided to them once they start the game."
+				+ " Additionally, you can enable cheats via the menu bar.</html>",
 				SwingConstants.CENTER);
 		instructionsPanel.add(instructionsLabel, BorderLayout.CENTER);
 
@@ -355,12 +374,23 @@ public final class GameView extends JFrame implements KeyListener {
 
 		instructionsGameItem.addActionListener(e -> displayInstructions());
 		aboutGameItem.addActionListener(e -> displayAbout());
-
+		
 		helpMenu.add(instructionsGameItem);
 		helpMenu.add(aboutGameItem);
+		
+		final JMenu cheatsMenu = new JMenu("Cheats");
+		final JMenuItem cheatsCheckBox = new JCheckBoxMenuItem("Enable Cheats");
+		
+		cheatsCheckBox.addActionListener(e -> {
+			myCheatsEnabled = !myCheatsEnabled;
+			updateTracker();
+		});
 
+		cheatsMenu.add(cheatsCheckBox);
+		
 		menuBar.add(fileMenu);
 		menuBar.add(helpMenu);
+		menuBar.add(cheatsMenu);
 
 		setJMenuBar(menuBar);
 	}
