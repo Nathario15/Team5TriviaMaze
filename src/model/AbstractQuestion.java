@@ -45,10 +45,17 @@ public abstract class AbstractQuestion implements Serializable {
 	}
 	
 	/**
-	 * Enables cheats.
+	 * Toggle cheats.
 	 */
-	public static void enableCheats() {
-		cheatsEnabled = true;
+	public static void toggleCheats() {
+		cheatsEnabled = !cheatsEnabled;
+	}
+	
+	/**
+	 *  Returns cheatsEnabled.
+	 */
+	public static boolean cheatsEnabled() {
+		return cheatsEnabled;
 	}
 
 	/**

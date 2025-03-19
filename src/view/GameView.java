@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import model.AbstractQuestion;
 import model.DatabaseManager;
 import model.Difficulty;
 import model.Direction;
@@ -126,10 +127,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Whether or not the player is currently in game.
 	 */
 	private boolean myInGame;
-	/**
-	 * Whether or not cheats are enabled.
-	 */
-	private boolean myCheatsEnabled;
+//	/**
+//	 * Whether or not cheats are enabled.
+//	 */
+//	private boolean myCheatsEnabled;
 	/**
 	 * The file name for the save file.
 	 */
@@ -292,7 +293,7 @@ public final class GameView extends JFrame implements KeyListener {
 					.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
 			myLockedDoorsLabel.setText("Questions Remaining: " + GameState.getInstance().getQuestionsRemaining());
 			final String cheatsStatus;
-		    if (myCheatsEnabled) {
+		    if (AbstractQuestion.cheatsEnabled()) {
 		        cheatsStatus = "On";
 		    } else {
 		        cheatsStatus = "Off";
@@ -382,7 +383,8 @@ public final class GameView extends JFrame implements KeyListener {
 		final JMenuItem cheatsCheckBox = new JCheckBoxMenuItem("Enable Cheats");
 		
 		cheatsCheckBox.addActionListener(e -> {
-			myCheatsEnabled = !myCheatsEnabled;
+//			myCheatsEnabled = !myCheatsEnabled;
+			AbstractQuestion.toggleCheats();
 			updateTracker();
 		});
 
@@ -399,6 +401,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Starts a new game, prompting the user to select a difficulty level.
 	 */
 	public void newGame() {
+		if (AbstractQuestion.cheatsEnabled()) {
+			AbstractQuestion.toggleCheats();
+			SystemControl.getInstance().getGameView().updateTracker();
+		}
 //		System.out.println("\n\n==================================================");
 //		System.out.println("================= STARTING NEW GAME ===============");
 //		System.out.println("==================================================\n\n");
@@ -503,6 +509,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins deserialization.
 	 */
 	public static void loadGame() {
+		if(AbstractQuestion.cheatsEnabled()) {
+			AbstractQuestion.toggleCheats();
+			SystemControl.getInstance().getGameView().updateTracker();
+		}
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle(LOAD_GAME);
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", FILE_EXTENSION));
