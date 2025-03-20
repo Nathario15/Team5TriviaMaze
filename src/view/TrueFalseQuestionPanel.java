@@ -46,7 +46,6 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
      */
     private String mySelectedAnswer;
 
-
     /**
      * Constructor.
      * @param theQuestion

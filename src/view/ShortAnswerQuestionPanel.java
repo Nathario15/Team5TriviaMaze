@@ -9,13 +9,25 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import model.GameState;
 import model.ShortAnswerQuestion;
+import model.SoundManager;
 
 public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
+	
+	/**
+     * Serialization ID.
+     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * For playing sounds.
+     */
+    private static SoundManager mySoundManager = SoundManager.getInstance();
+    
     /**
      * answer field.
      */
     private JTextField myAnswerField;
+    
     /**
      * clear button.
      */
@@ -48,6 +60,7 @@ public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
             @Override
             public void actionPerformed(final ActionEvent theE) {
                 myAnswerField.setText(""); // Clears the text field
+                mySoundManager.playClickSound();
             }
         });
         answerPanel.add(myClearButton, BorderLayout.EAST);

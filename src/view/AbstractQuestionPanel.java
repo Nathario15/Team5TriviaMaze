@@ -12,6 +12,9 @@ import model.AbstractQuestion;
 import model.GameState;
 
 public abstract class AbstractQuestionPanel extends JPanel {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	/**
 	 * rows.

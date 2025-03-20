@@ -13,17 +13,30 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import model.GameState;
 import model.MultipleChoiceQuestion;
+import model.SoundManager;
 
 public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
+	
+	/**
+     * Serialization ID.
+     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * For playing sounds.
+     */
+    private static SoundManager mySoundManager = SoundManager.getInstance();
+    
     /**
      * Buttons.
      */
     private ButtonGroup myChoiceGroup;
+    
     /**
      * Choices.
      */
     private JPanel myChoicePanel;
+    
     /**
      * Clear.
      */
@@ -61,6 +74,7 @@ public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
             @Override
             public void actionPerformed(final ActionEvent theE) {
                 myChoiceGroup.clearSelection(); // Clears the radio button selection
+                mySoundManager.playClickSound();
             }
         });
         
@@ -90,7 +104,6 @@ public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
             myFeedbackLabel.setText("Incorrect! Door is now permanently blocked.");
             myFeedbackLabel.setForeground(Color.RED);
         }
-
         return isCorrect;
     }
 }
