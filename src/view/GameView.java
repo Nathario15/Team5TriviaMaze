@@ -481,6 +481,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Starts a new game, prompting the user to select a difficulty level.
 	 */
 	public void newGame() {
+		if (AbstractQuestion.cheatsEnabled()) {
+			AbstractQuestion.toggleCheats();
+			SystemControl.getInstance().getGameView().updateTracker();
+		}
 //		System.out.println("\n\n==================================================");
 //		System.out.println("================= STARTING NEW GAME ===============");
 //		System.out.println("==================================================\n\n");
