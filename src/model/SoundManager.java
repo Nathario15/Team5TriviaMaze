@@ -21,9 +21,9 @@ public final class SoundManager {
 	
 	/** Stores the values of the current background music files. */
     private static final String[] BACKGROUND_MUSIC_FILES = {
-            "sounds/background_music_1.wav",
-            "sounds/background_music_2.wav",
-            "sounds/background_music_3.wav"
+            "resources/sounds/background_music_1.wav",
+            "resources/sounds/background_music_2.wav",
+            "resources/sounds/background_music_3.wav"
     };
     
     /** Controls whether the music is enabled or not. */
@@ -125,34 +125,34 @@ public final class SoundManager {
      * Plays a click sound.
      */
     public void playClickSound() {
-        playSound("sounds/click.wav");
+        playSound("resources/sounds/click.wav");
     }
 
     /**
      * Plays the correct answer sound.
      */
     public void playCorrectAnswerSound() {
-        playSound("sounds/correct_answer.wav");
+        playSound("resources/sounds/correct_answer.wav");
     }
 
     /**
      * Plays the incorrect answer sound.
      */
     public void playIncorrectAnswerSound() {
-        playSound("sounds/incorrect_answer.wav");
+        playSound("resources/sounds/incorrect_answer.wav");
     }
 
     /**
      * Plays the win sound.
      */
     public void playWinSound() {
-        playSound("sounds/win_sound.wav");
+        playSound("resources/sounds/win_sound.wav");
     }
 
     /**
      * Plays the lose sound.
      */
     public void playLoseSound() {
-        playSound("sounds/lose_sound.wav");
+        playSound("resources/sounds/lose_sound.wav");
     }
 }
