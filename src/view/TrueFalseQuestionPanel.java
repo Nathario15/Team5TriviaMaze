@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import model.GameState;
+import model.SoundManager;
 import model.TrueFalseQuestion;
 
 public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
@@ -15,6 +16,11 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
      * Serialization ID.
      */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * For playing sounds.
+     */
+    private static SoundManager mySoundManager;
     
     /**
      * Spacing between buttons.
@@ -46,7 +52,6 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
      */
     private String mySelectedAnswer;
 
-
     /**
      * Constructor.
      * @param theQuestion
@@ -55,6 +60,7 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
     public TrueFalseQuestionPanel(final TrueFalseQuestion theQuestion, final GameState theGameState) {
         super(theQuestion, theGameState);
         createAnswerInput();
+        mySoundManager = new SoundManager();
     }
 
     @Override
@@ -73,6 +79,7 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
                 // Set the answer and submit automatically
                 mySelectedAnswer = TRUE_VALUE;
                 mySubmitButton.doClick();  // Trigger the submit button
+                mySoundManager.playClickSound();
             }
         });
 
@@ -83,6 +90,7 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
                 // Set the answer and submit automatically
                 mySelectedAnswer = FALSE_VALUE;
                 mySubmitButton.doClick();  // Trigger the submit button
+                mySoundManager.playClickSound();
             }
         });
 

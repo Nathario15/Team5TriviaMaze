@@ -29,6 +29,7 @@ import model.Direction;
 import model.GameState;
 import model.Maze;
 import model.QuestionFactory;
+import model.SoundManager;
 
 /**
  * The main view for the Trivia Maze Game.
@@ -89,7 +90,14 @@ public final class GameView extends JFrame implements KeyListener {
 	 * .sav .
 	 */
 	public static final String FILE_EXTENSION = "sav";
-	
+	/**
+	 * Cheats.
+	 */
+	public static final String CHEATS = "Enable Cheats";
+	/**
+	 * 
+	 */
+	public static final String MUSIC = "Enable Music";
 
 //	/**
 //	 * Instance.
@@ -109,6 +117,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Creates the sounds in the game.
+	 */
+	private static SoundManager mySoundManager;
 
 //	/**
 //	 * games save data.
@@ -133,7 +145,7 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * The file name for the save file.
 	 */
-	private String myFilename = ""; // TODO fix filename
+	private String myFilename = "";
 
 	/**
 	 * The panel for tracking the state of the game.
@@ -168,6 +180,7 @@ public final class GameView extends JFrame implements KeyListener {
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		mySoundManager = new SoundManager();
 
 		myCardLayout = new CardLayout();
 		myMainPanel = new JPanel(myCardLayout);
@@ -213,11 +226,26 @@ public final class GameView extends JFrame implements KeyListener {
 		final JButton aboutButton = new JButton(ABOUT);
 		final JButton exitButton = new JButton(EXIT);
 
-		newGameButton.addActionListener(_ -> newGame());
-		loadGameButton.addActionListener(_ -> loadGame());
-		instructionsButton.addActionListener(_ -> displayInstructions());
-		aboutButton.addActionListener(_ -> displayAbout());
-		exitButton.addActionListener(_ -> System.exit(0));
+		newGameButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			newGame();
+		});    
+		loadGameButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			loadGame();
+		});
+		instructionsButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			displayInstructions();
+		});
+		aboutButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			displayAbout();
+		});
+		exitButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			System.exit(0);
+		});
 
 		menuPanel.add(newGameButton);
 		menuPanel.add(loadGameButton);
@@ -240,13 +268,25 @@ public final class GameView extends JFrame implements KeyListener {
 		final JButton westButton = new JButton("West");
 		final JButton eastButton = new JButton("East");
 		
-		northButton.addActionListener(_ -> movePlayer(Direction.NORTH, myMazePanel));
+		northButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			movePlayer(Direction.NORTH, myMazePanel);
+		});
 		northButton.addKeyListener(myMazePanel);
-		southButton.addActionListener(_ -> movePlayer(Direction.SOUTH, myMazePanel));
+		southButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			movePlayer(Direction.SOUTH, myMazePanel);
+		});
 		southButton.addKeyListener(myMazePanel);
-		westButton.addActionListener(_ -> movePlayer(Direction.WEST, myMazePanel));
+		westButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			movePlayer(Direction.WEST, myMazePanel);
+		});
 		westButton.addKeyListener(myMazePanel);
-		eastButton.addActionListener(_ -> movePlayer(Direction.EAST, myMazePanel));
+		eastButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
+			movePlayer(Direction.EAST, myMazePanel);
+		});
 		eastButton.addKeyListener(myMazePanel);
 
 		controlPanel.add(northButton);
@@ -316,6 +356,7 @@ public final class GameView extends JFrame implements KeyListener {
 
 		final JButton backButton = new JButton(BACK);
 		backButton.addActionListener(_ -> {
+			mySoundManager.playClickSound();
 			if (myInGame) {
 				myCardLayout.show(myMainPanel, GAME);
 			} else {
@@ -337,6 +378,7 @@ public final class GameView extends JFrame implements KeyListener {
 
 		final JButton backBtn = new JButton(BACK);
 		backBtn.addActionListener(_ -> {
+			mySoundManager.playClickSound();
 			if (myInGame) {
 				myCardLayout.show(myMainPanel, GAME);
 			} else {
@@ -350,51 +392,89 @@ public final class GameView extends JFrame implements KeyListener {
 
 	@SuppressWarnings("unused")
 	private void addMenuBar() {
+		// Create the menu bar
 		final JMenuBar menuBar = new JMenuBar();
 
+		// Add the file button
 		final JMenu fileMenu = new JMenu("File");
 		final JMenuItem saveGameItem = new JMenuItem(SAVE_GAME);
 		final JMenuItem loadGameItem = new JMenuItem(LOAD_GAME);
 		final JMenuItem newGameItem = new JMenuItem(NEW_GAME);
 		final JMenuItem exitGameItem = new JMenuItem(EXIT);
 
-		saveGameItem.addActionListener(e -> saveGame());
-		loadGameItem.addActionListener(e -> loadGame());
-		newGameItem.addActionListener(e -> newGame());
-		exitGameItem.addActionListener(e -> returnToMainMenu());
+		saveGameItem.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			saveGame();
+		});
+		loadGameItem.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			loadGame();
+		});
+		newGameItem.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			newGame();
+		});
+		exitGameItem.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			returnToMainMenu();
+			mySoundManager.stopBackgroundMusic();
+		});
 
 		fileMenu.add(saveGameItem);
 		fileMenu.add(loadGameItem);
 		fileMenu.add(newGameItem);
 		fileMenu.add(exitGameItem);
 
+		// Add the help button
 		final JMenu helpMenu = new JMenu("Help");
 		final JMenuItem instructionsGameItem = new JMenuItem(INSTRUCTIONS);
 		final JMenuItem aboutGameItem = new JMenuItem(ABOUT);
 
-		instructionsGameItem.addActionListener(e -> displayInstructions());
-		aboutGameItem.addActionListener(e -> displayAbout());
+		instructionsGameItem.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			displayInstructions();
+		});
+		aboutGameItem.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			displayAbout();
+		});
 		
 		helpMenu.add(instructionsGameItem);
 		helpMenu.add(aboutGameItem);
 		
+		// Add the musics button
+		final JMenu musicMenu = new JMenu("Music");
+		final JMenuItem musicToggle = new JCheckBoxMenuItem(MUSIC, mySoundManager.getMusicEnabled());
+		
+		musicToggle.addActionListener(e -> {
+			mySoundManager.playClickSound();
+			mySoundManager.toggleMusic();
+			musicToggle.setSelected(mySoundManager.getMusicEnabled());
+		});
+		
+		musicMenu.add(musicToggle);
+		
+		// Add the cheats button
 		final JMenu cheatsMenu = new JMenu("Cheats");
-		final JMenuItem cheatsCheckBox = new JCheckBoxMenuItem("Enable Cheats");
+		final JMenuItem cheatsCheckBox = new JCheckBoxMenuItem(CHEATS);
 		
 		cheatsCheckBox.addActionListener(e -> {
+			mySoundManager.playClickSound();
 			myCheatsEnabled = !myCheatsEnabled;
 			updateTracker();
 		});
 
 		cheatsMenu.add(cheatsCheckBox);
 		
+		// Add the menu options to the menu bar
 		menuBar.add(fileMenu);
 		menuBar.add(helpMenu);
+		menuBar.add(musicMenu);
 		menuBar.add(cheatsMenu);
 
 		setJMenuBar(menuBar);
 	}
-
+	
 	/**
 	 * Starts a new game, prompting the user to select a difficulty level.
 	 */
@@ -413,8 +493,10 @@ public final class GameView extends JFrame implements KeyListener {
 		final String[] difficulties = { "EASY", "MEDIUM", "HARD" };
 		final String selectedDifficulty = (String) JOptionPane.showInputDialog(this, "Select Difficulty:", NEW_GAME,
 				JOptionPane.QUESTION_MESSAGE, null, difficulties, difficulties[0]);
-
 		if (selectedDifficulty != null) {
+			// Click sound for pressing OK on difficulty message dialog
+			mySoundManager.playClickSound();
+			
 			// Reset player position to center of maze
 			Maze.reset();
 
@@ -441,9 +523,16 @@ public final class GameView extends JFrame implements KeyListener {
 
 			// Update tracker panel
 			updateTracker();
+			
+			// Start the background music
+			mySoundManager.playBackgroundMusic();
 
 			JOptionPane.showMessageDialog(this, "Game started on " + selectedDifficulty + " difficulty.");
+			
+			// Click sound for pressing OK on 'game started on' the message dialog
+			mySoundManager.playClickSound();
 		}
+		mySoundManager.playClickSound();
 	}
 
 	/**
@@ -460,17 +549,22 @@ public final class GameView extends JFrame implements KeyListener {
 		System.out.println("GameView.checkGameState :" + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
+			mySoundManager.playLoseSound();
 			System.out.println("GameView.checkGameState: lose cond");
 			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", GAME_OVER,
 					JOptionPane.ERROR_MESSAGE);
+			
+			mySoundManager.playClickSound();
 
 			// Ask if player wants to start a new game
 			final int response = JOptionPane.showConfirmDialog(this, "Would you like to start a new game?", GAME_OVER,
 					JOptionPane.YES_NO_OPTION);
 
 			if (response == JOptionPane.YES_OPTION) {
+				mySoundManager.playClickSound();
 				newGame();
 			} else {
+				mySoundManager.playClickSound();
 				returnToMainMenu();
 			}
 		}
@@ -513,18 +607,22 @@ public final class GameView extends JFrame implements KeyListener {
 			SystemControl.getInstance().getGameView().myFilename = fileToLoad.getAbsolutePath();
 
 			try {
+				mySoundManager.playClickSound();
 				GameState.loadFromFile(SystemControl.getInstance().getGameView().myFilename);
 				SystemControl.getInstance().getGameView().myInGame = true;
 				SystemControl.getInstance().getGameView().addMenuBar();
 				SystemControl.getInstance().getGameView().myCardLayout.show(SystemControl.getInstance().getGameView().myMainPanel, GAME);
 				myMazePanel.repaint();
+				mySoundManager.playBackgroundMusic();
 				SystemControl.getInstance().getGameView().updateTracker();
 				JOptionPane.showMessageDialog(SystemControl.getInstance().getGameView(), "Game loaded successfully!");
+				mySoundManager.playClickSound();
 			} catch (final IOException | ClassNotFoundException e) {
 				JOptionPane.showMessageDialog(SystemControl.getInstance().getGameView(), "Error loading game: " + e.getMessage(), "Load Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		mySoundManager.playClickSound();
 		SystemControl.getInstance().getGameView().updateTracker();
 	}
 

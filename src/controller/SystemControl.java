@@ -20,6 +20,7 @@ import model.MultipleChoiceQuestion;
 import model.QuestionFactory;
 import model.Room;
 import model.ShortAnswerQuestion;
+import model.SoundManager;
 import model.TrueFalseQuestion;
 import view.AbstractQuestionPanel;
 import view.MultipleChoiceQuestionPanel;
@@ -46,6 +47,9 @@ public final class SystemControl {
     /** Singleton instance. */
     private static SystemControl myInstance;
     
+    /** Reference to the sound manager. */
+    private static SoundManager mySoundManager;
+    
     /** Database manager for question retrieval. */
     private final DatabaseManager myDatabaseManager;
     
@@ -64,6 +68,7 @@ public final class SystemControl {
     private SystemControl() {
         myDatabaseManager = DatabaseManager.getInstance();
         myGameActive = false;
+        mySoundManager = new SoundManager();
     }
     
     /**
@@ -339,7 +344,8 @@ public final class SystemControl {
         
         System.out.println("Game won - player escaped the maze");
         
-        // Show victory message directly
+        // Show victory message directly, play win sound
+        mySoundManager.playWinSound();
         JOptionPane.showMessageDialog(null, 
             "Congratulations! You've successfully escaped the Minecraft Trivia Maze!", 
             "Victory", JOptionPane.INFORMATION_MESSAGE);
@@ -423,15 +429,19 @@ public final class SystemControl {
      */
     private static void handleQuestionResult(final boolean theCorrect, final JDialog theDialog) {
         if (theCorrect) {
+        	mySoundManager.playCorrectAnswerSound();
             JOptionPane.showMessageDialog(theDialog, 
                     "Correct! The door is now open.", "Success", 
                     JOptionPane.INFORMATION_MESSAGE);
+            mySoundManager.playClickSound();
             GameState.getInstance().addCorrect();
             GameState.getInstance().removeQuestion();
         } else {
+        	mySoundManager.playIncorrectAnswerSound();
             JOptionPane.showMessageDialog(theDialog, 
                     "Incorrect! The door is now permanently blocked.", "Failed", 
                     JOptionPane.ERROR_MESSAGE);
+            mySoundManager.playClickSound();
             GameState.getInstance().addIncorrect();
             GameState.getInstance().removeQuestion();
         }	
