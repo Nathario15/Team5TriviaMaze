@@ -463,6 +463,7 @@ public final class GameView extends JFrame implements KeyListener {
 //			myCheatsEnabled = !myCheatsEnabled;
 			AbstractQuestion.toggleCheats(cheatsCheckBox.isSelected());
 			updateTracker();
+		    myMazePanel.repaint(); 
 		});
 
 		cheatsMenu.add(cheatsCheckBox);
