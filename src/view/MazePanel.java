@@ -9,10 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.nio.file.Paths;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-
 import model.AbstractQuestion;
 import model.Direction;
 import model.DoorState;
@@ -121,7 +119,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		final Graphics2D g2d = (Graphics2D) theG;
 		final Image m;
 //		System.out.println(Paths.get("").toAbsolutePath());
-		m = new ImageIcon("GrassBlock.jpg").getImage();
+		m = new ImageIcon("resources/images/GrassBlock.jpg").getImage();
 //		System.out.println(m);
 //		g2d.drawImage(m, 0, 0, getWidth(), getHeight(), this);
 		super.paintComponent(g2d);
@@ -180,9 +178,9 @@ public final class MazePanel extends JPanel implements KeyListener {
 
 		final Image player;
 		if (AbstractQuestion.cheatsEnabled()) {
-			player = new ImageIcon("zombie.jpg").getImage();
+			player = new ImageIcon("resources/images/zombie.jpg").getImage();
 		} else {
-			player = new ImageIcon("steve-head.jpg").getImage();
+			player = new ImageIcon("resources/images/steve-head.jpg").getImage();
 		}
 		g2d.drawImage(player, playerX * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH,
 				playerY * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH, CELL_SIZE - PLAYER_SIZE_REDUCTION,
