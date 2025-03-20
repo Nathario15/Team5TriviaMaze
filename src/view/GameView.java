@@ -576,6 +576,7 @@ public final class GameView extends JFrame implements KeyListener {
 				newGame();
 			} else {
 				mySoundManager.playClickSound();
+				mySoundManager.stopBackgroundMusic();
 				returnToMainMenu();
 			}
 		}

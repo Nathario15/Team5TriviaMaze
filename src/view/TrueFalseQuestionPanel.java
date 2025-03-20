@@ -18,11 +18,6 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
     private static final long serialVersionUID = 1L;
     
     /**
-     * For playing sounds.
-     */
-    private static SoundManager mySoundManager;
-    
-    /**
      * Spacing between buttons.
      */
     private static final int BUTTON_SPACING = 10;
@@ -60,7 +55,6 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
     public TrueFalseQuestionPanel(final TrueFalseQuestion theQuestion, final GameState theGameState) {
         super(theQuestion, theGameState);
         createAnswerInput();
-        mySoundManager = new SoundManager();
     }
 
     @Override
@@ -79,7 +73,6 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
                 // Set the answer and submit automatically
                 mySelectedAnswer = TRUE_VALUE;
                 mySubmitButton.doClick();  // Trigger the submit button
-                mySoundManager.playClickSound();
             }
         });
 
@@ -90,7 +83,6 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
                 // Set the answer and submit automatically
                 mySelectedAnswer = FALSE_VALUE;
                 mySubmitButton.doClick();  // Trigger the submit button
-                mySoundManager.playClickSound();
             }
         });
 
