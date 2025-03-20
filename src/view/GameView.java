@@ -23,6 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import model.AbstractQuestion;
 import model.DatabaseManager;
 import model.Difficulty;
 import model.Direction;
@@ -138,10 +140,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Whether or not the player is currently in game.
 	 */
 	private boolean myInGame;
-	/**
-	 * Whether or not cheats are enabled.
-	 */
-	private boolean myCheatsEnabled;
+//	/**
+//	 * Whether or not cheats are enabled.
+//	 */
+//	private boolean myCheatsEnabled;
 	/**
 	 * The file name for the save file.
 	 */
@@ -332,7 +334,7 @@ public final class GameView extends JFrame implements KeyListener {
 					.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
 			myLockedDoorsLabel.setText("Questions Remaining: " + GameState.getInstance().getQuestionsRemaining());
 			final String cheatsStatus;
-		    if (myCheatsEnabled) {
+		    if (AbstractQuestion.cheatsEnabled()) {
 		        cheatsStatus = "On";
 		    } else {
 		        cheatsStatus = "Off";
@@ -460,7 +462,8 @@ public final class GameView extends JFrame implements KeyListener {
 		
 		cheatsCheckBox.addActionListener(e -> {
 			mySoundManager.playClickSound();
-			myCheatsEnabled = !myCheatsEnabled;
+//			myCheatsEnabled = !myCheatsEnabled;
+			AbstractQuestion.toggleCheats();
 			updateTracker();
 		});
 
@@ -546,7 +549,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Checks for win/loss conditions after a move.
 	 */
 	private void checkGameState() {
-		System.out.println("GameView.checkGameState :" + SystemControl.getInstance().checkLoseCondition());
+		System.out.println("GameView.checkGameState: " + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			mySoundManager.playLoseSound();
