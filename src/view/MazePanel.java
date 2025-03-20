@@ -82,6 +82,11 @@ public final class MazePanel extends JPanel implements KeyListener {
     private static final int CELL_BORDER_WIDTH = 2; //was 1
     
     /**
+     * Width of outer borders.
+     */
+    private static final int OUTER_BORDER_WIDTH = 7; //was 0
+    
+    /**
      * MineCraft Dirt.
      */
     private static final Color DIRT = new Color(146, 108, 77);
@@ -118,16 +123,20 @@ public final class MazePanel extends JPanel implements KeyListener {
 			for (int col = 0; col < MAP_SIZE; col++) {
 				// Fill each room with light gray
 				theG.setColor(DIRT);
-				theG.fillRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+				theG.fillRect(col * CELL_SIZE + OUTER_BORDER_WIDTH, row * CELL_SIZE  + OUTER_BORDER_WIDTH, CELL_SIZE, CELL_SIZE);
 
 				// Draw standard green grid lines
 				theG.setColor(GRASS);
 				for (int i = 0; i < CELL_BORDER_WIDTH; i++) {
-					theG.drawRect(col * CELL_SIZE + i, row * CELL_SIZE + i, CELL_SIZE - 2 * i, CELL_SIZE - 2 * i);
+					theG.drawRect(col * CELL_SIZE + OUTER_BORDER_WIDTH + i, row * CELL_SIZE + OUTER_BORDER_WIDTH + i, 
+							CELL_SIZE - 2 * i, CELL_SIZE - 2 * i);
 				}
 			}
 		}
-
+		theG.setColor(GRASS);
+		for (int i = 0; i < OUTER_BORDER_WIDTH; i++) {
+			theG.drawRect(i, i, MAP_SIZE * CELL_SIZE - 2 * i + OUTER_BORDER_WIDTH, MAP_SIZE * CELL_SIZE - 2 * i + OUTER_BORDER_WIDTH);
+		}
 		// Get the current room and its coordinates
 		final Room currentRoom = Maze.getRoom();
 		final int playerX = Maze.getDisplayX();
@@ -154,16 +163,16 @@ public final class MazePanel extends JPanel implements KeyListener {
 
             // Highlight current room
             theG.setColor(new Color(HIGHLIGHT_RED_GREEN, HIGHLIGHT_RED_GREEN, HIGHLIGHT_BLUE)); // Light blue highlight
-            theG.fillRect(playerX * CELL_SIZE + ROOM_HIGHLIGHT_INSET, 
-                          playerY * CELL_SIZE + ROOM_HIGHLIGHT_INSET, 
+            theG.fillRect(playerX * CELL_SIZE + ROOM_HIGHLIGHT_INSET + OUTER_BORDER_WIDTH, 
+                          playerY * CELL_SIZE + ROOM_HIGHLIGHT_INSET + OUTER_BORDER_WIDTH, 
                           CELL_SIZE - ROOM_SIZE_REDUCTION, 
                           CELL_SIZE - ROOM_SIZE_REDUCTION);
 		}
 
         // Draw Player Position
         theG.setColor(Color.RED);
-        theG.fillOval(playerX * CELL_SIZE + PLAYER_INSET, 
-                      playerY * CELL_SIZE + PLAYER_INSET, 
+        theG.fillOval(playerX * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH, 
+                      playerY * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH, 
                       CELL_SIZE - PLAYER_SIZE_REDUCTION, 
                       CELL_SIZE - PLAYER_SIZE_REDUCTION);
 	}
@@ -189,8 +198,8 @@ public final class MazePanel extends JPanel implements KeyListener {
 			theG.setColor(Color.BLACK);
 		}
 
-		final int x = theX * CELL_SIZE;
-		final int y = theY * CELL_SIZE;
+		final int x = theX * CELL_SIZE + OUTER_BORDER_WIDTH;
+		final int y = theY * CELL_SIZE + OUTER_BORDER_WIDTH;
 
 		// Draw the door on the appropriate side
 		if (theDirection == Direction.NORTH) {
