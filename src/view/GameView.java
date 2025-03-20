@@ -509,7 +509,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins deserialization.
 	 */
 	public static void loadGame() {
-		if(AbstractQuestion.cheatsEnabled()) {
+		if (AbstractQuestion.cheatsEnabled()) {
 			AbstractQuestion.toggleCheats();
 			SystemControl.getInstance().getGameView().updateTracker();
 		}
