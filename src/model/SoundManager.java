@@ -95,7 +95,6 @@ public final class SoundManager {
     public void stopBackgroundMusic() {
         if (myCurrentBackgroundMusic != null && myCurrentBackgroundMusic.isRunning()) {
             myCurrentBackgroundMusic.stop();
-        } else {
         }
     }
     
