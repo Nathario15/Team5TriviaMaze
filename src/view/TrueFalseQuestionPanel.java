@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import model.GameState;
-import model.SoundManager;
 import model.TrueFalseQuestion;
 
 public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
