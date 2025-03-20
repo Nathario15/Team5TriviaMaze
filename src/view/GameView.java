@@ -692,6 +692,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * returns to main menu.
 	 */
 	public void returnToMainMenu() {
+        mySoundManager.stopBackgroundMusic();
 //		System.out.println("\n\n==================================================");
 //		System.out.println("================ RETURNING TO MENU ================");
 //		System.out.println("==================================================\n\n");
