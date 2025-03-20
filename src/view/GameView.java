@@ -436,6 +436,11 @@ public final class GameView extends JFrame implements KeyListener {
 
 			// Initialize question factory
 			QuestionFactory.intializeQuestionFactory();
+			
+			// Initialize GameState position to match Maze's initial position
+			final int newX = Maze.getDisplayX() + 1; // Convert from 0-based to 1-based coordinates
+			final int newY = Maze.getDisplayY() + 1; // Convert from 0-based to 1-based coordinates
+			GameState.getInstance().setCurrentPosition(newX, newY);
 
 			// Update UI state
 			myInGame = true;
@@ -463,7 +468,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Checks for win/loss conditions after a move.
 	 */
 	private void checkGameState() {
-		System.out.println("GameView.checkGameState :" + SystemControl.getInstance().checkLoseCondition());
+		System.out.println("GameView.checkGameState: " + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			System.out.println("GameView.checkGameState: lose cond");
@@ -509,7 +514,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins deserialization.
 	 */
 	public static void loadGame() {
-		if(AbstractQuestion.cheatsEnabled()) {
+		if (AbstractQuestion.cheatsEnabled()) {
 			AbstractQuestion.toggleCheats();
 			SystemControl.getInstance().getGameView().updateTracker();
 		}
