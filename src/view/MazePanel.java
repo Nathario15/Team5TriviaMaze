@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.nio.file.Paths;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import model.Direction;
@@ -84,17 +85,19 @@ public final class MazePanel extends JPanel implements KeyListener {
     /**
      * Width of outer borders.
      */
-    private static final int OUTER_BORDER_WIDTH = 7; //was 0
+    private static final int OUTER_BORDER_WIDTH = 3; //was 0
     
     /**
      * MineCraft Dirt.
      */
-    private static final Color DIRT = new Color(146, 108, 77);
+    @SuppressWarnings("unused")
+	private static final Color DIRT = new Color(146, 108, 77);
     
     /**
      * MineCraft Grass (used for cell borders).
      */
-    private static final Color GRASS = new Color(172, 224, 119);
+    @SuppressWarnings("unused")
+	private static final Color GRASS = new Color(172, 224, 119);
 
     
 	/**
@@ -111,30 +114,34 @@ public final class MazePanel extends JPanel implements KeyListener {
                 + Maze.getDisplayX() + "," + Maze.getDisplayY() 
                 + ") - These are offset from internal coords.");
 		drawMaze(theG);
+		
 	}
 
 	private void drawMaze(final Graphics theG) {
 		final Graphics2D g2d = (Graphics2D) theG;
 		final Image m;
-		m = new ImageIcon("/Team5TriviaMaze/14376136-pack_xl.jpg").getImage();
-		g2d.drawImage(m, 0, 0, getWidth(), getHeight(), this);
+		System.out.println(Paths.get("").toAbsolutePath());
+		m = new ImageIcon("GrassBlock.jpg").getImage();
+		System.out.println(m);
+//		g2d.drawImage(m, 0, 0, getWidth(), getHeight(), this);
 		super.paintComponent(g2d);
+		g2d.drawImage(m, 0, 0, MAP_SIZE * CELL_SIZE + OUTER_BORDER_WIDTH, MAP_SIZE * CELL_SIZE + OUTER_BORDER_WIDTH, this);
 		// First draw all cells with their standard grid
 		for (int row = 0; row < MAP_SIZE; row++) {
 			for (int col = 0; col < MAP_SIZE; col++) {
 				// Fill each room with light gray
-				theG.setColor(DIRT);
-				theG.fillRect(col * CELL_SIZE + OUTER_BORDER_WIDTH, row * CELL_SIZE  + OUTER_BORDER_WIDTH, CELL_SIZE, CELL_SIZE);
+//				theG.setColor(DIRT);
+//				theG.fillRect(col * CELL_SIZE + OUTER_BORDER_WIDTH, row * CELL_SIZE  + OUTER_BORDER_WIDTH, CELL_SIZE, CELL_SIZE);
 
 				// Draw standard green grid lines
-				theG.setColor(GRASS);
+				theG.setColor(Color.BLACK);
 				for (int i = 0; i < CELL_BORDER_WIDTH; i++) {
 					theG.drawRect(col * CELL_SIZE + OUTER_BORDER_WIDTH + i, row * CELL_SIZE + OUTER_BORDER_WIDTH + i, 
 							CELL_SIZE - 2 * i, CELL_SIZE - 2 * i);
 				}
 			}
 		}
-		theG.setColor(GRASS);
+		theG.setColor(Color.BLACK);
 		for (int i = 0; i < OUTER_BORDER_WIDTH; i++) {
 			theG.drawRect(i, i, MAP_SIZE * CELL_SIZE - 2 * i + OUTER_BORDER_WIDTH, MAP_SIZE * CELL_SIZE - 2 * i + OUTER_BORDER_WIDTH);
 		}
