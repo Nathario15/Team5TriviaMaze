@@ -461,7 +461,7 @@ public final class GameView extends JFrame implements KeyListener {
 		cheatsCheckBox.addActionListener(e -> {
 			mySoundManager.playClickSound();
 //			myCheatsEnabled = !myCheatsEnabled;
-			AbstractQuestion.toggleCheats();
+			AbstractQuestion.toggleCheats(cheatsCheckBox.isSelected());
 			updateTracker();
 		});
 
@@ -480,10 +480,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Starts a new game, prompting the user to select a difficulty level.
 	 */
 	public void newGame() {
-		if (AbstractQuestion.cheatsEnabled()) {
-			AbstractQuestion.toggleCheats();
-			SystemControl.getInstance().getGameView().updateTracker();
-		}
+		AbstractQuestion.toggleCheats(false);
 //		System.out.println("\n\n==================================================");
 //		System.out.println("================= STARTING NEW GAME ===============");
 //		System.out.println("==================================================\n\n");
@@ -610,10 +607,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins deserialization.
 	 */
 	public static void loadGame() {
-		if (AbstractQuestion.cheatsEnabled()) {
-			AbstractQuestion.toggleCheats();
-			SystemControl.getInstance().getGameView().updateTracker();
-		}
+		AbstractQuestion.toggleCheats(false);
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle(LOAD_GAME);
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", FILE_EXTENSION));
