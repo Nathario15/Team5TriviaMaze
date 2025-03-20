@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import model.AbstractQuestion;
 import model.DatabaseManager;
 import model.Difficulty;
