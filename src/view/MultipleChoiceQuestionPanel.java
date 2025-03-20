@@ -25,7 +25,7 @@ public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
     /**
      * For playing sounds.
      */
-    private static SoundManager mySoundManager;
+    private static SoundManager mySoundManager = SoundManager.getInstance();
     
     /**
      * Buttons.
@@ -50,7 +50,6 @@ public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
     public MultipleChoiceQuestionPanel(final MultipleChoiceQuestion theQuestion, final GameState theGameState) {
         super(theQuestion, theGameState);
         createAnswerInput();
-        mySoundManager = new SoundManager();
     }
 
     @Override

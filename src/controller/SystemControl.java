@@ -48,7 +48,7 @@ public final class SystemControl {
     private static SystemControl myInstance;
     
     /** Reference to the sound manager. */
-    private static SoundManager mySoundManager;
+    private static SoundManager mySoundManager = SoundManager.getInstance();
     
     /** Database manager for question retrieval. */
     private final DatabaseManager myDatabaseManager;
@@ -68,7 +68,6 @@ public final class SystemControl {
     private SystemControl() {
         myDatabaseManager = DatabaseManager.getInstance();
         myGameActive = false;
-        mySoundManager = new SoundManager();
     }
     
     /**
@@ -346,10 +345,10 @@ public final class SystemControl {
         
         // Show victory message directly, play win sound
         mySoundManager.playWinSound();
+        mySoundManager.stopBackgroundMusic();
         JOptionPane.showMessageDialog(null, 
             "Congratulations! You've successfully escaped the Minecraft Trivia Maze!", 
             "Victory", JOptionPane.INFORMATION_MESSAGE);
-        
         // Use the direct reference to return to main menu
         if (myGameView != null) {
             System.out.println("Calling returnToMainMenu() on GameView");

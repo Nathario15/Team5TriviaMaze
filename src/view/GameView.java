@@ -121,7 +121,7 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * Creates the sounds in the game.
 	 */
-	private static SoundManager mySoundManager;
+	private static SoundManager mySoundManager = SoundManager.getInstance();
 
 //	/**
 //	 * games save data.
@@ -181,7 +181,6 @@ public final class GameView extends JFrame implements KeyListener {
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		mySoundManager = new SoundManager();
 
 		myCardLayout = new CardLayout();
 		myMainPanel = new JPanel(myCardLayout);
@@ -550,6 +549,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * end game.
 	 */
 	public void endGame() {
+        mySoundManager.stopBackgroundMusic();
 		this.newGame();
 	}
 
@@ -561,6 +561,7 @@ public final class GameView extends JFrame implements KeyListener {
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			mySoundManager.playLoseSound();
+			mySoundManager.stopBackgroundMusic();
 			System.out.println("GameView.checkGameState: lose cond");
 			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", GAME_OVER,
 					JOptionPane.ERROR_MESSAGE);

@@ -21,7 +21,7 @@ public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
     /**
      * For playing sounds.
      */
-    private static SoundManager mySoundManager;
+    private static SoundManager mySoundManager = SoundManager.getInstance();
     
     /**
      * answer field.
@@ -41,7 +41,6 @@ public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
     public ShortAnswerQuestionPanel(final ShortAnswerQuestion theQuestion, final GameState theGameState) {
         super(theQuestion, theGameState);
         createAnswerInput();
-        mySoundManager = new SoundManager();
     }
 
     @Override

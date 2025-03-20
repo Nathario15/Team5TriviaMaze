@@ -14,7 +14,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author Team 5
  * @version 1.0
  */
-public class SoundManager {
+public final class SoundManager {
+	
+	/** Singleton instance of SoundManager. */
+	private static SoundManager instance;
 	
 	/** Stores the values of the current background music files. */
     private static final String[] BACKGROUND_MUSIC_FILES = {
@@ -28,6 +31,22 @@ public class SoundManager {
 	
 	/** Represents the current background music playing. */
     private Clip myCurrentBackgroundMusic;
+    
+    private SoundManager() {
+        System.out.println("SoundManager instance created: " + this);
+    }
+
+    /**
+     * Gets the singleton instance of SoundManager.
+     * 
+     * @return instance
+     */
+    public static SoundManager getInstance() {
+        if (instance == null) {
+            instance = new SoundManager();
+        }
+        return instance;
+    }
 
     /**
      * Method that helps with the functionality of playing a sound.
@@ -52,21 +71,16 @@ public class SoundManager {
             return;
         }
         try {
-            // Stop any current music first
-            stopBackgroundMusic();
+            stopBackgroundMusic(); // Stop any current music first
 
-            // Randomly select a background music track
             final String selectedMusic = BACKGROUND_MUSIC_FILES[new Random().nextInt(BACKGROUND_MUSIC_FILES.length)];
             final File musicFile = new File(selectedMusic);
 
-            // Create an audio stream from the selected file
             final AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
 
-            // Load the audio data into a Clip object
             myCurrentBackgroundMusic = AudioSystem.getClip();
             myCurrentBackgroundMusic.open(audioStream);
 
-            // Loop the music infinitely (or until stopped)
             myCurrentBackgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
             myCurrentBackgroundMusic.start();
 
@@ -74,13 +88,14 @@ public class SoundManager {
             e.printStackTrace();
         }
     }
-    
+
     /**
-     * Stops the background music.
+     * Stops background music.
      */
     public void stopBackgroundMusic() {
         if (myCurrentBackgroundMusic != null && myCurrentBackgroundMusic.isRunning()) {
-        	myCurrentBackgroundMusic.stop();
+            myCurrentBackgroundMusic.stop();
+        } else {
         }
     }
     
