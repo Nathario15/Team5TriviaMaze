@@ -119,7 +119,13 @@ public final class MazePanel extends JPanel implements KeyListener {
 		final Graphics2D g2d = (Graphics2D) theG;
 		final Image m;
 //		System.out.println(Paths.get("").toAbsolutePath());
-		m = new ImageIcon("resources/images/GrassBlock.jpg").getImage();
+		
+	    // Choose background image based on cheat status
+	    if (AbstractQuestion.cheatsEnabled()) {
+	        m = new ImageIcon("resources/images/Jack-Black.png").getImage();
+	    } else {
+	        m = new ImageIcon("resources/images/GrassBlock.jpg").getImage();
+	    }
 //		System.out.println(m);
 //		g2d.drawImage(m, 0, 0, getWidth(), getHeight(), this);
 		super.paintComponent(g2d);
