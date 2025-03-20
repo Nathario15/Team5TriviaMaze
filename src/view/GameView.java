@@ -514,6 +514,11 @@ public final class GameView extends JFrame implements KeyListener {
 
 			// Initialize question factory
 			QuestionFactory.intializeQuestionFactory();
+			
+			// Initialize GameState position to match Maze's initial position
+			final int newX = Maze.getDisplayX() + 1; // Convert from 0-based to 1-based coordinates
+			final int newY = Maze.getDisplayY() + 1; // Convert from 0-based to 1-based coordinates
+			GameState.getInstance().setCurrentPosition(newX, newY);
 
 			// Update UI state
 			myInGame = true;
@@ -599,6 +604,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * begins deserialization.
 	 */
 	public static void loadGame() {
+		if (AbstractQuestion.cheatsEnabled()) {
+			AbstractQuestion.toggleCheats();
+			SystemControl.getInstance().getGameView().updateTracker();
+		}
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle(LOAD_GAME);
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Game Save Files (*.sav)", FILE_EXTENSION));
