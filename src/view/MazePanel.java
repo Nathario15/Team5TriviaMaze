@@ -107,8 +107,9 @@ public final class MazePanel extends JPanel implements KeyListener {
 	@Override
 	protected void paintComponent(final Graphics theG) {
 		super.paintComponent(theG);
-		System.out.println(
-				"MazePanel repainting. Player position: (" + Maze.getDisplayX() + "," + Maze.getDisplayY() + ")");
+		System.out.println("MazePanel repainting. Using display coordinates: (" 
+                + Maze.getDisplayX() + "," + Maze.getDisplayY() 
+                + ") - These are offset from internal coords.");
 		drawMaze(theG);
 	}
 

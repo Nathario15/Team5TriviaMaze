@@ -318,7 +318,7 @@ public final class Maze /* implements Serializable */ {
 		// Reset exit flag
 		myExitAchieved = false;
 
-		System.out.println("Maze fully reset - player at position (" + x + COMMA + y + PARENTHESIS_CLOSE);
+		System.out.println("Maze fully reset - internal coordinates: (" + x + COMMA + y + PARENTHESIS_CLOSE);
 
 		// Reset all rooms (recreate the map)
 		MAP = new Room[][] {
