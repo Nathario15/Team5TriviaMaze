@@ -4,8 +4,6 @@ import controller.SystemControl;
 import java.io.Serializable;
 import java.util.EnumMap;
 
-
-
 /**
  * A room, contains a question you have to answer, and a door that will open.
  * 
@@ -14,7 +12,7 @@ import java.util.EnumMap;
  */
 public class Room implements Serializable {
 	/**
-	 * 
+	 * Serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 	/**

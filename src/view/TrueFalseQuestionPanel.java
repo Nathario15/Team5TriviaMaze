@@ -9,6 +9,12 @@ import javax.swing.JPanel;
 import model.GameState;
 import model.TrueFalseQuestion;
 
+/**
+ * The true false question panel implementation.
+ * 
+ * @author Team 5
+ * @version 1.0
+ */
 public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
 	
     /**
@@ -56,6 +62,9 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
         createAnswerInput();
     }
 
+    /**
+     * Sets up the answer input.
+     */
     @Override
     protected void createAnswerInput() {
         // Set up the layout for True/False buttons
@@ -93,6 +102,9 @@ public final class TrueFalseQuestionPanel extends AbstractQuestionPanel {
         mySubmitButton.setVisible(false);
     }
 
+    /**
+     * Checks if the user typed a correct answer.
+     */
     @Override
     public boolean checkAnswer() {
         // Check if the selected answer is correct

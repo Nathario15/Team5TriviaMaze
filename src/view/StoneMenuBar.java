@@ -5,6 +5,11 @@ import java.awt.Image;
 import javax.swing.JMenuBar;
 import model.ResourceManager;
 
+/**
+ * Implements the Stone texture onto a JMenuBar.
+ * @author Team 5
+ * @version 1.0
+ */
 public class StoneMenuBar extends JMenuBar {
     /** Serialization. */
     private static final long serialVersionUID = 1L;
@@ -19,6 +24,9 @@ public class StoneMenuBar extends JMenuBar {
     	myTexture = ResourceManager.getInstance().loadImage(TEXTURE_PATH);
     }
 
+    /**
+     * Paints the texture onto the JMenuBar.
+     */
     @Override
     protected void paintComponent(final Graphics theG) {
         super.paintComponent(theG);

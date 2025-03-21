@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public final class QuestionFactory implements Serializable {
 	/**
-	 * 
+	 * Serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -19,8 +19,10 @@ public final class QuestionFactory implements Serializable {
 	 */
 	private static ArrayList<AbstractQuestion> myQuestions;
 
+	/**
+	 * Makes constructor private.
+	 */
 	private QuestionFactory() {
-
 	};
 
 	/**

@@ -7,7 +7,7 @@ package model;
  */
 public class TrueFalseQuestion extends AbstractQuestion {
 	/**
-	 * 
+	 * Serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 

@@ -7,6 +7,11 @@ import java.awt.Image;
 import javax.swing.JMenuItem;
 import model.ResourceManager;
 
+/**
+ * Implements the Stone texture onto a JMenuItem.
+ * @author Team 5
+ * @version 1.0
+ */
 public class StoneMenuItem extends JMenuItem {
     /** Serialization. */
     private static final long serialVersionUID = 1L;
@@ -23,6 +28,9 @@ public class StoneMenuItem extends JMenuItem {
         setForeground(Color.WHITE); // Set text color to white
     }
 
+    /**
+     * Paints the texture onto the JMenuItem.
+     */
     @Override
     protected void paintComponent(final Graphics theG) {
         super.paintComponent(theG);
@@ -43,6 +51,10 @@ public class StoneMenuItem extends JMenuItem {
         theG.drawString(text, x, y);
     }
     
+    /**
+     * Loads the custom font as desired.
+     * @return custom font.
+     */
     private static Font loadCustomFont() {
         return ResourceManager.getInstance().loadMinecraftFont();
     }

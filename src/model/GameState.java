@@ -11,7 +11,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Provides the current state of the game.
+ * 
+ * @author Team 5
+ * @version 1.0
+ */
 public final class GameState implements Serializable {
+	/**
+	 * Serialization.
+	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -38,8 +47,6 @@ public final class GameState implements Serializable {
 	 * The incorrect question count.
 	 */
 	private int myIncorrectQuestions;
-
-	
 
 	/**
 	 * The current X.

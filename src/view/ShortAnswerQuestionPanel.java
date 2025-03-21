@@ -11,6 +11,12 @@ import model.GameState;
 import model.ShortAnswerQuestion;
 import model.SoundManager;
 
+/**
+ * The short answer question panel implementation.
+ * 
+ * @author Team 5
+ * @version 1.0
+ */
 public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
 	
 	/**
@@ -43,6 +49,9 @@ public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
         createAnswerInput();
     }
 
+    /**
+     * Sets up the answer input.
+     */
     @Override
     protected void createAnswerInput() {
         // Set up the layout for the answer section
@@ -68,6 +77,9 @@ public final class ShortAnswerQuestionPanel extends AbstractQuestionPanel {
         add(answerPanel);
     }
 
+    /**
+     * Checks if the user typed a correct answer.
+     */
     @Override
     public boolean checkAnswer() {
         final String answer = myAnswerField.getText().trim();

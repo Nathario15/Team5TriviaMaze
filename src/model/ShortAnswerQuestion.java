@@ -7,7 +7,7 @@ package model;
  */
 public class ShortAnswerQuestion extends AbstractQuestion {
 	/**
-	 * 
+	 * Serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 

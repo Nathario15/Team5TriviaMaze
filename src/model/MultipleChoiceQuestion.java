@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class MultipleChoiceQuestion extends AbstractQuestion {
 	/**
-	 * 
+	 * Serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 	/**

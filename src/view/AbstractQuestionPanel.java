@@ -11,9 +11,15 @@ import javax.swing.SwingConstants;
 import model.AbstractQuestion;
 import model.GameState;
 
+/**
+ * The abstract implementation of a question panel.
+ * 
+ * @author Team 5
+ * @version 1.0
+ */
 public abstract class AbstractQuestionPanel extends JPanel {
 	/**
-	 * 
+	 * Serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -66,6 +72,9 @@ public abstract class AbstractQuestionPanel extends JPanel {
 
 	}
 
+	/**
+	 * Sets up the abstract panel.
+	 */
 	private void setUp() {
 
 		// Submit Button
