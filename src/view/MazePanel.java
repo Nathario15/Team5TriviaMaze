@@ -9,12 +9,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import model.AbstractQuestion;
 import model.Direction;
 import model.DoorState;
 import model.Maze;
+import model.ResourceManager;
 import model.Room;
 
 /**
@@ -109,8 +109,6 @@ public final class MazePanel extends JPanel implements KeyListener {
 	@Override
 	protected void paintComponent(final Graphics theG) {
 		super.paintComponent(theG);
-//		System.out.println("MazePanel repainting. Using display coordinates: (" + Maze.getDisplayX() + ","
-//				+ Maze.getDisplayY() + ") - These are offset from internal coords.");
 		drawMaze(theG);
 
 	}
@@ -118,25 +116,19 @@ public final class MazePanel extends JPanel implements KeyListener {
 	private void drawMaze(final Graphics theG) {
 		final Graphics2D g2d = (Graphics2D) theG;
 		final Image m;
-//		System.out.println(Paths.get("").toAbsolutePath());
 		
 	    // Choose background image based on cheat status
 	    if (AbstractQuestion.cheatsEnabled()) {
-	        m = new ImageIcon("resources/images/Jack-Black.png").getImage();
+	    	m = ResourceManager.getInstance().loadImage("/images/Jack-Black.png");
 	    } else {
-	        m = new ImageIcon("resources/images/GrassBlock.jpg").getImage();
+	        m = ResourceManager.getInstance().loadImage("/images/GrassBlock.jpg");
 	    }
-//		System.out.println(m);
-//		g2d.drawImage(m, 0, 0, getWidth(), getHeight(), this);
 		super.paintComponent(g2d);
 		g2d.drawImage(m, 0, 0, MAP_SIZE * CELL_SIZE + OUTER_BORDER_WIDTH, MAP_SIZE * CELL_SIZE + OUTER_BORDER_WIDTH,
 				this);
 		// First draw all cells with their standard grid
 		for (int row = 0; row < MAP_SIZE; row++) {
 			for (int col = 0; col < MAP_SIZE; col++) {
-				// Fill each room with light gray
-//				theG.setColor(DIRT);
-//				theG.fillRect(col * CELL_SIZE + OUTER_BORDER_WIDTH, row * CELL_SIZE  + OUTER_BORDER_WIDTH, CELL_SIZE, CELL_SIZE);
 
 				// Draw standard green grid lines
 				theG.setColor(Color.BLACK);
@@ -184,20 +176,13 @@ public final class MazePanel extends JPanel implements KeyListener {
 
 		final Image player;
 		if (AbstractQuestion.cheatsEnabled()) {
-			player = new ImageIcon("resources/images/zombie.jpg").getImage();
+			player = ResourceManager.getInstance().loadImage("/images/zombie.jpg");
 		} else {
-			player = new ImageIcon("resources/images/steve-head.jpg").getImage();
+			player = ResourceManager.getInstance().loadImage("/images/steve-head.jpg");
 		}
 		g2d.drawImage(player, playerX * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH,
 				playerY * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH, CELL_SIZE - PLAYER_SIZE_REDUCTION,
 				CELL_SIZE - PLAYER_SIZE_REDUCTION, this);
-
-//        // Draw Player Position
-//        theG.setColor(Color.RED);
-//        theG.fillOval(playerX * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH, 
-//                      playerY * CELL_SIZE + PLAYER_INSET + OUTER_BORDER_WIDTH, 
-//                      CELL_SIZE - PLAYER_SIZE_REDUCTION, 
-//                      CELL_SIZE - PLAYER_SIZE_REDUCTION);
 	}
 
 	/**

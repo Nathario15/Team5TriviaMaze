@@ -2,31 +2,23 @@ package view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import model.ResourceManager;
 
 public class StoneMenuItem extends JMenuItem {
     /** Serialization. */
     private static final long serialVersionUID = 1L;
     /** The stone texture. */
-    private static final String TEXTURE_PATH = "resources/images/stone.png";
-    /** Minecraftia font scale. */
-    private static final float MINECRAFTIA = 16f;
-    /** Arial backup value. */
-    private static final int ARIAL = 16;
+    private static final String TEXTURE_PATH = "/images/stone.png";
     /** Default stone texture. */
     private Image myDefaultTexture;
 
     /** Constructor. */
     public StoneMenuItem(final String theText) {
         super(theText);
-        myDefaultTexture = new ImageIcon(TEXTURE_PATH).getImage();
+        myDefaultTexture = ResourceManager.getInstance().loadImage(TEXTURE_PATH);
         setFont(loadCustomFont());
         setForeground(Color.WHITE); // Set text color to white
     }
@@ -52,23 +44,6 @@ public class StoneMenuItem extends JMenuItem {
     }
     
     private static Font loadCustomFont() {
-        try {
-            // Load the font from the resources directory
-            final File fontFile = new File("resources/fonts/Minecraftia.ttf");
-            
-            // Create the font from the file
-            final Font minecraftiaFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            
-            // Register the font with the GraphicsEnvironment
-            final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(minecraftiaFont);
-            
-            // Return the font with the desired size
-            return minecraftiaFont.deriveFont(MINECRAFTIA);
-            
-        } catch (final FontFormatException | IOException e) {
-            e.printStackTrace();
-            return new Font("Arial", Font.PLAIN, ARIAL);
-        }
+        return ResourceManager.getInstance().loadMinecraftFont();
     }
 }
