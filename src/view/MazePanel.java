@@ -203,7 +203,7 @@ public final class MazePanel extends JPanel implements KeyListener {
 		} else if (theState == DoorState.LOCKED) {
 			theG.setColor(Color.RED);
 		} else { // BLOCKED
-			theG.setColor(Color.BLACK);
+			theG.setColor(Color.BLUE);
 		}
 
 		final int x = theX * CELL_SIZE + OUTER_BORDER_WIDTH;

@@ -423,7 +423,7 @@ public final class GameView extends JFrame implements KeyListener {
 	        + "Navigate the maze by answering Minecraft trivia questions correctly.<br>"
 	        + "Moving in a direction that is currently outlined with a red line will prompt the user "
 	        + "to answer a trivia question. If they get it wrong, that is locked permanently and "
-	        + "outlined with a gray line. If they get it right, the line becomes green and they can now "
+	        + "outlined with a blue line. If they get it right, the line becomes green and they can now "
 	        + "freely navigate in that direction as desired. The player can navigate the maze using either "
 	        + "WASD keys or via the navigation buttons provided to them once they start the game.<br>"
 	        + "Additionally, you can enable cheats via the menu bar."
