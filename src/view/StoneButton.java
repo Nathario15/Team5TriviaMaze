@@ -30,7 +30,7 @@ public class StoneButton extends JButton {
     private Image myHoverTexture;
 
     /** Constructor. */
-    StoneButton(final String theText) {
+    public StoneButton(final String theText) {
         super(theText);
         myDefaultTexture = new ImageIcon(TEXTURE_PATH).getImage();
         myHoverTexture = new ImageIcon(HOVER_TEXTURE_PATH).getImage();
