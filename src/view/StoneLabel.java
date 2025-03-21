@@ -9,6 +9,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import model.ResourceManager;
 
+/**
+ * Implements the Stone texture onto a JLabel.
+ * @author Team 5
+ * @version 1.0
+ */
 public class StoneLabel extends JLabel {
 	/** Serialization. */
     private static final long serialVersionUID = 1L;
@@ -26,6 +31,9 @@ public class StoneLabel extends JLabel {
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
     }
 
+    /**
+     * Paints the texture onto the JLabel.
+     */
     @Override
     protected void paintComponent(final Graphics theG) {
         super.paintComponent(theG);
@@ -38,6 +46,10 @@ public class StoneLabel extends JLabel {
         theG.drawString(getText(), x, y);
     }
     
+    /**
+     * Loads the custom font as desired.
+     * @return custom font.
+     */
     private static Font loadCustomFont() {
         return ResourceManager.getInstance().loadMinecraftFont();
     }

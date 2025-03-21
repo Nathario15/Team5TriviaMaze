@@ -4,6 +4,12 @@ import javax.swing.SwingUtilities;
 import model.DatabaseManager;
 import view.GameView;
 
+/**
+ * The main class that can start the game.
+ * 
+ * @author Team 5
+ * @version 1.0
+ */
 public final class Main {
 	private Main() {
 	}

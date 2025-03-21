@@ -7,6 +7,11 @@ import java.awt.Image;
 import javax.swing.JCheckBoxMenuItem;
 import model.ResourceManager;
 
+/**
+ * Implements the Stone texture onto a JCheckBoxMenuItem.
+ * @author Team 5
+ * @version 1.0
+ */
 public class StoneCheckBoxMenuItem extends JCheckBoxMenuItem {
     /** Serialization. */
     private static final long serialVersionUID = 1L;
@@ -23,6 +28,9 @@ public class StoneCheckBoxMenuItem extends JCheckBoxMenuItem {
         setForeground(Color.WHITE); // Set text color to white
     }
 
+    /**
+     * Paints the texture onto the JCheckBoxMenuItem.
+     */
     @Override
     protected void paintComponent(final Graphics theG) {
         super.paintComponent(theG);
@@ -43,6 +51,10 @@ public class StoneCheckBoxMenuItem extends JCheckBoxMenuItem {
         theG.drawString(text, x, y);
     }
 
+    /**
+     * Loads the custom font as desired.
+     * @return custom font.
+     */
     private static Font loadCustomFont() {
         return ResourceManager.getInstance().loadMinecraftFont();
     }

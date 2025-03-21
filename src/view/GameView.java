@@ -186,6 +186,7 @@ public final class GameView extends JFrame implements KeyListener {
 	 * The label for tracking whether cheats are enabled.
 	 */
 	private JLabel myCheatsLabel;
+	
 	/**
 	 * Constructor.
 	 */
@@ -220,6 +221,9 @@ public final class GameView extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
+	/**
+	 * Adds the main menu.
+	 */
 	private void addMainMenu() {
 		final JPanel menuPanel = new JPanel(new GridBagLayout()) {
 			private static final long serialVersionUID = 1L;
@@ -261,11 +265,11 @@ public final class GameView extends JFrame implements KeyListener {
 	    final JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
 	    buttonPanel.setOpaque(false);
 
-	    final JButton newGameButton = createStyledButton(NEW_GAME);
-	    final JButton loadGameButton = createStyledButton(LOAD_GAME);
-	    final JButton instructionsButton = createStyledButton(INSTRUCTIONS);
-	    final JButton aboutButton = createStyledButton(ABOUT);
-	    final JButton exitButton = createStyledButton(EXIT);
+	    final JButton newGameButton = new StoneButton(NEW_GAME);
+	    final JButton loadGameButton = new StoneButton(LOAD_GAME);
+	    final JButton instructionsButton = new StoneButton(INSTRUCTIONS);
+	    final JButton aboutButton = new StoneButton(ABOUT);
+	    final JButton exitButton = new StoneButton(EXIT);
 
 	    // Add action listeners
 	    newGameButton.addActionListener(_ -> {
@@ -302,6 +306,9 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(menuPanel, MAIN_MENU);
 	}
 
+	/**
+	 * Adds the game panel.
+	 */
 	private void addGamePanel() {
 	    final JPanel gamePanel = new JPanel(new BorderLayout());
 
@@ -346,6 +353,11 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(gamePanel, GAME);
 	}
 
+	/**
+	 * Adds the tracker panel.
+	 * 
+	 * @param theGamePanel tracker panel
+	 */
 	private void addTrackerPanel(final JPanel theGamePanel) {
 	    myTrackerPanel = new JPanel(new GridLayout(BUTTONS, 1));
 
@@ -364,6 +376,9 @@ public final class GameView extends JFrame implements KeyListener {
 	    theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
 	}
 
+	/**
+	 * Updates the tracker.
+	 */
 	private void updateTracker() {
 		if (GameState.getInstance() != null) {
 			myPositionLabel.setText("Position: (" + GameState.getInstance().getPlayerPosition() + ")");
@@ -381,6 +396,9 @@ public final class GameView extends JFrame implements KeyListener {
 		}
 	}
 	
+	/**
+	 * Adds the instructions panel.
+	 */
 	private void addInstructionsPanel() {
 	    final JPanel instructionsPanel = new JPanel(new BorderLayout()) {
 	        private static final long serialVersionUID = 1L;
@@ -404,7 +422,7 @@ public final class GameView extends JFrame implements KeyListener {
 	        + "<b>Instructions:</b><br>"
 	        + "Navigate the maze by answering Minecraft trivia questions correctly.<br>"
 	        + "Moving in a direction that is currently outlined with a red line will prompt the user "
-	        + "to answer a trivia question. If they get it wrong, that door is locked permanently and "
+	        + "to answer a trivia question. If they get it wrong, that is locked permanently and "
 	        + "outlined with a gray line. If they get it right, the line becomes green and they can now "
 	        + "freely navigate in that direction as desired. The player can navigate the maze using either "
 	        + "WASD keys or via the navigation buttons provided to them once they start the game.<br>"
@@ -456,6 +474,9 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(instructionsPanel, INSTRUCTIONS);
 	}
 
+	/**
+	 * Adds the about panel.
+	 */
 	private void addAboutPanel() {
 	    final JPanel aboutPanel = new JPanel(new BorderLayout()) {
 	        private static final long serialVersionUID = 1L;
@@ -526,6 +547,9 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(aboutPanel, ABOUT);
 	}
 
+	/**
+	 * Adds the menu bar.
+	 */
 	private void addMenuBar() {
 	    // Create the menu bar
 	    final JMenuBar menuBar = new StoneMenuBar();
@@ -676,7 +700,6 @@ public final class GameView extends JFrame implements KeyListener {
 	 * end game.
 	 */
 	public void endGame() {
-        mySoundManager.stopBackgroundMusic();
 		this.newGame();
 	}
 
@@ -779,6 +802,12 @@ public final class GameView extends JFrame implements KeyListener {
 		myCardLayout.show(myMainPanel, ABOUT);
 	}
 
+	/**
+	 * Moves the player.
+	 * 
+	 * @param theDirection the direction
+	 * @param theMazePanel the maze panel
+	 */
 	void movePlayer(final Direction theDirection, final MazePanel theMazePanel) {
 		// Check if we're in a valid game state
 		if (GameState.getInstance() == null) {
@@ -833,11 +862,12 @@ public final class GameView extends JFrame implements KeyListener {
 			validate();
 		});
 	}
-	
-	private JButton createStyledButton(final String theText) {
-		return new StoneButton(theText);
-	}
 
+	/**
+	 * Loads the custom font.
+	 * 
+	 * @return custom font
+	 */
 	private static Font loadCustomFont() {
 	    return ResourceManager.getInstance().loadMinecraftFont();
 	}
@@ -850,6 +880,9 @@ public final class GameView extends JFrame implements KeyListener {
 	public void keyPressed(final KeyEvent theE) {
 	}
 
+	/**
+	 * Allows for WASD controls.
+	 */
 	@Override
 	public void keyReleased(final KeyEvent theE) {
 		final int keyCode = theE.getKeyCode();

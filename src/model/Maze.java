@@ -4,8 +4,7 @@ import controller.SystemControl;
 import javax.swing.JOptionPane;
 
 /**
- * Implements the singleton design pattern. TODO make the fields not static, so
- * it can be serialized.
+ * Implements the singleton design pattern.
  * 
  * @author Ibrahim Elnikety
  * @version 0.6
@@ -58,8 +57,11 @@ public final class Maze {
 	 */
 	private static int x = MAP_SIZE / 2;
 
+	/**
+	 * Creates a private constructor so that
+	 * the constructor isn't default or public.
+	 */
 	private Maze() {
-
 	}
 
 	/**

@@ -15,6 +15,12 @@ import model.GameState;
 import model.MultipleChoiceQuestion;
 import model.SoundManager;
 
+/**
+ * The multiple choice question panel implementation.
+ * 
+ * @author Team 5
+ * @version 1.0
+ */
 public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
 	
 	/**
@@ -52,6 +58,9 @@ public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
         createAnswerInput();
     }
 
+    /**
+     * Sets up the answer input.
+     */
     @Override
     protected void createAnswerInput() {
         // Set up the layout for multiple choice options
@@ -83,6 +92,9 @@ public final class MultipleChoiceQuestionPanel extends AbstractQuestionPanel {
         add(answerPanel);
     }
 
+    /**
+     * Checks if the user typed a correct answer.
+     */
     @Override
     public boolean checkAnswer() {
         String selectedAnswer = null;

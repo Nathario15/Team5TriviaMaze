@@ -8,6 +8,11 @@ import javax.swing.JMenu;
 import javax.swing.border.LineBorder;
 import model.ResourceManager;
 
+/**
+ * Implements the Stone texture onto a JMenu.
+ * @author Team 5
+ * @version 1.0
+ */
 public class StoneMenu extends JMenu {
     /** Serialization. */
     private static final long serialVersionUID = 1L;
@@ -25,6 +30,9 @@ public class StoneMenu extends JMenu {
         setBorder(new LineBorder(Color.BLACK, 1)); // Set a 1px white border
     }
 
+    /**
+     * Paints the texture onto the JMenu.
+     */
     @Override
     protected void paintComponent(final Graphics theG) {
         super.paintComponent(theG);
@@ -49,6 +57,10 @@ public class StoneMenu extends JMenu {
         theG.drawRect(0, 0, getWidth() - 1, getHeight() - 1); // Draw 1px white border
     }
     
+    /**
+     * Loads the custom font as desired.
+     * @return custom font.
+     */
     private static Font loadCustomFont() {
         return ResourceManager.getInstance().loadMinecraftFont();
     }
