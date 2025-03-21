@@ -239,10 +239,10 @@ public final class GameState implements Serializable {
 		GameState other;
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(theFilename))) {
 			other = (GameState) in.readObject();
-			System.out.println("Game loaded successfully from: " + theFilename);
+//			System.out.println("Game loaded successfully from: " + theFilename);
 		} catch (final IOException | ClassNotFoundException e) {
-			System.err.println("Error loading game: " + e.getMessage());
-			e.printStackTrace();
+//			System.err.println("Error loading game: " + e.getMessage());
+//			e.printStackTrace();
 			other = new GameState(); // Return a new instance if loading fails
 		}
 		other.loadToMaze();
