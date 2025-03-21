@@ -106,7 +106,7 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * Music.
 	 */
-	public static final String MUSIC = "Enable Music";
+	public static final String MUSIC = "Toggle Music";
 	/**
 	 * Start string.
 	 */
