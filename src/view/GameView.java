@@ -693,12 +693,12 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Checks for win/loss conditions after a move.
 	 */
 	private void checkGameState() {
-		System.out.println("GameView.checkGameState: " + SystemControl.getInstance().checkLoseCondition());
+//		System.out.println("GameView.checkGameState: " + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			mySoundManager.playLoseSound();
 			mySoundManager.stopBackgroundMusic();
-			System.out.println("GameView.checkGameState: lose cond");
+//			System.out.println("GameView.checkGameState: lose cond");
 			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", GAME_OVER,
 					JOptionPane.ERROR_MESSAGE);
 			
@@ -819,7 +819,7 @@ public final class GameView extends JFrame implements KeyListener {
 
 		// Check for win/loss condition
 		checkGameState();
-		System.out.println("Can solve?: " + Maze.canSolve());
+//		System.out.println("Can solve?: " + Maze.canSolve());
 	}
 
 	/**
@@ -840,7 +840,7 @@ public final class GameView extends JFrame implements KeyListener {
 
 		addMainMenu();
 
-		System.out.println("Now in main menu");
+//		System.out.println("Now in main menu");
 
 		SwingUtilities.invokeLater(() -> {
 			repaint();

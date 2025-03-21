@@ -77,7 +77,7 @@ public final class SystemControl {
      */
     public void setGameView(final view.GameView theGameView) {
         myGameView = theGameView;
-        System.out.println("GameView reference set in SystemControl");
+//        System.out.println("GameView reference set in SystemControl");
     }
     
     /**
@@ -341,7 +341,7 @@ public final class SystemControl {
     public void endGame() {
         myGameActive = false;
         
-        System.out.println("Game won - player escaped the maze");
+//        System.out.println("Game won - player escaped the maze");
         
         // Show victory message directly, play win sound
         mySoundManager.playWinSound();
@@ -351,11 +351,11 @@ public final class SystemControl {
             "Victory", JOptionPane.INFORMATION_MESSAGE);
         // Use the direct reference to return to main menu
         if (myGameView != null) {
-            System.out.println("Calling returnToMainMenu() on GameView");
+//            System.out.println("Calling returnToMainMenu() on GameView");
             myGameView.returnToMainMenu();
-        } else {
-            System.err.println("ERROR: No GameView reference in SystemControl!");
-        }
+        } //else {
+//            System.err.println("ERROR: No GameView reference in SystemControl!");
+//        }
     }
     
     /**
