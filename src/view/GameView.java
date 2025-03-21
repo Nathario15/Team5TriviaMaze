@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
@@ -19,10 +18,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -313,71 +310,65 @@ public final class GameView extends JFrame implements KeyListener {
 	}
 
 	private void addGamePanel() {
-		final JPanel gamePanel = new JPanel(new BorderLayout());
+	    final JPanel gamePanel = new JPanel(new BorderLayout());
 
-		myMazePanel = new MazePanel();
-		gamePanel.add(myMazePanel, BorderLayout.CENTER);
+	    myMazePanel = new MazePanel();
+	    gamePanel.add(myMazePanel, BorderLayout.CENTER);
 
-		final JPanel controlPanel = new JPanel(new GridLayout(1, 4));
-		final JButton northButton = new JButton("North");
-		final JButton southButton = new JButton("South");
-		final JButton westButton = new JButton("West");
-		final JButton eastButton = new JButton("East");
-		
-		northButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			movePlayer(Direction.NORTH, myMazePanel);
-		});
-		northButton.addKeyListener(myMazePanel);
-		southButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			movePlayer(Direction.SOUTH, myMazePanel);
-		});
-		southButton.addKeyListener(myMazePanel);
-		westButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			movePlayer(Direction.WEST, myMazePanel);
-		});
-		westButton.addKeyListener(myMazePanel);
-		eastButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			movePlayer(Direction.EAST, myMazePanel);
-		});
-		eastButton.addKeyListener(myMazePanel);
+	    final JPanel controlPanel = new JPanel(new GridLayout(1, 4));
+	    final JButton northButton = new StoneButton("North");
+	    final JButton southButton = new StoneButton("South");
+	    final JButton westButton = new StoneButton("West");
+	    final JButton eastButton = new StoneButton("East");
 
-		controlPanel.add(northButton);
-		controlPanel.add(southButton);
-		controlPanel.add(westButton);
-		controlPanel.add(eastButton);
+	    northButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        movePlayer(Direction.NORTH, myMazePanel);
+	    });
+	    northButton.addKeyListener(myMazePanel);
+	    southButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        movePlayer(Direction.SOUTH, myMazePanel);
+	    });
+	    southButton.addKeyListener(myMazePanel);
+	    westButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        movePlayer(Direction.WEST, myMazePanel);
+	    });
+	    westButton.addKeyListener(myMazePanel);
+	    eastButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        movePlayer(Direction.EAST, myMazePanel);
+	    });
+	    eastButton.addKeyListener(myMazePanel);
 
-		gamePanel.add(controlPanel, BorderLayout.SOUTH);
-		addTrackerPanel(gamePanel);
+	    controlPanel.add(northButton);
+	    controlPanel.add(southButton);
+	    controlPanel.add(westButton);
+	    controlPanel.add(eastButton);
 
-		myMainPanel.add(gamePanel, GAME);
+	    gamePanel.add(controlPanel, BorderLayout.SOUTH);
+	    addTrackerPanel(gamePanel);
+
+	    myMainPanel.add(gamePanel, GAME);
 	}
 
 	private void addTrackerPanel(final JPanel theGamePanel) {
-		myTrackerPanel = new JPanel(new GridLayout(BUTTONS, 1));
+	    myTrackerPanel = new JPanel(new GridLayout(BUTTONS, 1));
 
-		myPositionLabel = new JLabel("Position: (4,4)");
-		myCorrectQuestionsLabel = new JLabel("Correct Questions: 0");
-		myIncorrectQuestionsLabel = new JLabel("Incorrect Questions: 0");
-		myLockedDoorsLabel = new JLabel("Questions Remaining: 48");
-		myCheatsLabel = new JLabel("Cheats: Off");
+	    myPositionLabel = new StoneLabel("Position: (4,4)");
+	    myCorrectQuestionsLabel = new StoneLabel("Correct Questions: 0");
+	    myIncorrectQuestionsLabel = new StoneLabel("Incorrect Questions: 0");
+	    myLockedDoorsLabel = new StoneLabel("Questions Remaining: 48");
+	    myCheatsLabel = new StoneLabel("Cheats: Off");
 
-		myPositionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		myCorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		myIncorrectQuestionsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		myLockedDoorsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		myCheatsLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+	    myTrackerPanel.add(myPositionLabel);
+	    myTrackerPanel.add(myCorrectQuestionsLabel);
+	    myTrackerPanel.add(myIncorrectQuestionsLabel);
+	    myTrackerPanel.add(myLockedDoorsLabel);
+	    myTrackerPanel.add(myCheatsLabel);
 
-		myTrackerPanel.add(myPositionLabel);
-		myTrackerPanel.add(myCorrectQuestionsLabel);
-		myTrackerPanel.add(myIncorrectQuestionsLabel);
-		myTrackerPanel.add(myLockedDoorsLabel);
-		myTrackerPanel.add(myCheatsLabel);
-
-		theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
+	    theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
 	}
 
 	private void updateTracker() {
@@ -538,93 +529,90 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(aboutPanel, ABOUT);
 	}
 
-
-
-	@SuppressWarnings("unused")
 	private void addMenuBar() {
-		// Create the menu bar
-		final JMenuBar menuBar = new JMenuBar();
+	    // Create the menu bar
+	    final JMenuBar menuBar = new StoneMenuBar();
 
-		// Add the file button
-		final JMenu fileMenu = new JMenu("File");
-		final JMenuItem saveGameItem = new JMenuItem(SAVE_GAME);
-		final JMenuItem loadGameItem = new JMenuItem(LOAD_GAME);
-		final JMenuItem newGameItem = new JMenuItem(NEW_GAME);
-		final JMenuItem exitGameItem = new JMenuItem(EXIT);
+	    // Add the file button
+	    final JMenu fileMenu = new StoneMenu("File");
+	    final JMenuItem saveGameItem = new StoneMenuItem(SAVE_GAME);
+	    final JMenuItem loadGameItem = new StoneMenuItem(LOAD_GAME);
+	    final JMenuItem newGameItem = new StoneMenuItem(NEW_GAME);
+	    final JMenuItem exitGameItem = new StoneMenuItem(EXIT);
 
-		saveGameItem.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			saveGame();
-		});
-		loadGameItem.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			loadGame();
-		});
-		newGameItem.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			newGame();
-		});
-		exitGameItem.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			returnToMainMenu();
-			mySoundManager.stopBackgroundMusic();
-		});
+	    saveGameItem.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        saveGame();
+	    });
+	    loadGameItem.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        loadGame();
+	    });
+	    newGameItem.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        newGame();
+	    });
+	    exitGameItem.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        returnToMainMenu();
+	        mySoundManager.stopBackgroundMusic();
+	    });
 
-		fileMenu.add(saveGameItem);
-		fileMenu.add(loadGameItem);
-		fileMenu.add(newGameItem);
-		fileMenu.add(exitGameItem);
+	    fileMenu.add(saveGameItem);
+	    fileMenu.add(loadGameItem);
+	    fileMenu.add(newGameItem);
+	    fileMenu.add(exitGameItem);
 
-		// Add the help button
-		final JMenu helpMenu = new JMenu("Help");
-		final JMenuItem instructionsGameItem = new JMenuItem(INSTRUCTIONS);
-		final JMenuItem aboutGameItem = new JMenuItem(ABOUT);
+	    // Add the help button
+	    final JMenu helpMenu = new StoneMenu("Help");
+	    final JMenuItem instructionsGameItem = new StoneMenuItem(INSTRUCTIONS);
+	    final JMenuItem aboutGameItem = new StoneMenuItem(ABOUT);
 
-		instructionsGameItem.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			displayInstructions();
-		});
-		aboutGameItem.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			displayAbout();
-		});
-		
-		helpMenu.add(instructionsGameItem);
-		helpMenu.add(aboutGameItem);
-		
-		// Add the musics button
-		final JMenu musicMenu = new JMenu("Music");
-		final JMenuItem musicToggle = new JCheckBoxMenuItem(MUSIC, mySoundManager.getMusicEnabled());
-		
-		musicToggle.addActionListener(e -> {
-			mySoundManager.playClickSound();
-			mySoundManager.toggleMusic();
-			musicToggle.setSelected(mySoundManager.getMusicEnabled());
-		});
-		
-		musicMenu.add(musicToggle);
-		
-		// Add the cheats button
-		final JMenu cheatsMenu = new JMenu("Cheats");
-		final JMenuItem cheatsCheckBox = new JCheckBoxMenuItem(CHEATS);
-		
-		cheatsCheckBox.addActionListener(e -> {
-			mySoundManager.playClickSound();
-//			myCheatsEnabled = !myCheatsEnabled;
-			AbstractQuestion.toggleCheats(cheatsCheckBox.isSelected());
-			updateTracker();
-		    myMazePanel.repaint(); 
-		});
+	    instructionsGameItem.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        displayInstructions();
+	    });
+	    aboutGameItem.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        displayAbout();
+	    });
 
-		cheatsMenu.add(cheatsCheckBox);
-		
-		// Add the menu options to the menu bar
-		menuBar.add(fileMenu);
-		menuBar.add(helpMenu);
-		menuBar.add(musicMenu);
-		menuBar.add(cheatsMenu);
+	    helpMenu.add(instructionsGameItem);
+	    helpMenu.add(aboutGameItem);
 
-		setJMenuBar(menuBar);
+	    // Add the music button
+	    final JMenu musicMenu = new StoneMenu("Music");
+	    final StoneCheckBoxMenuItem musicToggle = new StoneCheckBoxMenuItem(MUSIC);
+	    musicToggle.setSelected(mySoundManager.getMusicEnabled());
+
+	    musicToggle.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        mySoundManager.toggleMusic();
+	        musicToggle.setSelected(mySoundManager.getMusicEnabled());
+	    });
+
+	    musicMenu.add(musicToggle);
+
+	    // Add the cheats button
+	    final JMenu cheatsMenu = new StoneMenu("Cheats");
+	    final JMenuItem cheatsCheckBox = new StoneCheckBoxMenuItem(CHEATS);
+
+	    cheatsCheckBox.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        AbstractQuestion.toggleCheats(cheatsCheckBox.isSelected());
+	        updateTracker();
+	        myMazePanel.repaint();
+	    });
+
+	    cheatsMenu.add(cheatsCheckBox);
+
+	    // Add the menu options to the menu bar
+	    menuBar.add(fileMenu);
+	    menuBar.add(helpMenu);
+	    menuBar.add(musicMenu);
+	    menuBar.add(cheatsMenu);
+
+	    setJMenuBar(menuBar);
 	}
 	
 	/**
@@ -918,67 +906,5 @@ public final class GameView extends JFrame implements KeyListener {
 		default:
 			break;
 		}
-	}
-	
-	private static class StoneButton extends JButton {
-	    private static final long serialVersionUID = 1L;
-
-	    /** Default stone texture. */
-	    private Image myDefaultTexture;
-	    /** Default stone hover texture. */
-	    private Image myHoverTexture;
-
-	    StoneButton(final String theText) {
-	        super(theText);
-	        myDefaultTexture = new ImageIcon("resources/images/stone.png").getImage();
-	        myHoverTexture = new ImageIcon("resources/images/stone_hover.png").getImage();
-
-	        // Set the font and text color
-	        this.setFont(loadCustomFont());
-	        this.setForeground(Color.WHITE);  // Set text color to white
-
-	        // Set other button properties
-	        this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-	        this.setFocusPainted(false);
-
-	        // Hover effect - Repainting on mouse events to change textures
-	        this.addMouseListener(new java.awt.event.MouseAdapter() {
-	            @Override
-	            public void mouseEntered(final java.awt.event.MouseEvent theEvt) {
-	                // Trigger repaint when the mouse enters the button area
-	                StoneButton.this.repaint();
-	            }
-
-	            @Override
-	            public void mouseExited(final java.awt.event.MouseEvent theEvt) {
-	                // Trigger repaint when the mouse exits the button area
-	                StoneButton.this.repaint();
-	            }
-	        });
-	    }
-
-	    @Override
-	    protected void paintComponent(final Graphics theG) {
-	        super.paintComponent(theG); // Paint the button’s default background and border
-
-	        // Determine which texture to use based on hover state
-	        Image textureToDraw = myDefaultTexture;
-	        if (getModel().isPressed() || getModel().isRollover()) {
-	            textureToDraw = myHoverTexture;
-	        }
-
-	        // Draw the chosen texture
-	        theG.drawImage(textureToDraw, 0, 0, getWidth(), getHeight(), this);
-
-	        // Set the font and color for the text
-	        theG.setFont(this.getFont());
-	        theG.setColor(this.getForeground());
-
-	        // Draw the button’s text (ensuring it's centered)
-	        final FontMetrics fm = theG.getFontMetrics();
-	        final int x = (getWidth() - fm.stringWidth(getText())) / 2;
-	        final int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
-	        theG.drawString(getText(), x, y);
-	    }
 	}
 }
