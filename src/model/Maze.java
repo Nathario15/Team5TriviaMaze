@@ -17,21 +17,6 @@ public final class Maze {
 	public static final int MAP_SIZE = 8;
 
 	/**
-	 * String constant for position logging.
-	 */
-	private static final String POSITION_STRING = " from position (";
-
-	/**
-	 * String constant for parenthesis.
-	 */
-	private static final String PARENTHESIS_CLOSE = ")";
-
-	/**
-	 * String constant for comma.
-	 */
-	private static final String COMMA = ",";
-
-	/**
 	 * Array for checking maze pathfinding.
 	 */
 	private static boolean[][] mapCheck;
