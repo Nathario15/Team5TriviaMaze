@@ -179,9 +179,9 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	private JLabel myIncorrectQuestionsLabel;
 	/**
-	 * The label for tracking the locked door count.
+	 * The label for tracking the questions remaining count.
 	 */
-	private JLabel myLockedDoorsLabel;
+	private JLabel myQuestionsLabel;
 	/**
 	 * The label for tracking whether cheats are enabled.
 	 */
@@ -352,13 +352,13 @@ public final class GameView extends JFrame implements KeyListener {
 	    myPositionLabel = new StoneLabel("Position: (4,4)");
 	    myCorrectQuestionsLabel = new StoneLabel("Correct Questions: 0");
 	    myIncorrectQuestionsLabel = new StoneLabel("Incorrect Questions: 0");
-	    myLockedDoorsLabel = new StoneLabel("Questions Remaining: 48");
+	    myQuestionsLabel = new StoneLabel("Questions Remaining: 48");
 	    myCheatsLabel = new StoneLabel("Cheats: Off");
 
 	    myTrackerPanel.add(myPositionLabel);
 	    myTrackerPanel.add(myCorrectQuestionsLabel);
 	    myTrackerPanel.add(myIncorrectQuestionsLabel);
-	    myTrackerPanel.add(myLockedDoorsLabel);
+	    myTrackerPanel.add(myQuestionsLabel);
 	    myTrackerPanel.add(myCheatsLabel);
 
 	    theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
@@ -370,7 +370,7 @@ public final class GameView extends JFrame implements KeyListener {
 			myCorrectQuestionsLabel.setText("Correct Questions: " + GameState.getInstance().getCorrectQuestions());
 			myIncorrectQuestionsLabel
 					.setText("Incorrect Questions: " + GameState.getInstance().getIncorrectQuestions());
-			myLockedDoorsLabel.setText("Questions Remaining: " + GameState.getInstance().getQuestionsRemaining());
+			myQuestionsLabel.setText("Questions Remaining: " + GameState.getInstance().getQuestionsRemaining());
 			final String cheatsStatus;
 		    if (AbstractQuestion.cheatsEnabled()) {
 		        cheatsStatus = "On";
