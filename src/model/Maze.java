@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  * @author Ibrahim Elnikety
  * @version 0.6
  */
-public final class Maze /* implements Serializable */ {
+public final class Maze {
 	/**
 	 * How big the map is, .
 	 */
@@ -73,12 +73,6 @@ public final class Maze /* implements Serializable */ {
 	 */
 	private static int x = MAP_SIZE / 2;
 
-	/**
-	 * The Database manager.
-	 */
-	@SuppressWarnings("unused")
-	private transient DatabaseManager myDatabaseManager;
-
 	private Maze() {
 
 	}
@@ -135,34 +129,6 @@ public final class Maze /* implements Serializable */ {
 		return MAP;
 	}
 
-//	/**
-//	 * Returns room North of player.
-//	 * @return
-//	 */
-//	public static Room getNorth() {
-//		return MAP[x][y + 1];
-//	}
-//	/**
-//	 * Returns room South of player.
-//	 * @return
-//	 */
-//	public static Room getSouth() {
-//		return MAP[x][y - 1];
-//	}
-//	/**
-//	 * Returns room East of player.
-//	 * @return
-//	 */
-//	public static Room getEast() {
-//		return MAP[x + 1][y];
-//	}
-//	/**
-//	 * Returns room West of player.
-//	 * @return
-//	 */
-//	public static Room getWest() {
-//		return MAP[x - 1][y];
-//	}
 	/**
 	 * Returns room based on direction.
 	 * 
@@ -390,10 +356,6 @@ public final class Maze /* implements Serializable */ {
 	private static boolean canSolve(final Direction theDir) {
 		final Room cur = setRoom(theDir);
 
-//		// If we've reached a null room (exit), we've found a solution
-//		if (cur == null) {
-//			return true;
-//		}
 		if (mapCheck[x][y]) {
 			setRoom(theDir.getOpposite());
 			return false;
@@ -411,24 +373,4 @@ public final class Maze /* implements Serializable */ {
 		setRoom(theDir.getOpposite());
 		return false;
 	}
-
-	/**
-	 * Reconnect to any services after deserialization. This is called from
-	 * GameState's readObject method.
-	 */
-	public void reconnectServices() {
-		myDatabaseManager = DatabaseManager.getInstance();
-	}
-//
-//	/**
-//	 * Special method called during deserialization to 
-//	 * reestablish the database manager.
-//	 */
-//	private void readObject(java.io.ObjectInputStream in) 
-//	        throws java.io.IOException, ClassNotFoundException {
-//	    in.defaultReadObject();
-//	    // Reconnect to the database
-//	    myDatabaseManager = DatabaseManager.getInstance();
-//	}
-
 }

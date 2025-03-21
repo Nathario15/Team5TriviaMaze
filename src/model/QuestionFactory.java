@@ -30,21 +30,6 @@ public final class QuestionFactory implements Serializable {
 	 */
 	public static void intializeQuestionFactory() {
 		myQuestions = new ArrayList<AbstractQuestion>();
-//		DatabaseManager.getInstance().setDifficulty(Difficulty.EASY);
-//		for (int i = 0; i < 48; i++) {
-//			final AbstractQuestion a = DatabaseManager.getInstance().getRandomQuestion();
-//			boolean inside = false;
-//			for (AbstractQuestion b : myQuestions) {
-//				if (b.equals(a)) {
-//					inside = true;
-//				}
-//			}
-//			if (!inside) {
-//				myQuestions.add(a);
-//			}else {
-//				i--;
-//			}
-//		}
 		myQuestions = DatabaseManager.getInstance().getArrayList();
 	}
 
@@ -70,6 +55,5 @@ public final class QuestionFactory implements Serializable {
 	public static AbstractQuestion getQuestion() {
 		final int index = (int) Math.round(Math.random() * (myQuestions.size() - 1));
 		return myQuestions.remove(index);
-//			return myQuestions.removeFirst();
 	}
 }

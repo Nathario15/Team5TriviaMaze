@@ -6,9 +6,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -38,6 +36,7 @@ import model.Direction;
 import model.GameState;
 import model.Maze;
 import model.QuestionFactory;
+import model.ResourceManager;
 import model.SoundManager;
 
 /**
@@ -118,7 +117,7 @@ public final class GameView extends JFrame implements KeyListener {
 	/**
 	 * Background.
 	 */
-	public static final String BACKGROUND = "resources/images/main_background.png";
+	public static final String BACKGROUND = "/images/main_background.png";
 	/**
 	 * Instance.
 	 */
@@ -139,14 +138,6 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Scales.
 	 */
 	private static final int INSET_SCALE = 10;
-	/**
-	 * Arial backup value.
-	 */
-	private static final int ARIAL = 16;
-	/**
-	 * Minecraftia font scale.
-	 */
-	private static final float MINECRAFTIA = 16f;
 	/**
 	 * 
 	 */
@@ -195,7 +186,6 @@ public final class GameView extends JFrame implements KeyListener {
 	 * The label for tracking whether cheats are enabled.
 	 */
 	private JLabel myCheatsLabel;
-	
 	/**
 	 * Constructor.
 	 */
@@ -215,30 +205,32 @@ public final class GameView extends JFrame implements KeyListener {
 	}
 	
 	/**
-	 * Sets up the game.
+	 * sets up.
 	 */
 	private void setUp() {
 		addMainMenu();
 		addGamePanel();
 		addInstructionsPanel();
 		addAboutPanel();
+
 		add(myMainPanel);
+
+		// Add key listener for keyboard navigation
 		setFocusable(true);
 		addKeyListener(this);
 	}
 
-	/**
-	 * Adds the main menu.
-	 */
 	private void addMainMenu() {
 		final JPanel menuPanel = new JPanel(new GridBagLayout()) {
 			private static final long serialVersionUID = 1L;
-	        private final Image myBackground = new ImageIcon(BACKGROUND).getImage();
+		    private final Image myBackground = ResourceManager.getInstance().loadImage(BACKGROUND);
 
 	        @Override
 	        protected void paintComponent(final Graphics theG) {
 	            super.paintComponent(theG);
-	            theG.drawImage(myBackground, 0, 0, getWidth(), getHeight(), this);
+	            if (myBackground != null) {
+	                theG.drawImage(myBackground, 0, 0, getWidth(), getHeight(), this);
+	            }
 	        }
 	    };
 
@@ -248,7 +240,8 @@ public final class GameView extends JFrame implements KeyListener {
 	    gbc.gridx = 0;
 	    
 	    // Title label
-	    final ImageIcon titleIcon = new ImageIcon("resources/images/trivia_maze_logo.png");
+	    final Image titleImage = ResourceManager.getInstance().loadImage("/images/trivia_maze_logo.png");
+	    final ImageIcon titleIcon = new ImageIcon(titleImage);
 
 	    // Scale the image to fit the menu panel
 	    final Image scaledImage = titleIcon.getImage().getScaledInstance(400, 100, Image.SCALE_SMOOTH);
@@ -268,11 +261,11 @@ public final class GameView extends JFrame implements KeyListener {
 	    final JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
 	    buttonPanel.setOpaque(false);
 
-	    final JButton newGameButton = new StoneButton(NEW_GAME);
-	    final JButton loadGameButton = new StoneButton(LOAD_GAME);
-	    final JButton instructionsButton = new StoneButton(INSTRUCTIONS);
-	    final JButton aboutButton = new StoneButton(ABOUT);
-	    final JButton exitButton = new StoneButton(EXIT);
+	    final JButton newGameButton = createStyledButton(NEW_GAME);
+	    final JButton loadGameButton = createStyledButton(LOAD_GAME);
+	    final JButton instructionsButton = createStyledButton(INSTRUCTIONS);
+	    final JButton aboutButton = createStyledButton(ABOUT);
+	    final JButton exitButton = createStyledButton(EXIT);
 
 	    // Add action listeners
 	    newGameButton.addActionListener(_ -> {
@@ -309,9 +302,6 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(menuPanel, MAIN_MENU);
 	}
 
-	/**
-	 * Adds the game panel.
-	 */
 	private void addGamePanel() {
 	    final JPanel gamePanel = new JPanel(new BorderLayout());
 
@@ -356,11 +346,6 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(gamePanel, GAME);
 	}
 
-	/**
-	 * Adds the tracker panel.
-	 * 
-	 * @param theGamePanel Game Panel for the tracker to go on.
-	 */
 	private void addTrackerPanel(final JPanel theGamePanel) {
 	    myTrackerPanel = new JPanel(new GridLayout(BUTTONS, 1));
 
@@ -379,9 +364,6 @@ public final class GameView extends JFrame implements KeyListener {
 	    theGamePanel.add(myTrackerPanel, BorderLayout.EAST);
 	}
 
-	/**
-	 * Updates the tracker based on GameState.
-	 */
 	private void updateTracker() {
 		if (GameState.getInstance() != null) {
 			myPositionLabel.setText("Position: (" + GameState.getInstance().getPlayerPosition() + ")");
@@ -399,9 +381,6 @@ public final class GameView extends JFrame implements KeyListener {
 		}
 	}
 	
-	/**
-	 * Adds the instructions panel.
-	 */
 	private void addInstructionsPanel() {
 	    final JPanel instructionsPanel = new JPanel(new BorderLayout()) {
 	        private static final long serialVersionUID = 1L;
@@ -411,9 +390,11 @@ public final class GameView extends JFrame implements KeyListener {
 	        protected void paintComponent(final Graphics theG) {
 	            super.paintComponent(theG);
 	            // Load the background image
-	            final Image background = new ImageIcon(BACKGROUND).getImage();
+	            final Image background = ResourceManager.getInstance().loadImage(BACKGROUND);
 	            // Draw the image to fill the entire panel
-	            theG.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+	            if (background != null) {
+	                theG.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+	            }
 	        }
 	    };
 
@@ -475,9 +456,6 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(instructionsPanel, INSTRUCTIONS);
 	}
 
-	/**
-	 * Adds the about panel.
-	 */
 	private void addAboutPanel() {
 	    final JPanel aboutPanel = new JPanel(new BorderLayout()) {
 	        private static final long serialVersionUID = 1L;
@@ -487,9 +465,11 @@ public final class GameView extends JFrame implements KeyListener {
 	        protected void paintComponent(final Graphics theG) {
 	            super.paintComponent(theG);
 	            // Load the background image
-	            final Image background = new ImageIcon(BACKGROUND).getImage();
+	            final Image background = ResourceManager.getInstance().loadImage(BACKGROUND);
 	            // Draw the image to fill the entire panel
-	            theG.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+	            if (background != null) {
+	                theG.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+	            }
 	        }
 	    };
 
@@ -546,9 +526,6 @@ public final class GameView extends JFrame implements KeyListener {
 	    myMainPanel.add(aboutPanel, ABOUT);
 	}
 
-	/**
-	 * Adds the menu bar.
-	 */
 	private void addMenuBar() {
 	    // Create the menu bar
 	    final JMenuBar menuBar = new StoneMenuBar();
@@ -640,6 +617,8 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	public void newGame() {
 		AbstractQuestion.toggleCheats(false);
+
+		// First clean up existing game state if we're in a game
 		if (myInGame) {
 			GameState.resetState();
 		}
@@ -705,12 +684,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Checks for win/loss conditions after a move.
 	 */
 	private void checkGameState() {
-//		System.out.println("GameView.checkGameState: " + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			mySoundManager.playLoseSound();
 			mySoundManager.stopBackgroundMusic();
-//			System.out.println("GameView.checkGameState: lose cond");
 			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", GAME_OVER,
 					JOptionPane.ERROR_MESSAGE);
 			
@@ -802,12 +779,6 @@ public final class GameView extends JFrame implements KeyListener {
 		myCardLayout.show(myMainPanel, ABOUT);
 	}
 
-	/**
-	 * Moves the player.
-	 * 
-	 * @param theDirection Direction.
-	 * @param theMazePanel Maze Panel.
-	 */
 	void movePlayer(final Direction theDirection, final MazePanel theMazePanel) {
 		// Check if we're in a valid game state
 		if (GameState.getInstance() == null) {
@@ -862,41 +833,21 @@ public final class GameView extends JFrame implements KeyListener {
 			validate();
 		});
 	}
+	
+	private JButton createStyledButton(final String theText) {
+		return new StoneButton(theText);
+	}
 
-	/**
-	 * Loads the custom font.
-	 * 
-	 * @return custom font
-	 */
 	private static Font loadCustomFont() {
-	    try {
-	        // Load the font from the resources directory
-	        final File fontFile = new File("resources/fonts/Minecraftia.ttf");
-	        
-	        // Create the font from the file
-	        final Font minecraftiaFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-	        
-	        // Register the font with the GraphicsEnvironment
-	        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	        ge.registerFont(minecraftiaFont);
-	        
-	        // Return the font with the desired size
-	        return minecraftiaFont.deriveFont(MINECRAFTIA);
-	        
-	    } catch (final FontFormatException | IOException e) {
-	        e.printStackTrace();
-	        return new Font("Arial", Font.PLAIN, ARIAL);
-	    }
+	    return ResourceManager.getInstance().loadMinecraftFont();
 	}
 
 	@Override
 	public void keyTyped(final KeyEvent theE) {
-		// Not used
 	}
 
 	@Override
 	public void keyPressed(final KeyEvent theE) {
-		// Not used
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import java.util.Random;
  * DatabaseManager handles all database operations for the Minecraft Trivia Maze
  * game. Uses SQLite database to store and retrieve questions.
  * 
- * @author Nathaniel
+ * @author Nathaniel Roy
  * @version 0.7
  */
 public final class DatabaseManager {
@@ -83,7 +83,6 @@ public final class DatabaseManager {
 
 			if (newDatabase) {
 				createTables();
-//	            insertSampleQuestions();
 			}
 		} catch (final SQLException e) {
 			System.err.println("Error connecting to database: " + e.getMessage());

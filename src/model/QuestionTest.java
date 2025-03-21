@@ -44,12 +44,6 @@ class QuestionTest {
 		}
 		for (int i = 0; i < max; i++) {
 			for (int j = i + 1; j < max; j++) {
-//				System.out.println(Objects.equals(arr[i], arr[j]));
-//				if(arr[i].equals(arr[j])) {
-//					System.out.println(arr[i]+" "+i);
-//					System.out.println(arr[j]+" "+j);
-//					System.out.println(Objects.equals(arr[i], arr[j]));
-//				}
 				assertFalse(arr[i].equals(arr[j]));
 			}
 		}

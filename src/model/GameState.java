@@ -55,7 +55,7 @@ public final class GameState implements Serializable {
 	 * The questions used.
 	 */
 	private Set<Integer> myQuestionsUsed;
-//    private Maze myMaze;
+
 	/**
 	 * The difficulty.
 	 */
@@ -276,10 +276,5 @@ public final class GameState implements Serializable {
 		theIn.defaultReadObject();
 		// Reconnect to the database
 		DatabaseManager.getInstance().setDifficulty(myDifficulty);
-
-//        // Reconnect the maze to any transient services
-//        if (myMaze != null) {
-//            myMaze.reconnectServices();
-//        }
 	}
 }
