@@ -153,8 +153,8 @@ public final class Maze {
 		// Check if new position is out of the playable area
 		if (newX <= 0 || newX >= MAP.length - 1 || newY <= 0 || newY >= MAP[0].length - 1) {
 			// Out of bounds - this is an exit
-			System.out.println("EXIT DETECTED at direction: " + theDirection + POSITION_STRING + x + COMMA + y
-					+ PARENTHESIS_CLOSE + " to (" + newX + COMMA + newY + PARENTHESIS_CLOSE);
+//			System.out.println("EXIT DETECTED at direction: " + theDirection + POSITION_STRING + x + COMMA + y
+//					+ PARENTHESIS_CLOSE + " to (" + newX + COMMA + newY + PARENTHESIS_CLOSE);
 			return null;
 		}
 
@@ -201,7 +201,7 @@ public final class Maze {
 
 		// If game already won, prevent further movement
 		if (!myExitAchieved) {
-			System.out.println("Move attempt: " + theDirection + POSITION_STRING + x + COMMA + y + PARENTHESIS_CLOSE);
+//			System.out.println("Move attempt: " + theDirection + POSITION_STRING + x + COMMA + y + PARENTHESIS_CLOSE);
 
 			// Get the door state for this direction
 			final DoorState doorState = getRoom().myDoors.get(theDirection);
@@ -225,7 +225,7 @@ public final class Maze {
 	 * @return true if exit successful
 	 */
 	private static boolean handleExitMovement(final Direction theDirection, final DoorState theDoorState) {
-		System.out.println("Exit detected in direction: " + theDirection);
+//		System.out.println("Exit detected in direction: " + theDirection);
 		boolean result = false;
 
 		// Check if this exit is already blocked
@@ -237,13 +237,13 @@ public final class Maze {
 			final boolean answeredCorrectly = SystemControl.triggerQuestion();
 			if (answeredCorrectly) {
 				// Correct answer - win game!
-				System.out.println("Question answered correctly - VICTORY!");
+//				System.out.println("Question answered correctly - VICTORY!");
 				myExitAchieved = true; // Set flag to prevent more movement
 				SystemControl.getInstance().endGame();
 				result = true;
 			} else {
 				// Wrong answer - block this exit
-				System.out.println("Question answered incorrectly - exit blocked");
+//				System.out.println("Question answered incorrectly - exit blocked");
 				getRoom().myDoors.put(theDirection, DoorState.BLOCKED);
 			}
 		}
@@ -284,7 +284,7 @@ public final class Maze {
 		// Reset exit flag
 		myExitAchieved = false;
 
-		System.out.println("Maze fully reset - internal coordinates: (" + x + COMMA + y + PARENTHESIS_CLOSE);
+//		System.out.println("Maze fully reset - internal coordinates: (" + x + COMMA + y + PARENTHESIS_CLOSE);
 
 		// Reset all rooms (recreate the map)
 		MAP = new Room[][] {
