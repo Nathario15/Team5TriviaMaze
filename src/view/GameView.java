@@ -4,12 +4,23 @@ import controller.SystemControl;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -96,24 +107,49 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	public static final String CHEATS = "Enable Cheats";
 	/**
-	 * 
+	 * Music.
 	 */
 	public static final String MUSIC = "Enable Music";
-
-//	/**
-//	 * Instance.
-//	 */
-//	protected static GameView instance;
-
+	/**
+	 * Start string.
+	 */
+	public static final String BEGIN = "<html><div style='text-align: center;'>";
+	/**
+	 * End string.
+	 */
+	public static final String END = "</div></html>";
+	/**
+	 * Background.
+	 */
+	public static final String BACKGROUND = "resources/images/main_background.png";
 	/**
 	 * Instance.
 	 */
 	protected static MazePanel myMazePanel;
-	
 	/**
 	 * Button.
 	 */
 	private static final int BUTTONS = 5;
+	/**
+	 * Button width.
+	 */
+	private static final int BUTTON_WIDTH = 200;
+	/**
+	 * Button height.
+	 */
+	private static final int BUTTON_HEIGHT = 50;
+	/**
+	 * Scales.
+	 */
+	private static final int INSET_SCALE = 10;
+	/**
+	 * Arial backup value.
+	 */
+	private static final int ARIAL = 16;
+	/**
+	 * Minecraftia font scale.
+	 */
+	private static final float MINECRAFTIA = 16f;
 	/**
 	 * 
 	 */
@@ -122,11 +158,6 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Creates the sounds in the game.
 	 */
 	private static SoundManager mySoundManager = SoundManager.getInstance();
-
-//	/**
-//	 * games save data.
-//	 */
-//	private static GameState myGameState;
 	/**
 	 * The card layout.
 	 */
@@ -139,15 +170,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Whether or not the player is currently in game.
 	 */
 	private boolean myInGame;
-//	/**
-//	 * Whether or not cheats are enabled.
-//	 */
-//	private boolean myCheatsEnabled;
 	/**
 	 * The file name for the save file.
 	 */
 	private String myFilename = "";
-
 	/**
 	 * The panel for tracking the state of the game.
 	 */
@@ -172,12 +198,11 @@ public final class GameView extends JFrame implements KeyListener {
 	 * The label for tracking whether cheats are enabled.
 	 */
 	private JLabel myCheatsLabel;
-
 	/**
 	 * Constructor.
 	 */
 	public GameView() {
-		setTitle("Trivia Maze Game");
+		setTitle("Minecraft Trivia Maze");
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -186,9 +211,7 @@ public final class GameView extends JFrame implements KeyListener {
 		myMainPanel = new JPanel(myCardLayout);
 		myInGame = false;
 
-		// Register this view with SystemControl
 		SystemControl.getInstance().setGameView(this);
-//		System.out.println("GameView registered with SystemControl");
 		setUp();
 
 	}
@@ -210,50 +233,83 @@ public final class GameView extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
-//	public static void main(final String[] args) {
-//		SwingUtilities.invokeLater(() -> {
-//			final GameView game = new GameView();
-//			game.setVisible(true);
-//		});
-//	}
-
 	private void addMainMenu() {
-		final JPanel menuPanel = new JPanel(new GridLayout(5, 1));
+		final JPanel menuPanel = new JPanel(new GridBagLayout()) {
+			private static final long serialVersionUID = 1L;
+	        private final Image myBackground = new ImageIcon(BACKGROUND).getImage();
 
-		final JButton newGameButton = new JButton(NEW_GAME);
-		final JButton loadGameButton = new JButton(LOAD_GAME);
-		final JButton instructionsButton = new JButton(INSTRUCTIONS);
-		final JButton aboutButton = new JButton(ABOUT);
-		final JButton exitButton = new JButton(EXIT);
+	        @Override
+	        protected void paintComponent(final Graphics theG) {
+	            super.paintComponent(theG);
+	            theG.drawImage(myBackground, 0, 0, getWidth(), getHeight(), this);
+	        }
+	    };
 
-		newGameButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			newGame();
-		});    
-		loadGameButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			loadGame();
-		});
-		instructionsButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			displayInstructions();
-		});
-		aboutButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			displayAbout();
-		});
-		exitButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			System.exit(0);
-		});
+	    menuPanel.setOpaque(false);
+	    final GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(INSET_SCALE, 0, INSET_SCALE, 0);
+	    gbc.gridx = 0;
+	    
+	    // Title label
+	    final ImageIcon titleIcon = new ImageIcon("resources/images/trivia_maze_logo.png");
 
-		menuPanel.add(newGameButton);
-		menuPanel.add(loadGameButton);
-		menuPanel.add(instructionsButton);
-		menuPanel.add(aboutButton);
-		menuPanel.add(exitButton);
+	    // Scale the image to fit the menu panel
+	    final Image scaledImage = titleIcon.getImage().getScaledInstance(400, 100, Image.SCALE_SMOOTH);
 
-		myMainPanel.add(menuPanel, MAIN_MENU);
+	    // Create a JLabel with the scaled image
+	    final JLabel title = new JLabel(new ImageIcon(scaledImage));
+
+	    // Ensure proper alignment
+	    title.setHorizontalAlignment(JLabel.CENTER);
+
+	    // Add to the menu panel
+	    gbc.gridy = 0;
+	    gbc.fill = GridBagConstraints.HORIZONTAL; // Allows stretching if needed
+	    menuPanel.add(title, gbc);
+
+	    // Button Panel
+	    final JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+	    buttonPanel.setOpaque(false);
+
+	    final JButton newGameButton = createStyledButton(NEW_GAME);
+	    final JButton loadGameButton = createStyledButton(LOAD_GAME);
+	    final JButton instructionsButton = createStyledButton(INSTRUCTIONS);
+	    final JButton aboutButton = createStyledButton(ABOUT);
+	    final JButton exitButton = createStyledButton(EXIT);
+
+	    // Add action listeners
+	    newGameButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        newGame();
+	    });
+	    loadGameButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        loadGame();
+	    });
+	    instructionsButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        displayInstructions();
+	    });
+	    aboutButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        displayAbout();
+	    });
+	    exitButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        System.exit(0);
+	    });
+
+	    // Add buttons to panel
+	    buttonPanel.add(newGameButton);
+	    buttonPanel.add(loadGameButton);
+	    buttonPanel.add(instructionsButton);
+	    buttonPanel.add(aboutButton);
+	    buttonPanel.add(exitButton);
+
+	    gbc.gridy = 1;
+	    menuPanel.add(buttonPanel, gbc);
+
+	    myMainPanel.add(menuPanel, MAIN_MENU);
 	}
 
 	private void addGamePanel() {
@@ -340,55 +396,149 @@ public final class GameView extends JFrame implements KeyListener {
 		    myCheatsLabel.setText("Cheats: " + cheatsStatus);
 		}
 	}
-
+	
 	private void addInstructionsPanel() {
-		final JPanel instructionsPanel = new JPanel(new BorderLayout());
-		final JLabel instructionsLabel = new JLabel(
-				"<html><b>Instructions:</b> Navigate the maze by answering Minecraft trivia questions correctly."
-				+ " Moving in a direction that is currently outlined with a red line will prompt the user"
-				+ " to answer a trivia question. If they get it wrong, that door is locked permanently and"
-				+ " outlined with a gray line. If they get it right, the line becomes green and they can now"
-				+ " freely navigate in that direction as desired. The player can navigate the maze using either"
-				+ " WASD keys or via the navigation buttons provided to them once they start the game."
-				+ " Additionally, you can enable cheats via the menu bar.</html>",
-				SwingConstants.CENTER);
-		instructionsPanel.add(instructionsLabel, BorderLayout.CENTER);
+	    final JPanel instructionsPanel = new JPanel(new BorderLayout()) {
+	        private static final long serialVersionUID = 1L;
 
-		final JButton backButton = new JButton(BACK);
-		backButton.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			if (myInGame) {
-				myCardLayout.show(myMainPanel, GAME);
-			} else {
-				myCardLayout.show(myMainPanel, MAIN_MENU);
-			}
-		});
-		instructionsPanel.add(backButton, BorderLayout.SOUTH);
+	        // Override paintComponent to draw the background image
+	        @Override
+	        protected void paintComponent(final Graphics theG) {
+	            super.paintComponent(theG);
+	            // Load the background image
+	            final Image background = new ImageIcon(BACKGROUND).getImage();
+	            // Draw the image to fill the entire panel
+	            theG.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+	        }
+	    };
 
-		myMainPanel.add(instructionsPanel, INSTRUCTIONS);
+	    // Create a JLabel for the instructions with HTML formatting for wrapping
+	    final JLabel instructionsLabel = new JLabel(
+	        BEGIN
+	        + "<b>Instructions:</b><br>"
+	        + "Navigate the maze by answering Minecraft trivia questions correctly.<br>"
+	        + "Moving in a direction that is currently outlined with a red line will prompt the user "
+	        + "to answer a trivia question. If they get it wrong, that door is locked permanently and "
+	        + "outlined with a gray line. If they get it right, the line becomes green and they can now "
+	        + "freely navigate in that direction as desired. The player can navigate the maze using either "
+	        + "WASD keys or via the navigation buttons provided to them once they start the game.<br>"
+	        + "Additionally, you can enable cheats via the menu bar."
+	        + END,
+	        SwingConstants.CENTER
+	    );
+	    instructionsLabel.setForeground(Color.WHITE); // Set text color to white
+
+	    // Set custom font (using the method to load the custom font)
+	    instructionsLabel.setFont(loadCustomFont());
+
+	    // Add the instructions label to the instructions panel, centered
+	    instructionsPanel.add(instructionsLabel, BorderLayout.CENTER);
+
+	    // Create a panel for the back button with GridBagLayout to control positioning
+	    final JPanel buttonPanel = new JPanel(new GridBagLayout());
+	    buttonPanel.setOpaque(false); // Make sure the button panel is transparent
+
+	    // Create the back button with the stone texture functionality
+	    final JButton backButton = new StoneButton(BACK);
+	    backButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+	    backButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+
+	    // Set up GridBagConstraints to position the back button
+	    final GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    gbc.insets = new Insets(INSET_SCALE, 0, INSET_SCALE, 0); // Vertical spacing between label and button
+	    gbc.anchor = GridBagConstraints.CENTER; // Center the button horizontally
+
+	    // Add ActionListener to the back button
+	    backButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        if (myInGame) {
+	            myCardLayout.show(myMainPanel, GAME); // Show game panel if in game
+	        } else {
+	            myCardLayout.show(myMainPanel, MAIN_MENU); // Show main menu if not in game
+	        }
+	    });
+
+	    // Add the back button to the button panel
+	    buttonPanel.add(backButton, gbc);
+
+	    // Add the button panel to the bottom of the instructions panel
+	    instructionsPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+	    // Add the instructions panel to the main panel
+	    myMainPanel.add(instructionsPanel, INSTRUCTIONS);
 	}
 
 	private void addAboutPanel() {
-		final JPanel aboutPanel = new JPanel(new BorderLayout());
-		final JLabel aboutLabel = new JLabel(
-				"<html><b>Trivia Maze Game</b><br>Created by Team 5 for the class of TCSS 360 Winter 2025,"
-				+ " consisting of Nathaniel Roy, Ibrahim Elnikety, and Jayden Peneueta.</html>",
-				SwingConstants.CENTER);
-		aboutPanel.add(aboutLabel, BorderLayout.CENTER);
+	    final JPanel aboutPanel = new JPanel(new BorderLayout()) {
+	        private static final long serialVersionUID = 1L;
 
-		final JButton backBtn = new JButton(BACK);
-		backBtn.addActionListener(_ -> {
-			mySoundManager.playClickSound();
-			if (myInGame) {
-				myCardLayout.show(myMainPanel, GAME);
-			} else {
-				myCardLayout.show(myMainPanel, MAIN_MENU);
-			}
-		});
-		aboutPanel.add(backBtn, BorderLayout.SOUTH);
+	        // Override paintComponent to draw the background image
+	        @Override
+	        protected void paintComponent(final Graphics theG) {
+	            super.paintComponent(theG);
+	            // Load the background image
+	            final Image background = new ImageIcon(BACKGROUND).getImage();
+	            // Draw the image to fill the entire panel
+	            theG.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+	        }
+	    };
 
-		myMainPanel.add(aboutPanel, ABOUT);
+	    // Create a JLabel to display the about information with HTML formatting for wrapping
+	    final JLabel aboutLabel = new JLabel(
+	        BEGIN
+	        + "<b>Trivia Maze Game</b><br>"
+	        + "Created by Team 5 for the class of TCSS 360 Winter 2025,<br>"
+	        + "consisting of Nathaniel Roy, Ibrahim Elnikety, and Jayden Peneueta."
+	        + END,
+	        SwingConstants.CENTER
+	    );
+	    aboutLabel.setForeground(Color.WHITE); // Set text color to white
+
+	    // Set custom font (using the method to load the custom font)
+	    aboutLabel.setFont(loadCustomFont());
+
+	    // Add the about label to the about panel, centered
+	    aboutPanel.add(aboutLabel, BorderLayout.CENTER);
+
+	    // Create a panel for the back button with GridBagLayout to control positioning
+	    final JPanel buttonPanel = new JPanel(new GridBagLayout());
+	    buttonPanel.setOpaque(false); // Make sure the button panel is transparent
+
+	    // Create the back button with the stone texture functionality
+	    final JButton backButton = new StoneButton(BACK);
+	    backButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+	    backButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+
+	    // Set up GridBagConstraints to position the back button
+	    final GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    gbc.insets = new Insets(INSET_SCALE, 0, INSET_SCALE, 0); // Vertical spacing between label and button
+	    gbc.anchor = GridBagConstraints.CENTER; // Center the button horizontally
+
+	    // Add ActionListener to the back button
+	    backButton.addActionListener(_ -> {
+	        mySoundManager.playClickSound();
+	        if (myInGame) {
+	            myCardLayout.show(myMainPanel, GAME); // Show game panel if in game
+	        } else {
+	            myCardLayout.show(myMainPanel, MAIN_MENU); // Show main menu if not in game
+	        }
+	    });
+
+	    // Add the back button to the button panel
+	    buttonPanel.add(backButton, gbc);
+
+	    // Add the button panel to the bottom of the about panel
+	    aboutPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+	    // Add the about panel to the main panel
+	    myMainPanel.add(aboutPanel, ABOUT);
 	}
+
+
 
 	@SuppressWarnings("unused")
 	private void addMenuBar() {
@@ -688,35 +838,50 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	public void returnToMainMenu() {
         mySoundManager.stopBackgroundMusic();
-//		System.out.println("\n\n==================================================");
-//		System.out.println("================ RETURNING TO MENU ================");
-//		System.out.println("==================================================\n\n");
 
-		// Switch to main menu first for immediate visual feedback
 		myCardLayout.show(myMainPanel, MAIN_MENU);
 
-		// Reset game state
 		myInGame = false;
-//		myGameState = null;
 		GameState.resetState();
 
-		// Remove existing menu bar
 		setJMenuBar(null);
 
-		// Force repaint immediately
 		repaint();
 		validate();
 
-		// Add any needed main menu components
 		addMainMenu();
 
 		System.out.println("Now in main menu");
 
-		// Final UI refresh to ensure changes are visible
 		SwingUtilities.invokeLater(() -> {
 			repaint();
 			validate();
 		});
+	}
+	
+	private JButton createStyledButton(final String theText) {
+		return new StoneButton(theText);
+	}
+
+	private static Font loadCustomFont() {
+	    try {
+	        // Load the font from the resources directory
+	        final File fontFile = new File("resources/fonts/Minecraftia.ttf");
+	        
+	        // Create the font from the file
+	        final Font minecraftiaFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+	        
+	        // Register the font with the GraphicsEnvironment
+	        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	        ge.registerFont(minecraftiaFont);
+	        
+	        // Return the font with the desired size
+	        return minecraftiaFont.deriveFont(MINECRAFTIA);
+	        
+	    } catch (final FontFormatException | IOException e) {
+	        e.printStackTrace();
+	        return new Font("Arial", Font.PLAIN, ARIAL);
+	    }
 	}
 
 	@Override
@@ -752,5 +917,67 @@ public final class GameView extends JFrame implements KeyListener {
 		default:
 			break;
 		}
+	}
+	
+	private static class StoneButton extends JButton {
+	    private static final long serialVersionUID = 1L;
+
+	    /** Default stone texture. */
+	    private Image myDefaultTexture;
+	    /** Default stone hover texture. */
+	    private Image myHoverTexture;
+
+	    StoneButton(final String theText) {
+	        super(theText);
+	        myDefaultTexture = new ImageIcon("resources/images/stone.png").getImage();
+	        myHoverTexture = new ImageIcon("resources/images/stone_hover.png").getImage();
+
+	        // Set the font and text color
+	        this.setFont(loadCustomFont());
+	        this.setForeground(Color.WHITE);  // Set text color to white
+
+	        // Set other button properties
+	        this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+	        this.setFocusPainted(false);
+
+	        // Hover effect - Repainting on mouse events to change textures
+	        this.addMouseListener(new java.awt.event.MouseAdapter() {
+	            @Override
+	            public void mouseEntered(final java.awt.event.MouseEvent theEvt) {
+	                // Trigger repaint when the mouse enters the button area
+	                StoneButton.this.repaint();
+	            }
+
+	            @Override
+	            public void mouseExited(final java.awt.event.MouseEvent theEvt) {
+	                // Trigger repaint when the mouse exits the button area
+	                StoneButton.this.repaint();
+	            }
+	        });
+	    }
+
+	    @Override
+	    protected void paintComponent(final Graphics theG) {
+	        super.paintComponent(theG); // Paint the button’s default background and border
+
+	        // Determine which texture to use based on hover state
+	        Image textureToDraw = myDefaultTexture;
+	        if (getModel().isPressed() || getModel().isRollover()) {
+	            textureToDraw = myHoverTexture;
+	        }
+
+	        // Draw the chosen texture
+	        theG.drawImage(textureToDraw, 0, 0, getWidth(), getHeight(), this);
+
+	        // Set the font and color for the text
+	        theG.setFont(this.getFont());
+	        theG.setColor(this.getForeground());
+
+	        // Draw the button’s text (ensuring it's centered)
+	        final FontMetrics fm = theG.getFontMetrics();
+	        final int x = (getWidth() - fm.stringWidth(getText())) / 2;
+	        final int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
+	        theG.drawString(getText(), x, y);
+	    }
 	}
 }

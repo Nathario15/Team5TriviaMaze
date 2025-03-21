@@ -23,7 +23,9 @@ public final class SoundManager {
     private static final String[] BACKGROUND_MUSIC_FILES = {
             "resources/sounds/background_music_1.wav",
             "resources/sounds/background_music_2.wav",
-            "resources/sounds/background_music_3.wav"
+            "resources/sounds/background_music_3.wav",
+            "resources/sounds/background_music_4.wav",
+            "resources/sounds/background_music_5.wav"
     };
     
     /** Controls whether the music is enabled or not. */
