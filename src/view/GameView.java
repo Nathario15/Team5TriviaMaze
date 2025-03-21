@@ -214,7 +214,6 @@ public final class GameView extends JFrame implements KeyListener {
 		addAboutPanel();
 
 		add(myMainPanel);
-//		this.instance = this;
 
 		// Add key listener for keyboard navigation
 		setFocusable(true);
@@ -618,14 +617,9 @@ public final class GameView extends JFrame implements KeyListener {
 	 */
 	public void newGame() {
 		AbstractQuestion.toggleCheats(false);
-//		System.out.println("\n\n==================================================");
-//		System.out.println("================= STARTING NEW GAME ===============");
-//		System.out.println("==================================================\n\n");
 
 		// First clean up existing game state if we're in a game
 		if (myInGame) {
-			// Clear existing game data
-//			myGameState = null;
 			GameState.resetState();
 		}
 
@@ -643,7 +637,6 @@ public final class GameView extends JFrame implements KeyListener {
 			GameState.resetState();
 
 			// Initialize a new game state
-//			myGameState = new GameState();
 			GameState.getInstance().setDifficulty(Difficulty.valueOf(selectedDifficulty));
 
 			// Set up the database for questions
@@ -691,12 +684,10 @@ public final class GameView extends JFrame implements KeyListener {
 	 * Checks for win/loss conditions after a move.
 	 */
 	private void checkGameState() {
-//		System.out.println("GameView.checkGameState: " + SystemControl.getInstance().checkLoseCondition());
 		// Check if path to exit is blocked
 		if (SystemControl.getInstance().checkLoseCondition()) {
 			mySoundManager.playLoseSound();
 			mySoundManager.stopBackgroundMusic();
-//			System.out.println("GameView.checkGameState: lose cond");
 			JOptionPane.showMessageDialog(this, "All paths to the exit are blocked! Game over.", GAME_OVER,
 					JOptionPane.ERROR_MESSAGE);
 			
@@ -817,7 +808,6 @@ public final class GameView extends JFrame implements KeyListener {
 
 		// Check for win/loss condition
 		checkGameState();
-//		System.out.println("Can solve?: " + Maze.canSolve());
 	}
 
 	/**
@@ -838,8 +828,6 @@ public final class GameView extends JFrame implements KeyListener {
 
 		addMainMenu();
 
-//		System.out.println("Now in main menu");
-
 		SwingUtilities.invokeLater(() -> {
 			repaint();
 			validate();
@@ -856,12 +844,10 @@ public final class GameView extends JFrame implements KeyListener {
 
 	@Override
 	public void keyTyped(final KeyEvent theE) {
-		// Not used
 	}
 
 	@Override
 	public void keyPressed(final KeyEvent theE) {
-		// Not used
 	}
 
 	@Override

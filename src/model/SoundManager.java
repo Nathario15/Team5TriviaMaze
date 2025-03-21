@@ -36,7 +36,6 @@ public final class SoundManager {
     private Clip myCurrentBackgroundMusic;
     
     private SoundManager() {
-//        System.out.println("SoundManager instance created: " + this);
     }
 
     /**

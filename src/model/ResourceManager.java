@@ -28,7 +28,6 @@ public final class ResourceManager {
     
     /** Private constructor for singleton pattern. */
     private ResourceManager() {
-        // Private constructor
     }
     
     /**
